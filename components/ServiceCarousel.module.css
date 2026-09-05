@@ -14,6 +14,7 @@
   .track {
     display: flex;
     overflow-x: auto;
+    overflow-y: hidden;
     scroll-snap-type: x mandatory;
     gap: 0;
     margin-inline: 0;
@@ -21,12 +22,13 @@
     scroll-padding-inline: 0;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
-    touch-action: pan-x;
+    touch-action: pan-y;
     cursor: pointer;
     min-width: 0;
     overscroll-behavior-x: contain;
   }
   .track::-webkit-scrollbar { display: none; }
+  .track[data-dragging] { scroll-snap-type: none; }
   .track > * {
     flex: 0 0 100%;
     width: 100%;

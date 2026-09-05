@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type PointerEvent as ReactPointerEvent, type ReactNode } from "react";
 import { Icon } from "@/components/Icons";
 import styles from "./ProcessComparison.module.css";
 
@@ -135,6 +135,13 @@ export function ProcessComparison() {
   const [restartKey, setRestartKey] = useState(0);
   const [mobile, setMobile] = useState(false);
   const activeLock = useRef<"before" | "after" | null>(null);
+  const pointer = useRef<{
+    id: number;
+    x: number;
+    y: number;
+    scrollLeft: number;
+    axis: "x" | "y" | null;
+  } | null>(null);
 
   useEffect(() => {
     const query = window.matchMedia("(max-width: 820px)");
@@ -190,6 +197,48 @@ export function ProcessComparison() {
     });
   };
 
+  const endPointer = (event: ReactPointerEvent<HTMLDivElement>) => {
+    const start = pointer.current;
+    const scroller = scrollRef.current;
+    pointer.current = null;
+    if (!start || start.id !== event.pointerId || !scroller) return;
+    scroller.removeAttribute("data-dragging");
+    if (start.axis !== "x") return;
+    const center = scroller.scrollLeft + scroller.clientWidth / 2;
+    const after = scroller.children[1] as HTMLElement | undefined;
+    showPanel(after && after.offsetLeft + after.offsetWidth / 2 <= center ? "after" : "before");
+  };
+
+  const onPointerDown = (event: ReactPointerEvent<HTMLDivElement>) => {
+    if (!window.matchMedia("(max-width: 820px)").matches) return;
+    const scroller = scrollRef.current;
+    if (!scroller) return;
+    pointer.current = {
+      id: event.pointerId,
+      x: event.clientX,
+      y: event.clientY,
+      scrollLeft: scroller.scrollLeft,
+      axis: null,
+    };
+  };
+
+  const onPointerMove = (event: ReactPointerEvent<HTMLDivElement>) => {
+    const start = pointer.current;
+    const scroller = scrollRef.current;
+    if (!start || start.id !== event.pointerId || !scroller) return;
+    const dx = event.clientX - start.x;
+    const dy = event.clientY - start.y;
+    if (!start.axis) {
+      if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
+      start.axis = Math.abs(dx) > Math.abs(dy) ? "x" : "y";
+      if (start.axis === "x") {
+        scroller.dataset.dragging = "";
+        scroller.setPointerCapture(event.pointerId);
+      }
+    }
+    if (start.axis === "x") scroller.scrollLeft = start.scrollLeft - dx;
+  };
+
   return (
     <div className={styles.comparison}>
       <div className={styles.toggle} role="tablist" aria-label="Confronto prima e dopo" data-active={active}>
@@ -215,7 +264,14 @@ export function ProcessComparison() {
           <span className={styles.toggleText}>Dopo</span>
         </button>
       </div>
-      <div className={styles.grid} ref={scrollRef}>
+      <div
+        className={styles.grid}
+        ref={scrollRef}
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={endPointer}
+        onPointerCancel={endPointer}
+      >
         <Panel active={!mobile || active === "before"} restartKey={restartKey}>
           <div className={styles.heading}>
             <span className={styles.label}>Prima</span>

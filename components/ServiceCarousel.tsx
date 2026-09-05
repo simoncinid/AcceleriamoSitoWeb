@@ -35,7 +35,13 @@ export function ServiceCarousel({
   const scrollRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
   const lock = useRef<number | null>(null);
-  const pointer = useRef<{ x: number; y: number; moved: boolean } | null>(null);
+  const pointer = useRef<{
+    id: number;
+    x: number;
+    y: number;
+    scrollLeft: number;
+    axis: "x" | "y" | null;
+  } | null>(null);
   const count = Children.count(children);
 
   useEffect(() => {
@@ -77,29 +83,51 @@ export function ServiceCarousel({
 
   const tap = (direction: -1 | 1) => goTo(active + direction);
 
-  const onPointerDown = (event: ReactPointerEvent<HTMLDivElement>) => {
-    if (!window.matchMedia("(max-width: 820px)").matches) return;
-    pointer.current = { x: event.clientX, y: event.clientY, moved: false };
-  };
-
-  const onPointerMove = (event: ReactPointerEvent<HTMLDivElement>) => {
+  const endPointer = (event: ReactPointerEvent<HTMLDivElement>) => {
     const start = pointer.current;
-    if (!start || start.moved) return;
-    if (Math.abs(event.clientX - start.x) > 8 || Math.abs(event.clientY - start.y) > 8) {
-      start.moved = true;
-    }
-  };
-
-  const onPointerUp = (event: ReactPointerEvent<HTMLDivElement>) => {
-    const start = pointer.current;
-    pointer.current = null;
-    if (!start || start.moved) return;
     const scroller = scrollRef.current;
-    if (!scroller) return;
+    pointer.current = null;
+    if (!start || start.id !== event.pointerId || !scroller) return;
+    scroller.removeAttribute("data-dragging");
+    if (start.axis === "x") {
+      goTo(activeIndex(scroller));
+      return;
+    }
+    if (start.axis === "y") return;
     const rect = scroller.getBoundingClientRect();
     const ratio = (event.clientX - rect.left) / rect.width;
     if (ratio < 0.34) tap(-1);
     else tap(1);
+  };
+
+  const onPointerDown = (event: ReactPointerEvent<HTMLDivElement>) => {
+    if (!window.matchMedia("(max-width: 820px)").matches) return;
+    const scroller = scrollRef.current;
+    if (!scroller) return;
+    pointer.current = {
+      id: event.pointerId,
+      x: event.clientX,
+      y: event.clientY,
+      scrollLeft: scroller.scrollLeft,
+      axis: null,
+    };
+  };
+
+  const onPointerMove = (event: ReactPointerEvent<HTMLDivElement>) => {
+    const start = pointer.current;
+    const scroller = scrollRef.current;
+    if (!start || start.id !== event.pointerId || !scroller) return;
+    const dx = event.clientX - start.x;
+    const dy = event.clientY - start.y;
+    if (!start.axis) {
+      if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
+      start.axis = Math.abs(dx) > Math.abs(dy) ? "x" : "y";
+      if (start.axis === "x") {
+        scroller.dataset.dragging = "";
+        scroller.setPointerCapture(event.pointerId);
+      }
+    }
+    if (start.axis === "x") scroller.scrollLeft = start.scrollLeft - dx;
   };
 
   return (
@@ -109,7 +137,8 @@ export function ServiceCarousel({
         ref={scrollRef}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
-        onPointerUp={onPointerUp}
+        onPointerUp={endPointer}
+        onPointerCancel={endPointer}
       >
         {children}
       </div>
