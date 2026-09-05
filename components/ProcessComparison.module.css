@@ -125,13 +125,12 @@
     --system-step: 57px;
     --system-gap: 8px;
     --review-h: 78px;
-    --auto-min: calc(var(--system-step) * 2 + var(--system-gap) + 40px);
-    display: grid; grid-template-rows: minmax(var(--auto-min), 1fr) auto var(--review-h); gap: 8px;
+    display: grid; grid-template-rows: auto auto var(--review-h); gap: 8px; align-content: start;
     overflow: hidden; padding-bottom: 20px; background-size: auto, auto, 14px 14px;
   }
   .after .stage > * { min-height: 0; }
   .after .stage > .automatic {
-    min-height: var(--auto-min); height: auto; align-self: stretch; overflow: hidden;
+    height: auto; align-self: stretch; overflow: hidden;
   }
   .automatic {
     flex: 0 0 auto; display: flex; flex-direction: column; overflow: hidden;
@@ -140,8 +139,7 @@
   .systemLabel { flex-shrink: 0; margin-bottom: 6px; font-size: 9px; }
   .autoBadge { padding: 2px 5px; font-size: 8px; }
   .systemSteps {
-    flex: 1 1 auto; display: grid; grid-template-rows: var(--system-step) var(--system-step); gap: var(--system-gap);
-    min-height: calc(var(--system-step) * 2 + var(--system-gap));
+    flex: 0 0 auto; display: grid; grid-template-rows: var(--system-step) var(--system-step); gap: var(--system-gap);
   }
   .systemSteps .step {
     height: var(--system-step); min-height: var(--system-step); max-height: var(--system-step);
@@ -183,7 +181,7 @@
   .artwork { width: 42px; height: 42px; }
   .step { grid-template-columns: 42px minmax(0, 1fr) 16px; border-radius: 4px; }
   .connector { left: 24px; }
-  .after .stage { --system-step: 54px; --review-h: 72px; --auto-min: calc(var(--system-step) * 2 + var(--system-gap) + 36px); padding-bottom: 18px; }
+  .after .stage { --system-step: 54px; --review-h: 72px; padding-bottom: 18px; }
   .systemSteps .step { grid-template-columns: 30px minmax(0, 1fr) 14px; font-size: 10px; }
   .systemSteps .artwork { width: 30px; height: 30px; }
   .automatic { padding: 8px 10px 8px; }

@@ -1,6 +1,44 @@
 import { NextResponse } from "next/server";
+import nodemailer from "nodemailer";
 
 type ContactBody = Record<string, unknown>;
+
+function asString(value: unknown) {
+  return typeof value === "string" ? value.trim() : "";
+}
+
+function isValidEmail(value: string) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+}
+
+function buildEmailText(body: ContactBody) {
+  const optional = [
+    ["Ruolo", asString(body.role)],
+    ["Persone coinvolte", asString(body.people)],
+    ["Frequenza", asString(body.frequency)],
+    ["Strumenti usati", asString(body.tools)],
+  ].filter(([, value]) => value);
+
+  const lines = [
+    "Nuova richiesta di consulenza gratuita da acceleriamo.it",
+    "",
+    `Nome: ${asString(body.name)}`,
+    `Azienda: ${asString(body.company)}`,
+    `Email: ${asString(body.email)}`,
+    `Problema: ${asString(body.activity)}`,
+    "",
+    "Come lavorano oggi:",
+    asString(body.currentProcess),
+  ];
+
+  if (optional.length) {
+    lines.push("", "Dettagli aggiuntivi:");
+    optional.forEach(([label, value]) => lines.push(`${label}: ${value}`));
+  }
+
+  lines.push("", `Inviato il: ${new Date().toLocaleString("it-IT", { timeZone: "Europe/Rome" })}`);
+  return lines.join("\n");
+}
 
 export async function POST(request: Request) {
   let body: ContactBody;
@@ -11,26 +49,53 @@ export async function POST(request: Request) {
   }
 
   if (body.website) return NextResponse.json({ message: "Richiesta ricevuta." });
-  if (!body.name || !body.company || !body.email || !body.activity || !body.currentProcess || body.privacy !== "accepted") {
+
+  const name = asString(body.name);
+  const company = asString(body.company);
+  const email = asString(body.email);
+  const activity = asString(body.activity);
+  const currentProcess = asString(body.currentProcess);
+
+  if (!name || !company || !email || !activity || !currentProcess || body.privacy !== "accepted") {
     return NextResponse.json({ message: "Completa i campi obbligatori." }, { status: 422 });
   }
 
-  const webhook = process.env.CONTACT_WEBHOOK_URL;
-  if (!webhook) {
+  if (!isValidEmail(email)) {
+    return NextResponse.json({ message: "Inserisci un indirizzo email valido." }, { status: 422 });
+  }
+
+  const fromAddress = process.env.GMAIL_FROM_ADDRESS;
+  const toAddress = process.env.GMAIL_TO_ADDRESS;
+  const appPassword = process.env.GMAIL_APP_PASSWORD;
+
+  if (!fromAddress || !toAddress || !appPassword) {
     return NextResponse.json({
       message: "Il modulo è temporaneamente non disponibile. La richiesta non è stata inviata. Riprova più tardi.",
     }, { status: 503 });
   }
 
+  const transporter = nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true,
+    auth: {
+      user: fromAddress,
+      pass: appPassword,
+    },
+  });
+
   try {
-    const response = await fetch(webhook, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...body, source: "acceleriamo.it", submittedAt: new Date().toISOString() }),
-      signal: AbortSignal.timeout(8000),
+    await transporter.sendMail({
+      from: `"ACCELERIAMO" <${fromAddress}>`,
+      to: toAddress,
+      replyTo: `"${name}" <${email}>`,
+      subject: `Consulenza gratuita · ${company} · ${name}`,
+      text: buildEmailText(body),
     });
-    if (!response.ok) throw new Error("Webhook non disponibile");
-    return NextResponse.json({ message: "Grazie! Abbiamo ricevuto la tua richiesta di consulenza gratuita. Ti ricontatteremo per concordare un appuntamento." });
+
+    return NextResponse.json({
+      message: "Grazie! Abbiamo ricevuto la tua richiesta di consulenza gratuita. Ti ricontatteremo per concordare un appuntamento.",
+    });
   } catch {
     return NextResponse.json({ message: "Invio temporaneamente non disponibile. Riprova tra poco." }, { status: 502 });
   }

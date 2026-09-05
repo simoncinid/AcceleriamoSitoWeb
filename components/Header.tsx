@@ -26,13 +26,16 @@ export function Header() {
           {links.map(([label, href]) => <a href={href} key={href}>{label}</a>)}
         </nav>
         <a className="button button--small button--primary header-cta" href="#contatti">Richiedi una consulenza gratuita <Icon name="arrow" size={17} /></a>
-        <details className="mobile-menu" ref={mobileMenu}>
-          <summary aria-label="Apri o chiudi il menu"><Icon name="menu" size={24} /></summary>
-          <nav aria-label="Navigazione mobile">
-            {links.map(([label, href]) => <a href={href} key={href} onClick={closeMobileMenu}>{label}</a>)}
-            <a className="button button--primary" href="#contatti" onClick={closeMobileMenu}>Richiedi una consulenza gratuita</a>
-          </nav>
-        </details>
+        <div className="mobile-actions">
+          <a className="mobile-cta" href="#contatti" onClick={closeMobileMenu}>Contattaci</a>
+          <details className="mobile-menu" ref={mobileMenu}>
+            <summary aria-label="Apri o chiudi il menu"><Icon name="menu" size={24} /></summary>
+            <nav aria-label="Navigazione mobile">
+              {links.map(([label, href]) => <a href={href} key={href} onClick={closeMobileMenu}>{label}</a>)}
+              <a className="button button--small button--primary" href="#contatti" onClick={closeMobileMenu}>Richiedi una consulenza gratuita</a>
+            </nav>
+          </details>
+        </div>
       </div>
     </header>
   );

@@ -112,20 +112,6 @@ export function ExampleVisual({ index }: { index: number }) {
   </MotionScene>;
 }
 
-export function EvidenceVisual() {
-  return <section className={styles.evidenceStage} aria-label="Confronto tra gestione manuale e automatizzata">
-    <p className={styles.evidenceLabel}>Esempio: preparazione di un preventivo</p>
-    <figure className={styles.evidenceBefore}>
-      <span className={styles.evidenceArtwork} role="img" aria-label="Richieste, fogli e preventivi gestiti manualmente" />
-      <figcaption><small>Prima</small><strong>Manuale</strong><p>X errori <b>·</b> X minuti</p></figcaption>
-    </figure>
-    <figure className={styles.evidenceAfter}>
-      <span className={styles.evidenceArtwork} role="img" aria-label="Preventivo preparato automaticamente e verificato" />
-      <figcaption><small>Dopo</small><strong>Automatizzato</strong><p>0 errori <b>·</b> Y minuti</p></figcaption>
-    </figure>
-  </section>;
-}
-
 export function ProblemVisual({ type, label }: { type: "inbox" | "duplicate" | "waiting" | "scattered"; label: string }) {
   return <MotionScene className={styles.problemStage} label={label}>
     <div className={styles.problemArtwork} data-motion="rise" data-at={.25}><StoryArt kind={type} at={.45} /></div>

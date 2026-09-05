@@ -6,7 +6,7 @@ import { ServiceCarousel } from "@/components/ServiceCarousel";
 import { HeroProcessDemo } from "@/components/HeroProcessDemo";
 import { Icon } from "@/components/Icons";
 import { MotionScene, SectionEntrances } from "@/components/MotionScene";
-import { MethodVisual, ServiceVisual, HumanVisual, IntegrationsVisual, ExampleVisual, EvidenceVisual, ProblemVisual } from "@/components/StoryVisuals";
+import { MethodVisual, ServiceVisual, HumanVisual, IntegrationsVisual, ExampleVisual, ProblemVisual } from "@/components/StoryVisuals";
 
 const examples = [
   ["Grossisti · Preventivi", "Il cliente chiede 30 articoli. Li ricopiate uno per uno?", "La richiesta arriva via email. Per rispondere servono listino e sconti. La soluzione prepara la bozza. Il commerciale controlla e invia."],
@@ -193,7 +193,6 @@ export default function Home() {
               <div><p className="eyebrow"><span className="signal-square" />Come misuriamo</p><h2>Quanto tempo serve oggi?{" "}<br /><span className="accent">E dopo il nostro intervento?</span></h2></div>
             <p>Confrontiamo tempo impiegato e dati da correggere: prima e dopo la soluzione.</p>
             </div>
-            <EvidenceVisual />
           </div>
         </section>
 
