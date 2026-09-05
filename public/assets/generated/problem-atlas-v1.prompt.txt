@@ -1,0 +1,2 @@
+Tool: built-in imagegen
+Use case: stylized-concept. Asset type: transparent 2x2 illustration atlas for concrete business-process problems. Four isolated tactile 3D illustrations: overflowing multi-channel inbox, duplicate spreadsheets, approval bottleneck hourglass, and scattered information folder. Premium ivory, orange and coffee palette; no text; transparent background.

@@ -1,0 +1,2 @@
+.scene { position: relative; min-width: 0; }
+.scene [data-motion="draw"] { transform-origin: left center; }

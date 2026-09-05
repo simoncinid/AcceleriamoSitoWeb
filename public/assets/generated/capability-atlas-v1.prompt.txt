@@ -1,0 +1,2 @@
+Tool: built-in imagegen
+Use case: stylized-concept. Asset type: transparent 2x2 illustration atlas for technology capabilities. Four isolated tactile 3D illustrations: email-to-system automation, AI document extraction, approval and auditability, and custom internal software. Premium ivory, orange and coffee palette; no text; transparent background.

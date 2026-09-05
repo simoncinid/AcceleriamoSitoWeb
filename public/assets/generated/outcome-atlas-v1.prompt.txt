@@ -1,0 +1,2 @@
+Tool: built-in imagegen
+Use case: stylized-concept. Asset type: transparent 2x2 illustration atlas for operational outcomes. Four isolated tactile 3D illustrations: quote ready to send, verified invoice processing, order-progress visibility, and routed customer service request. Premium ivory, orange and coffee palette; no text; transparent background.

@@ -1,0 +1,1464 @@
+Devi progettare e sviluppare da zero il sito web completo di ACCELERIAMO.
+
+Prima di scrivere codice, leggi e usa come riferimento principale @DESIGN.md.
+
+@DESIGN.md rappresenta la reference di partenza per il linguaggio visivo, la gerarchia, il sistema di componenti, il comportamento responsive, gli spazi, le card, i pulsanti e il ritmo generale del sito.
+
+GERARCHIA DELLE FONTI
+
+In caso di qualsiasi contraddizione tra questo brief e @DESIGN.md, dai priorità a @DESIGN.md per:
+
+tipografia
+
+forme
+
+raggi degli angoli
+
+superfici
+
+background
+
+spaziatura
+
+densità
+
+gerarchia visiva
+
+componenti
+
+layout
+
+La sola eccezione è la palette: per colori, accenti e significato funzionale dei colori usa sempre la palette ACCELERIAMO definita in questo file.
+
+Non devi copiare il brand o il sito da cui deriva @DESIGN.md.
+
+Devi reinterpretarne i principi per costruire un’identità originale e riconoscibile per ACCELERIAMO.
+
+NOME DEL BRAND
+
+ACCELERIAMO
+
+Non ACCELERA.
+
+Il nome deve essere sempre scritto correttamente come:
+
+ACCELERIAMO
+
+La parte finale “IA” richiama intenzionalmente l’Intelligenza Artificiale.
+
+Quando ha senso dal punto di vista grafico, valorizza visivamente “IA” all’interno della parola ACCELERIAMO attraverso il colore principale del brand.
+
+Esempio concettuale:
+
+ACCELER + IA + MO
+
+Non separare però il nome in modo tale da renderlo difficile da leggere.
+
+Il nome deve continuare a essere percepito immediatamente come ACCELERIAMO.
+
+POSIZIONAMENTO
+
+ACCELERIAMO è un’agenzia specializzata nella trasformazione dei processi aziendali delle PMI.
+
+Non vende genericamente “intelligenza artificiale”.
+
+Non vende chatbot.
+
+Non vende tecnologia fine a sé stessa.
+
+ACCELERIAMO entra nei processi aziendali, osserva come circola il lavoro, individua attività ripetitive, passaggi manuali, attese, duplicazioni, errori e informazioni sparse.
+
+Poi interviene attraverso:
+
+automazione dei processi aziendali
+
+Intelligenza Artificiale inserita nei processi
+
+integrazione tra software esistenti
+
+gestione intelligente di email e documenti
+
+automazione delle attività amministrative e commerciali
+
+estrazione e classificazione automatica dei dati
+
+workflow approvativi
+
+reportistica automatica
+
+agenti IA quando hanno una funzione operativa concreta
+
+software personalizzato
+
+applicazioni web interne
+
+dashboard
+
+strumenti verticali sviluppati intorno al processo del cliente
+
+TARGET
+
+Il target principale sono le PMI italiane.
+
+Parliamo principalmente con:
+
+imprenditori
+
+titolari d’azienda
+
+responsabili amministrativi
+
+responsabili commerciali
+
+responsabili operations
+
+responsabili IT di PMI
+
+responsabili di funzione
+
+Non progettare il sito per sviluppatori.
+
+Non impostare la comunicazione come un sito developer-first.
+
+Il cliente deve comprendere il valore anche se non conosce termini come API, webhook, RAG, LLM, n8n, MCP o vector database.
+
+La tecnologia resta dietro il risultato.
+
+IDEA CENTRALE
+
+Il sito deve comunicare questo concetto:
+
+ACCELERIAMO non parte dall’IA.
+
+ACCELERIAMO parte dal lavoro.
+
+Prima studiamo il processo.
+
+Poi decidiamo dove automazione, software e Intelligenza Artificiale producono un vantaggio concreto.
+
+Il messaggio implicito deve essere:
+
+“Non devi capire l’IA. Devi capire quanto lavoro inutile stai facendo oggi.”
+
+OBIETTIVO COMMERCIALE DEL SITO
+
+Il sito deve trasformare un imprenditore curioso in un contatto commerciale qualificato.
+
+La conversione principale non deve essere:
+
+“Richiedi una demo”.
+
+ACCELERIAMO non vende un prodotto standard.
+
+La CTA principale deve ruotare intorno all’analisi di un processo aziendale.
+
+Usa una CTA come:
+
+“Analizziamo un tuo processo”
+
+oppure:
+
+“Raccontaci un processo”
+
+oppure una formula equivalente, breve e concreta.
+
+L’utente deve percepire che il primo passo consiste nel raccontare:
+
+cosa fa oggi
+
+chi interviene
+
+quali strumenti usa
+
+dove perde tempo
+
+dove nascono errori
+
+quali attività vengono ripetute
+
+quali passaggi vorrebbe ridurre
+
+IDENTITÀ VISIVA
+
+Usa rigorosamente questa palette.
+
+Colore principale:
+
+#FF5A1F
+
+È il colore distintivo di ACCELERIAMO.
+
+Usalo per:
+
+CTA principali
+
+stati attivi
+
+frecce nei workflow
+
+piccoli dettagli
+
+numeri importanti
+
+indicatori
+
+elementi del logo
+
+accenti
+
+evidenziazione della parte “IA” del nome, quando graficamente opportuno
+
+Non usarlo come grande superficie dominante.
+
+Secondo colore:
+
+#1D1B19
+
+Nero caldo.
+
+Usalo per:
+
+titoli
+
+navigazione
+
+footer
+
+testo ad alta priorità
+
+elementi strutturali
+
+Sfondo principale:
+
+#FFFDF8
+
+Bianco caldo.
+
+Deve essere il colore prevalente delle pagine.
+
+Sfondo secondario:
+
+#F6F2EB
+
+Usalo per:
+
+card
+
+sezioni alternate
+
+diagrammi
+
+casi studio
+
+blocchi di contenuto
+
+Testo secondario:
+
+#625E58
+
+Usalo per paragrafi, descrizioni e testi secondari.
+
+Bordi e separatori:
+
+#DED9D0
+
+Usalo per:
+
+linee
+
+bordi card
+
+separatori
+
+connessioni dei diagrammi non attive
+
+Colore funzionale:
+
+#3F6F65
+
+Verde petrolio poco saturo.
+
+Non deve diventare un secondo colore principale del brand.
+
+Usalo esclusivamente per indicare:
+
+processo completato
+
+risultato
+
+risparmio
+
+output
+
+successo
+
+stato positivo
+
+processo attivo completato
+
+PALETTE COMPLETA
+
+#FF5A1F
+#1D1B19
+#FFFDF8
+#F6F2EB
+#625E58
+#DED9D0
+#3F6F65
+
+Non aggiungere altri colori di marca senza una ragione funzionale.
+
+STILE VISIVO
+
+Lo stile deve essere moderno, maturo, leggibile e orientato al B2B.
+
+Deve comunicare:
+
+ordine
+
+controllo
+
+movimento
+
+riduzione del lavoro manuale
+
+capacità tecnica
+
+affidabilità
+
+chiarezza
+
+Non deve sembrare:
+
+una startup crypto
+
+una software house per programmatori
+
+un sito cyberpunk
+
+un laboratorio futuristico
+
+una generica agenzia IA
+
+una landing page costruita con un template SaaS
+
+EVITA ASSOLUTAMENTE
+
+cervelli digitali
+
+robot
+
+umanoidi
+
+figure davanti a ologrammi
+
+mani che toccano interfacce futuristiche
+
+circuiti elettronici decorativi
+
+reti neurali astratte
+
+sfere 3D
+
+globi luminosi
+
+gradienti viola
+
+gradienti blu-violetto
+
+effetti neon
+
+stelle
+
+particelle
+
+sfondi “AI futuristic”
+
+illustrazioni stock sull’Intelligenza Artificiale
+
+icone casuali di robot
+
+grandi blocchi di codice usati come decorazione
+
+IL PROTAGONISTA VISIVO DEVE ESSERE IL PROCESSO
+
+Il linguaggio grafico proprietario di ACCELERIAMO deve rappresentare il modo in cui il lavoro passa da uno stato al successivo.
+
+Esempio:
+
+Richiesta cliente
+
+↓
+
+Email ricevuta
+
+↓
+
+IA comprende il contenuto
+
+↓
+
+Informazioni estratte
+
+↓
+
+Dati aggiornati
+
+↓
+
+Operatore controlla
+
+↓
+
+Risposta inviata
+
+Questo tipo di visual deve diventare uno degli elementi distintivi del sito.
+
+ACCELERIAMO deve rappresentare prima il lavoro e poi gli strumenti.
+
+Quindi evita di impostare ogni workflow come:
+
+Gmail → ChatGPT → Excel → CRM.
+
+Preferisci:
+
+Richiesta → Lettura → Controllo → Decisione → Aggiornamento → Risposta.
+
+Gli strumenti software coinvolti possono apparire in secondo livello, con piccole icone o label.
+
+Il visitatore deve comprendere il processo anche senza conoscere i software.
+
+PRINCIPIO DI COMUNICAZIONE
+
+Un imprenditore non compra:
+
+n8n
+
+API
+
+webhook
+
+LLM
+
+database vettoriali
+
+prompt
+
+integrazioni
+
+Compra risultati come:
+
+una richiesta cliente gestita in pochi passaggi
+
+un documento letto senza ricopiare dati
+
+un preventivo preparato più rapidamente
+
+un CRM aggiornato senza inserimenti manuali
+
+un controllo fatto automaticamente
+
+un report pronto ogni mattina
+
+un’attività amministrativa che non occupa più una persona per ore
+
+un passaggio tra quattro persone ridotto a un controllo finale
+
+Ogni sezione del sito deve seguire questa logica.
+
+COPY
+
+Scrivi in italiano.
+
+Usa un linguaggio diretto.
+
+Frasi brevi.
+
+Evita gergo tecnico quando non serve.
+
+Evita formule generiche come:
+
+“Portiamo la tua azienda nel futuro”
+
+“Trasformiamo il tuo business con l’AI”
+
+“Soluzioni innovative”
+
+“Innovazione digitale a 360 gradi”
+
+“Il futuro è già qui”
+
+“Potenzia il tuo business”
+
+“Rivoluziona il modo di lavorare”
+
+Non usare slogan vaghi.
+
+Parla di attività concrete.
+
+Esempio corretto:
+
+“Se una persona copia ogni giorno gli stessi dati da una mail al gestionale, quel passaggio va analizzato.”
+
+Esempio sbagliato:
+
+“L’IA trasforma il futuro della tua azienda.”
+
+CONCETTO HERO
+
+Costruisci una hero forte e semplice.
+
+Possibile headline:
+
+“Prima il processo.
+Poi l’Intelligenza Artificiale.”
+
+Oppure:
+
+“Il lavoro ripetitivo non dovrebbe occupare le tue persone.”
+
+Scegli la soluzione che funziona meglio nel layout finale.
+
+Sottotitolo concettuale:
+
+“Analizziamo come lavora la tua azienda. Automatizziamo i passaggi ripetitivi, inseriamo l’IA dove genera un vantaggio concreto e sviluppiamo software quando manca lo strumento giusto.”
+
+CTA primaria:
+
+“Analizziamo un tuo processo”
+
+CTA secondaria:
+
+“Guarda come lavoriamo”
+
+Nella hero inserisci un visual animato o interattivo che rappresenti un processo aziendale.
+
+Non usare una foto stock.
+
+Esempio visual:
+
+Richiesta cliente
+
+→
+
+IA legge
+
+→
+
+Dati organizzati
+
+→
+
+Gestionale aggiornato
+
+→
+
+Controllo umano
+
+→
+
+Risposta
+
+Su desktop il workflow può essere orizzontale.
+
+Su mobile deve diventare verticale.
+
+STRUTTURA HOMEPAGE
+
+Costruisci la homepage con questa logica.
+
+1. HEADER
+
+Logo ACCELERIAMO.
+
+Menu semplice.
+
+Possibili voci:
+
+Cosa facciamo
+Come lavoriamo
+Esempi
+Software su misura
+Chi siamo
+Contatti
+
+CTA:
+
+“Analizziamo un processo”
+
+Header pulito.
+
+Sticky quando utile.
+
+Su mobile menu hamburger.
+
+2. HERO
+
+Headline forte.
+
+Sottotitolo.
+
+CTA primaria.
+
+CTA secondaria.
+
+Workflow visuale.
+
+La parte “IA” di ACCELERIAMO può avere #FF5A1F.
+
+3. SEZIONE PROBLEMA
+
+Titolo concettuale:
+
+“Dove si perde tempo in azienda?”
+
+Mostra casi reali e riconoscibili.
+
+Esempi:
+
+dati copiati da una mail a Excel
+
+informazioni reinserite nel gestionale
+
+documenti letti uno a uno
+
+preventivi preparati manualmente
+
+richieste commerciali smistate a mano
+
+report preparati ogni settimana
+
+file sparsi tra email, cartelle ed Excel
+
+controlli ripetitivi
+
+follow-up dimenticati
+
+ordini inseriti manualmente
+
+Non trasformare questa sezione in una lista piatta, ma non sovraccaricarla.
+
+Usa pochi blocchi editoriali ampi. Ogni blocco deve comunicare una sola situazione, con un titolo, una frase breve e un visual leggibile.
+
+4. MANIFESTO OPERATIVO
+
+Titolo:
+
+“Non partiamo dall’IA.
+Partiamo dal lavoro.”
+
+Spiega in poche righe il metodo.
+
+La tecnologia viene scelta dopo aver compreso il processo.
+
+5. COME LAVORIAMO
+
+Visualizza il metodo come sequenza.
+
+1. Osserviamo
+
+2. Mappiamo
+
+3. Individuiamo i passaggi ripetitivi
+
+4. Automatizziamo
+
+5. Inseriamo l’IA dove serve
+
+6. Colleghiamo gli strumenti
+
+7. Sviluppiamo ciò che manca
+
+8. Misuriamo il risultato
+
+Questa sezione deve essere fortemente visuale.
+
+6. TRE AREE PRINCIPALI
+
+Tre grandi blocchi.
+
+AUTOMAZIONE DEI PROCESSI
+
+Descrizione:
+
+“Colleghiamo attività, persone e strumenti per eliminare passaggi manuali e ripetitivi.”
+
+INTELLIGENZA ARTIFICIALE NEI PROCESSI
+
+Descrizione:
+
+“Inseriamo l’IA nei punti in cui deve leggere, classificare, estrarre, confrontare, sintetizzare, assistere o decidere secondo regole definite.”
+
+SOFTWARE SU MISURA
+
+Descrizione:
+
+“Quando gli strumenti standard non seguono il processo, sviluppiamo l’applicazione intorno al lavoro dell’azienda.”
+
+Ogni blocco deve avere un solo esempio visuale concreto e dominante. Evita di sommare nello stesso blocco liste, legende, badge, pulsanti e microcopy.
+
+7. PRIMA E DOPO
+
+Sezione chiave.
+
+Mostra un processo prima dell’intervento.
+
+Esempio:
+
+PRIMA
+
+Richiesta cliente
+
+→ persona legge email
+
+→ copia dati
+
+→ apre Excel
+
+→ aggiorna gestionale
+
+→ passa informazione
+
+→ altra persona controlla
+
+→ risposta
+
+DOPO
+
+Richiesta cliente
+
+→ sistema interpreta
+
+→ dati estratti
+
+→ gestionale aggiornato
+
+→ operatore controlla
+
+→ risposta
+
+Non promettere percentuali inventate.
+
+Mostra il cambiamento del processo.
+
+8. ESEMPI DI AUTOMAZIONI
+
+Costruisci una griglia di esempi concreti.
+
+Categorie:
+
+Commerciale
+
+Amministrazione
+
+Customer service
+
+Acquisti
+
+Operations
+
+Documenti
+
+Management
+
+Distribuisci queste informazioni nel componente senza trasformarlo in una scheda tecnica densa. Mostra in primo piano soltanto:
+
+situazione iniziale
+
+risultato
+
+Il ruolo dell’IA e l’intervento umano residuo possono apparire come una sola nota breve o nel dettaglio espandibile.
+
+9. IA CON CONTROLLO UMANO
+
+Questa sezione è importante per le PMI.
+
+Spiega che ACCELERIAMO non cerca di eliminare ogni intervento umano.
+
+L’obiettivo è lasciare alle persone:
+
+controllo
+
+decisioni importanti
+
+eccezioni
+
+relazione
+
+attività ad alto valore
+
+E affidare al sistema:
+
+ricerca
+
+classificazione
+
+trasferimento dati
+
+preparazione
+
+controlli ripetitivi
+
+raccolta informazioni
+
+prima elaborazione
+
+10. SOFTWARE SU MISURA
+
+Spiega quando ha senso sviluppare software personalizzato.
+
+Esempio:
+
+“Non sempre serve un nuovo software.
+
+Prima verifichiamo ciò che esiste.
+
+Se gli strumenti attuali non riescono a seguire il processo, sviluppiamo il componente necessario.”
+
+Mostra esempi:
+
+dashboard
+
+portali interni
+
+gestione commesse
+
+configuratori
+
+applicazioni operative
+
+gestione richieste
+
+sistemi documentali
+
+strumenti commerciali
+
+11. INTEGRAZIONI
+
+Qui puoi mostrare software e piattaforme conosciute.
+
+Mantieni però gli strumenti in secondo piano rispetto al processo.
+
+Potrebbero apparire:
+
+Microsoft 365
+
+Google Workspace
+
+Gmail
+
+Outlook
+
+Excel
+
+Google Sheets
+
+CRM
+
+ERP
+
+gestionali
+
+WhatsApp
+
+database
+
+API
+
+OpenAI
+
+Claude
+
+Gemini
+
+Make
+
+n8n
+
+Zapier
+
+Non presentare ACCELERIAMO come rivenditore di questi strumenti.
+
+Il messaggio deve essere:
+
+“Lavoriamo con ciò che la tua azienda usa già.”
+
+12. CASI STUDIO
+
+Predisponi il componente per casi studio.
+
+Ogni caso deve contenere:
+
+azienda o settore
+
+problema
+
+processo iniziale
+
+intervento
+
+ruolo dell’IA
+
+automazione
+
+software coinvolto
+
+risultato
+
+metriche quando disponibili
+
+Se non esistono ancora casi reali, usa placeholder dichiarati nel codice e non inventare testimonianze, clienti o risultati.
+
+13. CTA FINALE
+
+Headline:
+
+“Quale processo ti fa perdere più tempo?”
+
+Testo:
+
+“Raccontacelo. Partiamo da lì.”
+
+CTA:
+
+“Analizziamo un processo”
+
+Questa CTA deve essere semplice e forte.
+
+14. FOOTER
+
+Logo.
+
+Claim breve.
+
+Contatti.
+
+Privacy.
+
+Cookie.
+
+LinkedIn.
+
+Informazioni societarie predisposte come placeholder.
+
+DESIGN SYSTEM
+
+Deriva da @DESIGN.md:
+
+ritmo
+
+dimensioni
+
+gerarchie
+
+componenti
+
+responsiveness
+
+densità
+
+approccio alle card
+
+CTA
+
+layout
+
+Ma applica sempre la palette ACCELERIAMO. Se una regola di forma, tipografia o densità di questo file diverge da @DESIGN.md, prevale @DESIGN.md.
+
+Usa bordi sottili.
+
+Ombre minime.
+
+Raggio canonico di card e pulsanti: 12px, come indicato in @DESIGN.md.
+
+Usa 6px per controlli e componenti interni più piccoli.
+
+Usa raggi completamente arrotondati solo per badge, tag e indicatori circolari.
+
+Evita card eccessivamente tonde.
+
+Evita pill ovunque.
+
+Usa pill per tag e label, non per ogni componente.
+
+TIPOGRAFIA
+
+Segui il sistema tipografico di @DESIGN.md.
+
+Usa Degular Display medium per headline, display ed eyebrow quando il font è legalmente disponibile.
+
+Quando Degular Display non è disponibile, usa Mona Sans medium come sostituto open source suggerito dalla reference; Inter medium è il fallback successivo.
+
+Usa Inter per corpo, navigazione, pulsanti, label e UI.
+
+Non usare Manrope.
+
+Includi i font nel progetto e non affidarti alla loro presenza nel sistema operativo dell’utente.
+
+Gerarchia indicativa desktop:
+
+Hero:
+56-64px
+
+H2:
+40-44px
+
+H3:
+26-32px
+
+Body principale:
+18px
+
+Body:
+16px
+
+Label:
+13-14px
+
+Mobile:
+
+Hero:
+36-40px
+
+H2:
+30-32px
+
+H3:
+22-26px
+
+Body:
+16-17px
+
+Usa line-height generoso.
+
+Non comprimere il testo.
+
+DENSITÀ DEI CONTENUTI
+
+Ogni sezione deve avere un messaggio dominante comprensibile in pochi secondi.
+
+Ogni card deve contenere idealmente un titolo, una frase e un visual oppure un singolo dato. Evita di inserire contemporaneamente liste, legende, badge, CTA, numeri, icone e note nello stesso contenitore.
+
+Preferisci blocchi editoriali ampi, molto spazio interno e visual grandi. Se un contenuto richiede molte righe o attributi, spostalo in una sezione dedicata o rendilo progressivamente accessibile.
+
+Non usare griglie da tre colonne quando rendono il testo compresso. Due colonne ampie sono preferibili per contenuti complessi.
+
+BACKGROUND E ASSET
+
+Le grandi aree visuali possono usare asset raster originali generati appositamente, con texture tattili, griglie leggere, piani traslucidi e direzioni di movimento.
+
+Gli asset devono rispettare rigorosamente la palette ACCELERIAMO e restare astratti, sobri e orientati al processo.
+
+Per evitare un aspetto standard, crea anche illustrazioni editoriali originali per servizi e passaggi chiave: oggetti tattili, documenti, moduli, contenitori e percorsi che rendano visibile il lavoro che cambia.
+
+Le icone funzionali piccole devono restare semplici e coerenti; non sostituirle con immagini raster poco leggibili. Usa gli asset generati come elementi editoriali dominanti, non come decorazioni sparse.
+
+Non usare gradienti CSS generici come riempitivo principale quando una superficie editoriale dedicata comunica meglio il brand.
+
+Ottimizza gli asset in WebP o AVIF, usa dimensioni appropriate e lazy loading fuori dalla hero.
+
+RESPONSIVE
+
+Il sito deve essere progettato mobile-first.
+
+Non limitarti a ridimensionare il desktop.
+
+Desktop e mobile devono raccontare lo stesso contenuto con strutture adeguate allo spazio.
+
+Desktop:
+
+workflow principalmente orizzontali
+
+griglie a 3 colonne quando leggibili
+
+ampie aree bianche
+
+visual processuali estesi
+
+Mobile:
+
+workflow verticali
+
+una card per riga
+
+CTA larghe
+
+menu hamburger
+
+testi leggibili senza zoom
+
+nessun diagramma con elementi minuscoli
+
+nessun overflow orizzontale accidentale
+
+nessuna tabella larga non gestita
+
+Mantieni touch target adeguati.
+
+Cura breakpoint tablet.
+
+ANIMAZIONI
+
+Usa animazioni leggere e funzionali.
+
+Le animazioni devono spiegare il processo.
+
+Esempio:
+
+arriva una richiesta
+
+si attiva un nodo
+
+l’IA legge
+
+i dati si spostano
+
+un’attività viene completata
+
+si attiva il controllo umano
+
+compare l’output
+
+Non aggiungere movimento decorativo senza funzione.
+
+Rispetta prefers-reduced-motion.
+
+ACCESSIBILITÀ
+
+Mantieni contrasto adeguato.
+
+Usa HTML semantico.
+
+Cura:
+
+focus states
+
+navigazione da tastiera
+
+aria-label
+
+testi alternativi
+
+form label
+
+contrasti
+
+dimensione font
+
+reduced motion
+
+PERFORMANCE
+
+Il sito deve essere veloce.
+
+Evita dipendenze pesanti senza necessità.
+
+Ottimizza:
+
+immagini
+
+font
+
+JavaScript
+
+animazioni
+
+bundle
+
+lazy loading
+
+Core Web Vitals
+
+SEO
+
+Predisponi correttamente:
+
+title
+
+meta description
+
+Open Graph
+
+Twitter cards
+
+canonical
+
+robots
+
+sitemap
+
+structured data quando pertinente
+
+heading hierarchy
+
+URL leggibili
+
+Contenuti server-rendered o staticamente renderizzati quando la tecnologia scelta lo consente.
+
+TECNOLOGIA
+
+Analizza il repository prima di decidere.
+
+Se il progetto è vuoto, scegli uno stack moderno, stabile e mantenibile.
+
+Preferenza:
+
+Next.js
+
+TypeScript
+
+React
+
+CSS moderno oppure Tailwind se coerente con l’architettura
+
+Evita librerie UI che rendano il sito visivamente generico.
+
+Costruisci un piccolo design system proprietario.
+
+Componenti indicativi:
+
+Button
+
+Section
+
+Container
+
+ProcessFlow
+
+ProcessNode
+
+ServiceCard
+
+BeforeAfter
+
+CaseStudyCard
+
+Metric
+
+IntegrationBadge
+
+CTASection
+
+Header
+
+Footer
+
+ContactForm
+
+PROCESS FLOW COME COMPONENTE CENTRALE
+
+Il componente ProcessFlow deve essere uno degli elementi distintivi del progetto.
+
+Deve supportare:
+
+layout desktop orizzontale
+
+layout mobile verticale
+
+stati inactive
+
+stati active
+
+stati completed
+
+nodi IA
+
+nodi umani
+
+nodi sistema
+
+output
+
+connessioni
+
+microanimazioni
+
+Usa:
+
+#FF5A1F per attività, movimento e IA
+
+#3F6F65 per completamento e risultato
+
+#DED9D0 per connessioni inattive
+
+#1D1B19 per testo e nodi principali
+
+FORM DI CONTATTO
+
+Il form non deve chiedere genericamente:
+
+Nome
+Email
+Messaggio
+
+Deve aiutare il prospect a descrivere un processo.
+
+Campi consigliati:
+
+Nome
+
+Azienda
+
+Email
+
+Ruolo
+
+Quale attività vuoi migliorare?
+
+Come viene gestita oggi?
+
+Quante persone intervengono?
+
+Quali strumenti usate?
+
+Quanto spesso viene svolta?
+
+Qual è il problema principale?
+
+Campo libero aggiuntivo
+
+Non rendere obbligatori troppi campi.
+
+CTA:
+
+“Raccontaci il processo”
+
+TONO DEL BRAND
+
+ACCELERIAMO deve sembrare:
+
+competente
+
+concreto
+
+vicino alle PMI
+
+tecnico senza tecnicismi inutili
+
+pragmatico
+
+orientato ai processi
+
+orientato ai risultati
+
+Non deve sembrare:
+
+arrogante
+
+futurista
+
+criptico
+
+iper-tecnico
+
+una società che vuole sostituire tutte le persone con l’IA
+
+una consulenza fatta di slide
+
+una startup che vive di buzzword
+
+MICROCOPY
+
+Preferisci formule come:
+
+“Qui oggi interviene una persona.”
+
+“Questo passaggio si ripete 40 volte al giorno.”
+
+“Il sistema prepara. Tu controlli.”
+
+“L’IA legge il documento. L’operatore gestisce l’eccezione.”
+
+“Se il processo funziona già, non lo tocchiamo.”
+
+“Se un passaggio non serve, lo eliminiamo prima di automatizzarlo.”
+
+“Automatizzare un processo sbagliato significa farlo sbagliare più velocemente.”
+
+Quest’ultima frase può diventare un elemento editoriale importante.
+
+PRINCIPIO FINALE
+
+Ogni volta che devi scegliere tra:
+
+mostrare tecnologia
+
+oppure
+
+mostrare il lavoro che cambia
+
+scegli il lavoro che cambia.
+
+Ogni volta che devi scegliere tra:
+
+un visual astratto sull’IA
+
+oppure
+
+un processo aziendale concreto
+
+scegli il processo.
+
+Ogni volta che devi scegliere tra:
+
+un termine tecnico
+
+oppure
+
+una spiegazione comprensibile a un imprenditore
+
+scegli la spiegazione comprensibile.
+
+ACCELERIAMO deve far percepire che l’Intelligenza Artificiale è una componente del sistema.
+
+Non è il sistema.
+
+Il sistema è il processo aziendale migliorato.
+
+IMPLEMENTAZIONE
+
+Procedi direttamente con il progetto.
+
+1. Analizza @DESIGN.md.
+
+2. Analizza eventuali file già presenti nel repository.
+
+3. Definisci architettura e componenti.
+
+4. Definisci i design token con la palette ACCELERIAMO.
+
+5. Implementa la homepage completa.
+
+6. Implementa responsive desktop, tablet e mobile.
+
+7. Implementa ProcessFlow e relative animazioni.
+
+8. Implementa il form orientato all’analisi del processo.
+
+9. Inserisci contenuti italiani coerenti con questo brief.
+
+10. Evita lorem ipsum.
+
+11. Cura stati hover, active, focus e mobile.
+
+12. Controlla accessibilità.
+
+13. Controlla performance.
+
+14. Controlla che non siano presenti overflow o problemi responsive.
+
+15. Controlla che il sito non sembri una copia della reference.
+
+16. Controlla che la palette sia rispettata.
+
+17. Controlla che la parte “IA” del nome ACCELERIAMO riceva un trattamento visivo riconoscibile ma leggibile.
+
+18. Esegui build, lint e controlli disponibili nel progetto.
+
+19. Correggi eventuali errori.
+
+20. Lascia il progetto in uno stato funzionante e pronto per essere eseguito.
+
+Non fermarti alla progettazione o a un mockup.
+
+Realizza il sito funzionante.
