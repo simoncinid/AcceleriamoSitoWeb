@@ -113,20 +113,17 @@ export function ExampleVisual({ index }: { index: number }) {
 }
 
 export function EvidenceVisual() {
-  return <MotionScene className={styles.evidenceStage} label="Confronto tra gestione manuale e automatizzata">
-    <div className={styles.evidenceHeader}><span>Un esempio misurabile</span><strong>Preparazione di un preventivo</strong></div>
-    <div className={styles.evidenceComparison}>
-      <article className={`${styles.evidencePanel} ${styles.evidenceBefore}`}>
-        <div className={styles.evidenceArtwork} role="img" aria-label="Richieste, fogli e preventivi gestiti manualmente" />
-        <div><span>Prima</span><strong>Manuale</strong><p><Icon name="clock" size={14} /> Molto tempo <b>·</b> <i>errori</i></p></div>
-      </article>
-      <span className={styles.evidenceArrow} aria-hidden="true"><Icon name="arrow" size={22} /></span>
-      <article className={`${styles.evidencePanel} ${styles.evidenceAfter}`}>
-        <div className={styles.evidenceArtwork} role="img" aria-label="Preventivo preparato automaticamente e verificato" />
-        <div><span>Dopo</span><strong>Automatizzato</strong><p><Icon name="clock" size={14} /> Veloce <b>·</b> <i><Icon name="check" size={14} /> 0 errori</i></p></div>
-      </article>
-    </div>
-  </MotionScene>;
+  return <section className={styles.evidenceStage} aria-label="Confronto tra gestione manuale e automatizzata">
+    <p className={styles.evidenceLabel}>Esempio: preparazione di un preventivo</p>
+    <figure className={styles.evidenceBefore}>
+      <span className={styles.evidenceArtwork} role="img" aria-label="Richieste, fogli e preventivi gestiti manualmente" />
+      <figcaption><small>Prima</small><strong>Manuale</strong><p>X errori <b>·</b> X minuti</p></figcaption>
+    </figure>
+    <figure className={styles.evidenceAfter}>
+      <span className={styles.evidenceArtwork} role="img" aria-label="Preventivo preparato automaticamente e verificato" />
+      <figcaption><small>Dopo</small><strong>Automatizzato</strong><p>0 errori <b>·</b> Y minuti</p></figcaption>
+    </figure>
+  </section>;
 }
 
 export function ProblemVisual({ type, label }: { type: "inbox" | "duplicate" | "waiting" | "scattered"; label: string }) {
