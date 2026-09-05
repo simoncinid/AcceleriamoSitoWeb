@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import { Icon } from "./Icons";
+import { LEGAL_VERSION } from "@/lib/legal";
 
 type FormState = "idle" | "sending" | "success" | "error";
 
@@ -57,7 +58,10 @@ export function ContactForm() {
         </div>
         <label><span>Quali strumenti usate?</span><input name="tools" placeholder="Es. Excel, Outlook" /></label>
       </details>
-      <label className="privacy-check"><input type="checkbox" name="privacy" value="accepted" required /><span>Chiedo di essere ricontattato per la consulenza gratuita sul caso descritto. <RequiredDot /></span></label>
+      <p className="form-privacy-note">Useremo i tuoi dati per gestire la richiesta e ricontattarti. Nessuna iscrizione a newsletter. Non inserire dati sensibili, password o dati personali di terzi non necessari.</p>
+      <label className="privacy-check"><input type="checkbox" name="privacy" value="accepted" required /><span>Ho letto l’<a href="/privacy-policy" target="_blank" rel="noopener noreferrer">informativa privacy</a> e chiedo di essere ricontattato per la consulenza gratuita.</span></label>
+      <label className="privacy-check"><input type="checkbox" name="terms" value="accepted" required /><span>Ho letto e accetto i <a href="/termini-e-condizioni" target="_blank" rel="noopener noreferrer">termini e le condizioni</a> del sito e della richiesta di consulenza gratuita.</span></label>
+      <input type="hidden" name="legalVersion" value={LEGAL_VERSION} />
       <input className="honeypot" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" />
       <div className="form-submit">
         <button className="button button--primary" type="submit" disabled={state === "sending"}>

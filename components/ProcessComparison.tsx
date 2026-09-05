@@ -295,7 +295,7 @@ export function ProcessComparison() {
           <div className={styles.heading}>
             <span className={styles.label}>Dopo</span>
             <h3>La bozza è pronta <span className="accent">da controllare.</span></h3>
-            <p>Articoli, quantità e prezzi sono già nella bozza. I dati mancanti sono segnalati.</p>
+            <p>Articoli, quantità e prezzi sono già nella bozza.</p>
           </div>
           <div className={styles.stage}>
             <span className={styles.halo} aria-hidden="true" />

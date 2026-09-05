@@ -1,4 +1,4 @@
-import { Brand } from "@/components/Brand";
+import { Footer } from "@/components/Footer";
 import { ContactForm } from "@/components/ContactForm";
 import { Header } from "@/components/Header";
 import { ProcessComparison } from "@/components/ProcessComparison";
@@ -187,15 +187,6 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="section cases" id="casi-studio">
-          <div className="container case-card">
-            <div className="case-card__intro">
-              <div><p className="eyebrow"><span className="signal-square" />Come misuriamo</p><h2>Quanto tempo serve oggi?{" "}<br /><span className="accent">E dopo il nostro intervento?</span></h2></div>
-            <p>Confrontiamo tempo impiegato e dati da correggere: prima e dopo la soluzione.</p>
-            </div>
-          </div>
-        </section>
-
         <section className="section contact-section" id="contatti">
           <div className="container contact-grid">
             <div className="contact-copy"><p className="eyebrow eyebrow--light">Il primo passo è gratuito</p><h2>Richiedi una <span className="accent">consulenza gratuita.</span></h2><p>Descrivi il problema. Ti ricontattiamo per analizzarlo insieme.</p></div>
@@ -204,12 +195,7 @@ export default function Home() {
         </section>
       </main>
 
-      <footer className="site-footer">
-        <div className="container">
-          <div className="footer-main"><div><Brand light /><p>Soluzioni su misura, supporto e manutenzione per le PMI.</p></div><div className="footer-links"><a href="#servizi">Cosa facciamo</a><a href="#metodo">Come lavoriamo</a><a href="#chi-siamo">Chi siamo</a><a href="#contatti">Richiedi una consulenza gratuita</a></div></div>
-          <div className="footer-bottom"><span>© {new Date().getFullYear()} ACCELERIAMO · Dati societari da inserire</span><div><span>Privacy da pubblicare</span><span>Cookie da pubblicare</span></div></div>
-        </div>
-      </footer>
+      <Footer />
     </>
   );
 }

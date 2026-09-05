@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
+import { LEGAL_VERSION, PRIVACY_ACKNOWLEDGEMENT, TERMS_ACKNOWLEDGEMENT } from "@/lib/legal";
 
 type ContactBody = Record<string, unknown>;
 
@@ -36,14 +37,23 @@ function buildEmailText(body: ContactBody) {
     optional.forEach(([label, value]) => lines.push(`${label}: ${value}`));
   }
 
-  lines.push("", `Inviato il: ${new Date().toLocaleString("it-IT", { timeZone: "Europe/Rome" })}`);
+  lines.push("", "Dichiarazioni del richiedente:",
+    `Privacy: ${PRIVACY_ACKNOWLEDGEMENT}`,
+    `Termini: ${TERMS_ACKNOWLEDGEMENT}`,
+    `Versione documenti: ${LEGAL_VERSION}`,
+    "Documenti: /privacy-policy · /termini-e-condizioni",
+    `Ricevuto dal server il: ${new Date().toISOString()}`);
   return lines.join("\n");
 }
 
 export async function POST(request: Request) {
   let body: ContactBody;
   try {
-    body = await request.json();
+    const parsed: unknown = await request.json();
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+      return NextResponse.json({ message: "Dati non validi." }, { status: 400 });
+    }
+    body = parsed as ContactBody;
   } catch {
     return NextResponse.json({ message: "Dati non validi." }, { status: 400 });
   }
@@ -56,8 +66,16 @@ export async function POST(request: Request) {
   const activity = asString(body.activity);
   const currentProcess = asString(body.currentProcess);
 
-  if (!name || !company || !email || !activity || !currentProcess || body.privacy !== "accepted") {
+  if (!name || !company || !email || !activity || !currentProcess) {
     return NextResponse.json({ message: "Completa i campi obbligatori." }, { status: 422 });
+  }
+
+  if (body.privacy !== "accepted" || body.terms !== "accepted") {
+    return NextResponse.json({ message: "Conferma di aver letto l’informativa privacy e di accettare i termini e le condizioni." }, { status: 422 });
+  }
+
+  if (body.legalVersion !== LEGAL_VERSION) {
+    return NextResponse.json({ message: "I documenti legali sono stati aggiornati. Ricarica la pagina, leggili e invia nuovamente la richiesta." }, { status: 409 });
   }
 
   if (!isValidEmail(email)) {

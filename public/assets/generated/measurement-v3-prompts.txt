@@ -1,0 +1,6 @@
+Built-in image_gen, transparent PNG assets.
+manual-v3: Isolated 3D clay messy cream paperwork, charcoal clock and red error cross. Compact centered group, no backdrop or words, real transparent alpha.
+auto-v3: Isolated 3D clay neat cream document, green checkmark, charcoal stopwatch and orange gear. Compact centered group, no backdrop or words, real transparent alpha.
+red-v3: Typography-only PNG asset for a website. REAL TRANSPARENT BACKGROUND alpha channel, no backdrop or checkerboard. Exactly two left-aligned lines: "3 errori" then "30 minuti". Large bold clean modern sans serif, solid #C93434. Text fills 85% of width. Landscape canvas 3:2. No icons, no decorations, no other text.
+green-v3: Typography-only PNG asset for a website. REAL TRANSPARENT BACKGROUND alpha channel, no backdrop or checkerboard. Exactly two left-aligned lines: "0 errori" then "2 minuti". Large bold clean modern sans serif, solid #24734D. Text fills 85% of width. Landscape canvas 3:2. No icons, no decorations, no other text.
+Illustrative values, not measured client results.
