@@ -12,6 +12,13 @@ function isValidEmail(value: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 }
 
+function isValidPhone(value: string) {
+  const compact = value.replace(/[\s./()-]/g, "");
+  if (!/^\+?[0-9]{8,15}$/.test(compact)) return false;
+  const digits = compact.replace(/\D/g, "");
+  return digits.length >= 8 && digits.length <= 15;
+}
+
 function buildEmailText(body: ContactBody) {
   const optional = [
     ["Ruolo", asString(body.role)],
@@ -20,17 +27,18 @@ function buildEmailText(body: ContactBody) {
     ["Strumenti usati", asString(body.tools)],
   ].filter(([, value]) => value);
 
+  const currentProcess = asString(body.currentProcess);
   const lines = [
-    "Nuova richiesta di consulenza gratuita da acceleriamo.it",
+    "Nuova richiesta di valutazione da acceleriamo.it",
     "",
     `Nome: ${asString(body.name)}`,
     `Azienda: ${asString(body.company)}`,
     `Email: ${asString(body.email)}`,
-    `Problema: ${asString(body.activity)}`,
-    "",
-    "Come lavorano oggi:",
-    asString(body.currentProcess),
+    `Telefono: ${asString(body.phone)}`,
+    `Cosa fa perdere più tempo: ${asString(body.activity)}`,
   ];
+
+  if (currentProcess) lines.push("", "Come lavorano oggi:", currentProcess);
 
   if (optional.length) {
     lines.push("", "Dettagli aggiuntivi:");
@@ -63,10 +71,10 @@ export async function POST(request: Request) {
   const name = asString(body.name);
   const company = asString(body.company);
   const email = asString(body.email);
+  const phone = asString(body.phone);
   const activity = asString(body.activity);
-  const currentProcess = asString(body.currentProcess);
 
-  if (!name || !company || !email || !activity || !currentProcess) {
+  if (!name || !company || !email || !phone || !activity) {
     return NextResponse.json({ message: "Completa i campi obbligatori." }, { status: 422 });
   }
 
@@ -80,6 +88,10 @@ export async function POST(request: Request) {
 
   if (!isValidEmail(email)) {
     return NextResponse.json({ message: "Inserisci un indirizzo email valido." }, { status: 422 });
+  }
+
+  if (!isValidPhone(phone)) {
+    return NextResponse.json({ message: "Inserisci un numero di telefono valido." }, { status: 422 });
   }
 
   const fromAddress = process.env.GMAIL_FROM_ADDRESS;
@@ -107,12 +119,12 @@ export async function POST(request: Request) {
       from: `"ACCELERIAMO" <${fromAddress}>`,
       to: toAddress,
       replyTo: `"${name}" <${email}>`,
-      subject: `Consulenza gratuita · ${company} · ${name}`,
+      subject: `Valutazione · ${company} · ${name}`,
       text: buildEmailText(body),
     });
 
     return NextResponse.json({
-      message: "Grazie! Abbiamo ricevuto la tua richiesta di consulenza gratuita. Ti ricontatteremo per concordare un appuntamento.",
+      message: "Grazie! Abbiamo ricevuto la tua richiesta. Ti contattiamo per approfondire e fissare una consulenza.",
     });
   } catch {
     return NextResponse.json({ message: "Invio temporaneamente non disponibile. Riprova tra poco." }, { status: 502 });

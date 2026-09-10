@@ -122,11 +122,11 @@ function Panel({ after = false, active = true, restartKey = 0, children }: { aft
 }
 
 const steps = [
-  { icon: "email", label: "Apre email e allegati" },
-  { icon: "document", label: "Cerca il listino del cliente" },
-  { icon: "database", label: "Ricopia i campi nel gestionale" },
-  { icon: "email", label: "Chiede i dati mancanti" },
-  { icon: "person", label: "Scrive il preventivo" },
+  { icon: "email", label: "Apre l’email e gli allegati" },
+  { icon: "document", label: "Cerca il listino di quel cliente" },
+  { icon: "database", label: "Ribatte i codici nel gestionale" },
+  { icon: "email", label: "Scrive per i dati che mancano" },
+  { icon: "person", label: "Rilegge e manda il preventivo" },
 ] as const;
 
 export function ProcessComparison() {
@@ -275,11 +275,11 @@ export function ProcessComparison() {
         <Panel active={!mobile || active === "before"} restartKey={restartKey}>
           <div className={styles.heading}>
             <span className={styles.label}>Prima</span>
-            <h3>Ogni articolo va <span className="accent">ricopiato.</span></h3>
-            <p>Il commerciale cerca codici e prezzi tra email, listino e gestionale.</p>
+            <h3>Ogni articolo lo ricopia <span className="accent">una persona.</span></h3>
+            <p>Il commerciale cerca codici, prezzi e disponibilità tra email, listino e gestionale.</p>
           </div>
           <div className={styles.stage}>
-            <div className={styles.stageLabel}><span className={styles.dot} /> Esempio: richiesta di preventivo</div>
+            <div className={styles.stageLabel}><span className={styles.dot} /> Esempio: 30 articoli richiesti via email</div>
             <ol className={styles.manual} aria-label="Passaggi manuali">
               {steps.map((step, index) => (
                 <li key={step.label} className={styles.step} style={{ "--shift": `${[0, 18, -8, 14, 0][index]}px` } as CSSProperties}>
@@ -289,31 +289,31 @@ export function ProcessComparison() {
               ))}
             </ol>
           </div>
-          <p className={styles.footer}><Icon name="repeat" size={18} /> Lo stesso percorso ricomincia con la richiesta successiva.</p>
+          <p className={styles.footer}><Icon name="repeat" size={18} /> Domani arriva un’altra richiesta e si ricomincia.</p>
         </Panel>
         <Panel after active={!mobile || active === "after"} restartKey={restartKey}>
           <div className={styles.heading}>
             <span className={styles.label}>Dopo</span>
-            <h3>La bozza è pronta <span className="accent">da controllare.</span></h3>
-            <p>Articoli, quantità e prezzi sono già nella bozza.</p>
+            <h3>Restano due righe <span className="accent">da controllare.</span></h3>
+            <p>Codici, quantità e prezzi sono già dentro la bozza.</p>
           </div>
           <div className={styles.stage}>
             <span className={styles.halo} aria-hidden="true" />
-            <div className={styles.stageLabel}><span className={styles.dot} /> Lo stesso caso, con gli strumenti collegati</div>
+            <div className={styles.stageLabel}><span className={styles.dot} /> Stessa richiesta, stesso gestionale</div>
             <div className={styles.automatic}>
               <span className={styles.sweep} aria-hidden="true" />
-              <div className={styles.systemLabel}><span>Il sistema</span><span className={styles.autoBadge}>Automatico</span></div>
+              <div className={styles.systemLabel}><span>Il software</span><span className={styles.autoBadge}>Da solo</span></div>
               <ol className={styles.systemSteps} aria-label="Passaggi automatici">
-                <li className={styles.step}><Artwork kind="document" /><span>Legge codici e quantità</span><Icon name="check" size={18} /></li>
-                <li className={styles.step}><Artwork kind="database" /><span>Compila la bozza nel gestionale</span><Icon name="check" size={18} /></li>
+                <li className={styles.step}><Artwork kind="document" /><span>Legge codici e quantità dall’allegato</span><Icon name="check" size={18} /></li>
+                <li className={styles.step}><Artwork kind="database" /><span>Scrive la bozza nel gestionale</span><Icon name="check" size={18} /></li>
               </ol>
             </div>
-            <div className={styles.handoff} aria-hidden="true"><span className={styles.track}><span /></span><span>Bozza e dati da verificare</span><Icon name="arrow" size={18} /></div>
+            <div className={styles.handoff} aria-hidden="true"><span className={styles.track}><span /></span><span>Bozza pronta, righe da controllare</span><Icon name="arrow" size={18} /></div>
             <div className={`${styles.review} ${styles.step}`}>
-              <Artwork kind="person" /><div><small>Il commerciale</small><strong>Valuta prezzo e condizioni</strong></div><span className={styles.reviewCheck}><Icon name="check" size={20} /></span>
+              <Artwork kind="person" /><div><small>Il commerciale</small><strong>Controlla il prezzo e invia</strong></div><span className={styles.reviewCheck}><Icon name="check" size={20} /></span>
             </div>
           </div>
-          <p className={styles.footer}><Icon name="shield" size={18} /> Il commerciale controlla e approva prima dell’invio.</p>
+          <p className={styles.footer}><Icon name="shield" size={18} /> Il prezzo sbagliato lo vedete prima di mandare l’offerta.</p>
         </Panel>
       </div>
     </div>

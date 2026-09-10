@@ -28,6 +28,7 @@ export function Icon({ name, size = 20 }: IconProps) {
     shield: <><path d="M12 3 5 6v5c0 4.6 2.8 8.1 7 10 4.2-1.9 7-5.4 7-10V6l-7-3Z"/><path d="m9 12 2 2 4-4"/></>,
     menu: <><path d="M4 7h16M4 12h16M4 17h16"/></>,
     chevron: <path d="m9 6 6 6-6 6"/>,
+    linkedin: <><rect x="3.5" y="3.5" width="17" height="17" rx="2"/><path d="M8 10.5V17M8 7.4v.01M12.2 17v-3.6a1.9 1.9 0 0 1 3.8 0V17"/></>,
   };
 
   return <svg {...common}>{paths[name] ?? paths.check}</svg>;

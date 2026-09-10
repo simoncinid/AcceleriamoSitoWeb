@@ -22,7 +22,7 @@ function setup(configured = true, fail = false) {
   }, configured ? { GMAIL_FROM_ADDRESS: 'from@example.test', GMAIL_TO_ADDRESS: 'to@example.test', GMAIL_APP_PASSWORD: 'mock' } : {});
   return { sent, post: (body) => route.POST(new Request('http://localhost/api/contact', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })) };
 }
-const valid = { name: 'Test', company: 'Test Srl', email: 'test@example.test', activity: 'Preventivi', currentProcess: 'Excel', privacy: 'accepted', terms: 'accepted', legalVersion: legal.LEGAL_VERSION };
+const valid = { name: 'Test', company: 'Test Srl', email: 'test@example.test', phone: '+39 333 123 4567', activity: 'Preventivi', currentProcess: 'Excel', privacy: 'accepted', terms: 'accepted', legalVersion: legal.LEGAL_VERSION };
 test('rifiuta ciascuna dichiarazione assente o falsificata senza inviare email', async () => {
   const { post, sent } = setup();
   for (const field of ['privacy', 'terms']) {
@@ -44,6 +44,7 @@ test('invio valido registra versione, dichiarazioni e data server con SMTP simul
   assert.ok(sent[0].text.includes(legal.LEGAL_VERSION));
   assert.ok(sent[0].text.includes(legal.PRIVACY_ACKNOWLEDGEMENT));
   assert.ok(sent[0].text.includes(legal.TERMS_ACKNOWLEDGEMENT));
+  assert.ok(sent[0].text.includes('+39 333 123 4567'));
   assert.match(sent[0].text, /Ricevuto dal server il: \d{4}-\d{2}-\d{2}T/);
 });
 test('JSON di tipo errato, campi mancanti e honeypot non inviano', async () => {
@@ -51,6 +52,8 @@ test('JSON di tipo errato, campi mancanti e honeypot non inviano', async () => {
   for (const value of [null, [], 'string']) assert.equal((await post(value)).status, 400);
   assert.equal((await post({ ...valid, email: 'invalid' })).status, 422);
   assert.equal((await post({ ...valid, name: '' })).status, 422);
+  assert.equal((await post({ ...valid, phone: '' })).status, 422);
+  assert.equal((await post({ ...valid, phone: 'abc' })).status, 422);
   assert.equal((await post({ ...valid, website: 'spam' })).status, 200);
   assert.equal(sent.length, 0);
 });

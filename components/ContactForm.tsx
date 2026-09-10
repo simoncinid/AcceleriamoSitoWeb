@@ -39,33 +39,45 @@ export function ContactForm() {
   }
 
   return (
-    <form className="contact-form" onSubmit={handleSubmit} aria-label="Richiedi una consulenza gratuita">
+    <form className="contact-form" onSubmit={handleSubmit} aria-label="Richiedi valutazione">
       <div className="form-row">
         <label><span>Nome e cognome <RequiredDot /></span><input name="name" autoComplete="name" required /></label>
         <label><span>Azienda <RequiredDot /></span><input name="company" autoComplete="organization" required /></label>
       </div>
       <div className="form-row">
         <label><span>Email di lavoro <RequiredDot /></span><input name="email" type="email" autoComplete="email" required /></label>
-        <label><span>Il tuo ruolo</span><input name="role" autoComplete="organization-title" placeholder="Es. Titolare" /></label>
+        <label><span>Telefono <RequiredDot /></span><input name="phone" type="tel" autoComplete="tel" inputMode="tel" required placeholder="Es. +39 333 123 4567" /></label>
       </div>
-      <label><span>Quale problema vuoi risolvere? <RequiredDot /></span><input name="activity" required placeholder="Es. Preventivi a mano" /></label>
-      <label><span>Come lavorate oggi? <RequiredDot /></span><textarea name="currentProcess" required rows={4} placeholder="Es. Copiamo gli ordini dalle email al gestionale." /></label>
+      <div className="form-row">
+        <label><span>Il tuo ruolo <em>Facoltativo</em></span><input name="role" autoComplete="organization-title" placeholder="Es. Titolare" /></label>
+        <label><span>Cosa vi fa perdere più tempo? <RequiredDot /></span>
+          <select name="activity" required defaultValue="">
+            <option value="" disabled>Seleziona</option>
+            <option>Fare i preventivi</option>
+            <option>Ribattere ordini e documenti</option>
+            <option>Organizzare giri e appuntamenti</option>
+            <option>Rispondere a «a che punto siamo»</option>
+            <option>Controllare fatture e bolle</option>
+            <option>Altro</option>
+          </select>
+        </label>
+      </div>
+      <label><span>Raccontacelo in due righe <em>Facoltativo</em></span><textarea name="currentProcess" rows={3} placeholder="Es. Gli ordini arrivano via email e li ribattiamo nel gestionale." /></label>
       <details className="optional-fields">
-        <summary>Aggiungi qualche dettaglio <span>Opzionale</span></summary>
+        <summary>Aggiungi qualche dettaglio <span>Facoltativo</span></summary>
         <div className="form-row">
           <label><span>Quante persone se ne occupano?</span><select name="people" defaultValue=""><option value="" disabled>Seleziona</option><option>1</option><option>2–3</option><option>4–6</option><option>Più di 6</option></select></label>
-          <label><span>Quanto spesso svolgete questa attività?</span><select name="frequency" defaultValue=""><option value="" disabled>Seleziona</option><option>Più volte al giorno</option><option>Ogni giorno</option><option>Ogni settimana</option><option>Ogni mese</option></select></label>
+          <label><span>Quanto spesso lo fate?</span><select name="frequency" defaultValue=""><option value="" disabled>Seleziona</option><option>Più volte al giorno</option><option>Ogni giorno</option><option>Ogni settimana</option><option>Ogni mese</option></select></label>
         </div>
-        <label><span>Quali strumenti usate?</span><input name="tools" placeholder="Es. Excel, Outlook" /></label>
+        <label><span>Che programmi usate?</span><input name="tools" placeholder="Es. Excel, Outlook, Danea" /></label>
       </details>
-      <p className="form-privacy-note">Useremo i tuoi dati per gestire la richiesta e ricontattarti. Nessuna iscrizione a newsletter. Non inserire dati sensibili, password o dati personali di terzi non necessari.</p>
-      <label className="privacy-check"><input type="checkbox" name="privacy" value="accepted" required /><span>Ho letto l’<a href="/privacy-policy" target="_blank" rel="noopener noreferrer">informativa privacy</a> e chiedo di essere ricontattato per la consulenza gratuita.</span></label>
-      <label className="privacy-check"><input type="checkbox" name="terms" value="accepted" required /><span>Ho letto e accetto i <a href="/termini-e-condizioni" target="_blank" rel="noopener noreferrer">termini e le condizioni</a> del sito e della richiesta di consulenza gratuita.</span></label>
+      <label className="privacy-check"><input type="checkbox" name="privacy" value="accepted" required /><span>Ho letto l’<a href="/privacy-policy" target="_blank" rel="noopener noreferrer">informativa privacy</a> e chiedo di essere ricontattato, anche per telefono, per la valutazione del caso e per fissare una consulenza.</span></label>
+      <label className="privacy-check"><input type="checkbox" name="terms" value="accepted" required /><span>Ho letto e accetto i <a href="/termini-e-condizioni" target="_blank" rel="noopener noreferrer">termini e le condizioni</a> del sito e della richiesta di valutazione.</span></label>
       <input type="hidden" name="legalVersion" value={LEGAL_VERSION} />
       <input className="honeypot" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" />
       <div className="form-submit">
         <button className="button button--primary" type="submit" disabled={state === "sending"}>
-          {state === "sending" ? "Invio in corso…" : "Richiedi una consulenza gratuita"}<Icon name="arrow" size={19} />
+          {state === "sending" ? "Invio in corso…" : "Richiedi valutazione"}<Icon name="arrow" size={19} />
         </button>
       </div>
       {message && <p className={`form-message form-message--${state}`} role="status">{message}</p>}

@@ -8,23 +8,23 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://acceleriamo.it";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: "ACCELERIAMO | Soluzioni su misura per le PMI",
+  title: "ACCELERIAMO | Meno lavoro rifatto a mano nella tua azienda",
   description:
-    "Preventivi, fatture e commesse: semplifichiamo il lavoro delle PMI. Consulenza gratuita, proposta, sviluppo su misura, supporto e manutenzione.",
+    "Preventivi, ordini, documenti e giri dei tecnici: guardiamo come lavorate oggi e costruiamo il pezzo che vi toglie il lavoro ripetuto. Non dovete cambiare gestionale.",
   alternates: { canonical: "/" },
   openGraph: {
     type: "website",
     locale: "it_IT",
     url: "/",
     siteName: "ACCELERIAMO",
-    title: "Meno ore perse. Più tempo per la tua azienda.",
+    title: "Ogni giorno rifate a mano le stesse cose.",
     description:
-      "Richiedi una consulenza gratuita. Analizziamo il tuo caso, proponiamo e sviluppiamo la soluzione, poi ti seguiamo con supporto e manutenzione.",
+      "Richiedi una valutazione: guardiamo un’attività che vi fa perdere tempo e ti chiamiamo per fissare una consulenza.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "ACCELERIAMO | Consulenza gratuita per le PMI",
-    description: "Dai preventivi alle commesse: consulenza gratuita, soluzioni su misura e supporto per la tua PMI.",
+    title: "ACCELERIAMO | Meno lavoro rifatto a mano",
+    description: "Preventivi, ordini, giri e appuntamenti: togliamo alle aziende italiane il lavoro ripetuto. Senza cambiare gestionale.",
   },
   robots: { index: true, follow: true },
 };
@@ -41,14 +41,14 @@ const structuredData = {
   name: "ACCELERIAMO",
   url: siteUrl,
   description:
-    "Soluzioni su misura per le PMI italiane: consulenza gratuita per analizzare il caso, proposta, sviluppo, supporto e manutenzione. Automazione e intelligenza artificiale quando utili.",
+    "Analizziamo il lavoro ripetuto delle aziende italiane e costruiamo il pezzo che lo toglie alle persone: lettura dei documenti, collegamento tra i programmi già in uso e software su misura quando manca lo strumento giusto.",
   areaServed: { "@type": "Country", name: "Italia" },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="it" className={degularDisplay.variable}>
-      <body>
+      <body suppressHydrationWarning>
         <a className="skip-link" href="#contenuto">Vai al contenuto</a>
         {children}
         <script

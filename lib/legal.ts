@@ -1,8 +1,8 @@
 // Incrementare la versione quando cambia il testo dei documenti o delle dichiarazioni.
-export const LEGAL_VERSION = "2026-09-05";
-export const LEGAL_DATE = "5 settembre 2026";
-export const PRIVACY_ACKNOWLEDGEMENT = "Ho letto l’informativa privacy e chiedo di essere ricontattato per la consulenza gratuita.";
-export const TERMS_ACKNOWLEDGEMENT = "Ho letto e accetto i termini e le condizioni del sito e della richiesta di consulenza gratuita.";
+export const LEGAL_VERSION = "2026-09-10";
+export const LEGAL_DATE = "10 settembre 2026";
+export const PRIVACY_ACKNOWLEDGEMENT = "Ho letto l’informativa privacy e chiedo di essere ricontattato, anche per telefono, per la valutazione del caso e per fissare una consulenza.";
+export const TERMS_ACKNOWLEDGEMENT = "Ho letto e accetto i termini e le condizioni del sito e della richiesta di valutazione.";
 
 export const legalIdentity = {
   name: "Diego Simoncini",

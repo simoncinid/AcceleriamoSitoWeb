@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Footer } from "@/components/Footer";
 import { ContactForm } from "@/components/ContactForm";
 import { Header } from "@/components/Header";
@@ -8,12 +9,29 @@ import { Icon } from "@/components/Icons";
 import { MotionScene, SectionEntrances } from "@/components/MotionScene";
 import { MethodVisual, ServiceVisual, HumanVisual, IntegrationsVisual, ExampleVisual, ProblemVisual } from "@/components/StoryVisuals";
 
+const people = [
+  {
+    name: "Diego Simoncini",
+    role: "Consulenza e sviluppo",
+    linkedin: "https://www.linkedin.com/in/diego-simoncini-019909223/",
+    photo: "/team/diego-simoncini.jpg",
+    initials: "DS",
+  },
+  {
+    name: "Tommaso Rovini",
+    role: "Commerciale e marketing",
+    linkedin: "https://www.linkedin.com/in/tommasorovini/",
+    photo: "/team/tommaso-rovini.jpg",
+    initials: "TR",
+  },
+];
+
 const examples = [
-  ["Grossisti · Preventivi", "Il cliente chiede 30 articoli. Li ricopiate uno per uno?", "La richiesta arriva via email. Per rispondere servono listino e sconti. La soluzione prepara la bozza. Il commerciale controlla e invia."],
-  ["Edilizia · Fatture fornitori", "La fattura torna con il materiale consegnato?", "Fatture, ordini e bolle di cantiere vanno confrontati. La soluzione segnala subito quantità o prezzi diversi."],
-  ["Officine meccaniche · Commesse", "Il cliente chiede quando consegnate. Devi chiamare tre reparti?", "Per rispondere bisogna chiedere a taglio, lavorazione e assemblaggio. Una schermata mostra cosa è pronto, fermo o mancante."],
-  ["Manutenzioni · Giri operatori", "Ogni sera prepari i giri di domani. E se potessi delegare?", "Zone, orari e competenze sono spesso solo nella testa del titolare. Il pianificatore propone i giri e gestisce assenze e urgenze."],
-  ["Centri gomme · Appuntamenti", "Una disdetta, un’urgenza. Chi rimette in ordine l’agenda?", "Tra disdette e forature urgenti, il telefono interrompe il lavoro. Il calendario libera posti, propone nuovi orari e gestisce le urgenze."],
+  ["Commercio all’ingrosso · Preventivi", "Il cliente chiede 30 articoli. Li ricopiate uno per uno?", "La richiesta arriva via email. Per rispondere servono il listino di quel cliente e la disponibilità. Il software scrive la bozza nel gestionale. Il commerciale controlla il prezzo e invia."],
+  ["Agenti di commercio · Ordini", "Gli agenti mandano gli ordini su WhatsApp. Chi li ribatte?", "Foto di moduli, note vocali, righe scritte a mano. Il software legge codici e quantità e prepara l’ordine. In amministrazione restano da confermare solo le righe dubbie."],
+  ["Manutenzioni · Giri dei tecnici", "Ogni sera prepari i giri di domani. E se lo facesse un altro?", "Zone, orari, competenze e scadenze dei contratti stanno spesso solo nella testa del titolare. Il programma propone i giri e li rifà quando salta un appuntamento."],
+  ["Assistenza tecnica · «A che punto siamo?»", "Il cliente chiede a che punto è il lavoro. Devi chiamare due persone?", "Interventi fatti, ricambi in arrivo e ore già spese finiscono in una schermata sola. Chi risponde al telefono la guarda e risponde subito."],
+  ["Servizi su appuntamento · Agenda", "Una disdetta, un’urgenza. Chi rimette in ordine l’agenda?", "Il telefono squilla mentre state lavorando. Il calendario libera il posto, propone un altro orario al cliente e infila l’urgenza dove ci sta."],
 ];
 
 export default function Home() {
@@ -25,11 +43,11 @@ export default function Home() {
         <section className="hero" id="top">
           <div className="container hero__grid">
             <div className="hero__copy">
-              <p className="eyebrow">Soluzioni su misura per le PMI italiane</p>
-              <h1><span>Meno ore perse.</span>{" "}<br /><em>Più tempo</em>{" "}<br /><span>per la tua azienda.</span></h1>
-              <p>Riduci il lavoro ripetitivo. Analizziamo il caso, sviluppiamo la soluzione e ti seguiamo nel tempo.</p>
+              <p className="eyebrow">Per le aziende dove tutto passa da email, Excel e telefonate</p>
+              <h1><span>Ogni giorno</span>{" "}<br /><em>rifate a mano</em>{" "}<br /><span>le stesse cose.</span></h1>
+              <p>Documenti da ribattere, preventivi da scrivere, giri da organizzare, appuntamenti da rimettere in fila. Guardiamo come lo fate oggi e costruiamo il pezzo che lo fa al posto vostro.</p>
               <div className="button-row">
-                <a className="button button--primary" href="#contatti">Richiedi una consulenza gratuita <Icon name="arrow" size={19} /></a>
+                <a className="button button--primary" href="#contatti">Richiedi valutazione <Icon name="arrow" size={19} /></a>
               </div>
             </div>
             <HeroProcessDemo />
@@ -39,46 +57,46 @@ export default function Home() {
         <section className="section problem-section" id="problemi">
           <div className="container">
             <div className="section-heading section-heading--center">
-              <p className="eyebrow">Il punto di partenza</p>
-              <h2>Quante volte succede <span className="accent">anche nella tua azienda?</span></h2>
-              <p>Ordini da riscrivere, ritardi da rincorrere, informazioni da cercare.</p>
+              <p className="eyebrow">Riconosci il tuo caso?</p>
+              <h2>Non conta cosa vendete. <span className="accent">Conta cosa rifate ogni giorno.</span></h2>
+              <p>Grossisti, installatori, officine, manutentori: cambia il mestiere, non il lavoro ripetuto.</p>
             </div>
-            <ServiceCarousel className="problem-grid" label="Problemi quotidiani nelle PMI" variant="story">
+            <ServiceCarousel className="problem-grid" label="Quattro tipi di lavoro ripetuto" variant="story">
               <article className="editorial-card">
                 <div className="editorial-card__copy">
                   <span className="signal-square" />
-                  <p className="card-kicker">Lavoro ripetitivo</p>
+                  <p className="card-kicker">Documenti da ribattere</p>
+                  <h3>Lo stesso ordine viene scritto due volte.</h3>
+                  <p>Arriva per email o su WhatsApp. Poi qualcuno lo rilegge e lo ribatte nel gestionale, riga per riga.</p>
+                </div>
+                <div className="editorial-card__visual"><ProblemVisual type="duplicate" label="Lo stesso dato ribattuto in due programmi" /></div>
+              </article>
+              <article className="editorial-card">
+                <div className="editorial-card__copy">
+                  <span className="signal-square" />
+                  <p className="card-kicker">Richieste che aspettano</p>
                   <h3>Il cliente aspetta ancora il preventivo.</h3>
-                  <p>Tra allegati, listino e sconti, il cliente aspetta una risposta.</p>
+                  <p>Per rispondere servono il listino giusto, lo sconto di quel cliente e la disponibilità. Stanno in tre posti diversi.</p>
                 </div>
-                <div className="editorial-card__visual"><ProblemVisual type="inbox" label="Richieste distribuite in più canali" /></div>
+                <div className="editorial-card__visual"><ProblemVisual type="inbox" label="Richieste ferme in attesa di risposta" /></div>
               </article>
               <article className="editorial-card">
                 <div className="editorial-card__copy">
                   <span className="signal-square" />
-                  <p className="card-kicker">Dati da ricopiare</p>
-                  <h3>Lo stesso ordine viene scritto tre volte.</h3>
-                  <p>Email, Excel e gestionale: ogni copia richiede tempo e può creare errori.</p>
+                  <p className="card-kicker">Giri e appuntamenti</p>
+                  <h3>Ogni sera prepari i giri di domani.</h3>
+                  <p>Zone, orari, ricambi, tecnici disponibili. Se uno dà buca, si rifà tutto a mano.</p>
                 </div>
-                <div className="editorial-card__visual"><ProblemVisual type="duplicate" label="Dati duplicati tra strumenti" /></div>
+                <div className="editorial-card__visual"><ProblemVisual type="scattered" label="Giri e appuntamenti da rifare a mano" /></div>
               </article>
               <article className="editorial-card">
                 <div className="editorial-card__copy">
                   <span className="signal-square" />
-                  <p className="card-kicker">Tutto passa dal titolare</p>
-                  <h3>Per uno sconto devono chiamare te.</h3>
-                  <p>Per decidere devi prima cercare dati, prezzi e condizioni.</p>
+                  <p className="card-kicker">«A che punto siamo?»</p>
+                  <h3>Il cliente chiede quando consegnate.</h3>
+                  <p>Per rispondere chiami due persone e cerchi un’email di tre settimane fa.</p>
                 </div>
-                <div className="editorial-card__visual"><ProblemVisual type="waiting" label="Decisioni in attesa di approvazione" /></div>
-              </article>
-              <article className="editorial-card">
-                <div className="editorial-card__copy">
-                  <span className="signal-square" />
-                  <p className="card-kicker">Informazioni difficili da trovare</p>
-                  <h3>Chi segue la commessa è assente. E ora?</h3>
-                  <p>Aggiornamenti dispersi tra email, fogli e messaggi. Nessuna risposta certa.</p>
-                </div>
-                <div className="editorial-card__visual"><ProblemVisual type="scattered" label="Informazioni difficili da ritrovare" /></div>
+                <div className="editorial-card__visual"><ProblemVisual type="waiting" label="Nessuno sa dire a che punto è il lavoro" /></div>
               </article>
             </ServiceCarousel>
           </div>
@@ -88,15 +106,15 @@ export default function Home() {
           <div className="container">
             <div className="section-heading method-heading">
               <p className="eyebrow">Come lavoriamo</p>
-              <h2>Dalla consulenza gratuita{" "}<br /><span className="accent">al supporto nel tempo.</span></h2>
-              <p className="method-heading__note">Ci racconti il problema. Noi analizziamo, proponiamo, sviluppiamo e ti seguiamo.</p>
+              <h2>Guardiamo il lavoro vero.{" "}<br /><span className="accent">Poi tocchiamo solo quello che serve.</span></h2>
+              <p className="method-heading__note">A volte la risposta giusta è che un passaggio non va automatizzato: va eliminato.</p>
             </div>
             <MotionScene className="method-layout" label="Le quattro fasi del metodo">
               <ol className="method-grid">
-                <li data-motion="focus" data-at="0.2"><span aria-hidden="true">01</span><h3>Consulenza gratuita</h3><p>Guardiamo l’attività e dove si perde tempo.</p></li>
-                <li data-motion="focus" data-at="1.7"><span aria-hidden="true">02</span><h3>Proposta di soluzione</h3><p>Soluzione, tempi e costi chiari. Anche con AI, se serve.</p></li>
-                <li data-motion="focus" data-at="3.2"><span aria-hidden="true">03</span><h3>Sviluppo su misura</h3><p>La realizziamo, la proviamo e vi mostriamo come usarla.</p></li>
-                <li data-motion="focus" data-at="4.7"><span aria-hidden="true">04</span><h3>Supporto e manutenzione</h3><p>Restiamo disponibili per assistenza e aggiornamenti.</p></li>
+                <li data-motion="focus" data-at="0.2"><span aria-hidden="true">01</span><h3>Guardiamo come lavorate</h3><p>Le email che arrivano, i file che aprite, i passaggi che rifate ogni giorno.</p></li>
+                <li data-motion="focus" data-at="1.7"><span aria-hidden="true">02</span><h3>Ti diciamo cosa conviene</h3><p>Alcune cose si eliminano. Altre le fa il computer. Altre è meglio lasciarle come sono.</p></li>
+                <li data-motion="focus" data-at="3.2"><span aria-hidden="true">03</span><h3>Costruiamo il pezzo che manca</h3><p>Lo proviamo sui vostri casi veri. Poi lo usate voi, davanti a noi.</p></li>
+                <li data-motion="focus" data-at="4.7"><span aria-hidden="true">04</span><h3>Restiamo raggiungibili</h3><p>Se cambia un listino o qualcosa si rompe, scrivete a noi.</p></li>
               </ol>
               <MethodVisual />
             </MotionScene>
@@ -107,19 +125,19 @@ export default function Home() {
           <div className="container">
             <div className="section-heading">
               <p className="eyebrow">Cosa facciamo</p>
-              <h2>Cosa possiamo costruire{" "}<br /><span className="accent">per la tua azienda.</span></h2>
+              <h2>Tre modi per togliervi lavoro{" "}<br /><span className="accent">dalle mani.</span></h2>
             </div>
             <ServiceCarousel>
               <article className="service-card">
-                <div className="service-card__copy"><span>01</span><h3>Meno dati da ricopiare</h3><p>Colleghiamo email, Excel e gestionale: l’ordine passa senza essere riscritto.</p></div>
+                <div className="service-card__copy"><span>01</span><h3>I dati passano da soli</h3><p>L’ordine arriva via email e finisce nel gestionale. Nessuno lo ribatte.</p></div>
                 <ServiceVisual type="automation" />
               </article>
               <article className="service-card">
-                <div className="service-card__copy"><span>02</span><h3>AI per leggere i documenti</h3><p>Legge email e PDF, recupera i dati e segnala solo i casi dubbi.</p></div>
+                <div className="service-card__copy"><span>02</span><h3>Leggiamo i documenti al posto vostro</h3><p>Fatture, bolle, ordini e PDF: il software tira fuori i dati e segnala solo le righe che non tornano.</p></div>
                 <ServiceVisual type="ai" />
               </article>
               <article className="service-card" id="software">
-                <div className="service-card__copy"><span>03</span><h3>Software su misura</h3><p>La vista che ti serve per sapere cosa è fermo e chi deve intervenire.</p></div>
+                <div className="service-card__copy"><span>03</span><h3>Il programma che vi manca</h3><p>Quando nessun gestionale segue il vostro modo di lavorare, costruiamo la schermata che vi serve.</p></div>
                 <ServiceVisual type="software" />
               </article>
             </ServiceCarousel>
@@ -129,8 +147,9 @@ export default function Home() {
         <section className="section comparison-section" id="confronto" aria-labelledby="comparison-title">
           <div className="container">
             <div className="section-heading section-heading--split">
-              <div><p className="eyebrow">Prima e dopo</p><h2 id="comparison-title">Un preventivo pronto{" "}<br /><span className="accent">da controllare e inviare.</span></h2></div>
-              <p>Il software prepara articoli e quantità. Il commerciale controlla e invia.</p>
+              <p className="eyebrow">Prima e dopo</p>
+              <h2 id="comparison-title">Trenta articoli da ricopiare.{" "}<br /><span className="accent">Oppure due righe da controllare.</span></h2>
+              <p className="split-lead">Stessa richiesta, stesso listino, stesso gestionale. Cambia solo chi fa la parte noiosa.</p>
             </div>
             <ProcessComparison />
           </div>
@@ -139,8 +158,9 @@ export default function Home() {
         <section className="section examples" id="esempi">
           <div className="container">
             <div className="section-heading section-heading--split">
-              <div><p className="eyebrow">Esempi di soluzioni possibili</p><h2>Problemi quotidiani.{" "}<br /><span className="accent">Soluzioni concrete.</span></h2></div>
-              <p>Preventivi, giri operatori, appuntamenti: partiamo dal tuo caso.</p>
+              <p className="eyebrow">Esempi</p>
+              <h2>Aziende diverse.{" "}<br /><span className="accent">Stesso lavoro ripetuto.</span></h2>
+              <p className="split-lead">Cinque casi. Se somigliano al vostro, il vostro lo guardiamo davvero.</p>
             </div>
             <div className="example-list">
               {examples.map(([category, title, detail], index) => (
@@ -155,24 +175,44 @@ export default function Home() {
 
         <section className="section human-section" id="controllo-umano">
           <div className="container human-grid">
-            <div><p className="eyebrow">Le decisioni restano a voi</p><h2>Il software prepara.{" "}<br className="break-keep" /><span className="accent">Voi controllate e decidete.</span></h2><p>Il sistema segnala i casi dubbi. Voi decidete quelli importanti.</p></div>
+            <div><p className="eyebrow">Le decisioni restano vostre</p><h2>Il computer non decide niente.{" "}<br className="break-keep" /><span className="accent">Vi mette il caso sotto gli occhi.</span></h2><p>Quando un prezzo non torna o una quantità non corrisponde, il sistema si ferma e ve lo segnala. Lo vedete prima di mandare l’offerta, non quando arriva la fattura.</p></div>
             <HumanVisual />
           </div>
         </section>
 
         <section className="section about-section" id="chi-siamo">
           <div className="container about-grid">
-            <div>
-              <p className="eyebrow">Chi siamo</p>
-              <h2>Aiutiamo le PMI a <span className="accent">semplificare il lavoro di ogni giorno.</span></h2>
-            </div>
+            <p className="eyebrow">Chi siamo</p>
+            <h2>Togliamo lavoro <span className="accent">a chi ce l’ha addosso tutti i giorni.</span></h2>
             <div className="about-copy">
-              <p>Aiutiamo titolari e collaboratori a eliminare attese, copie e informazioni disperse. Consulenza, proposta, sviluppo, supporto e manutenzione. Anche con AI, quando serve.</p>
+              <p className="split-lead">Parliamo con chi il lavoro lo fa davvero: chi apre le email al mattino, chi ribatte gli ordini, chi prepara i giri. Poi costruiamo il pezzo che gli toglie le parti ripetitive.</p>
             </div>
+            <ul className="about-people">
+              {people.map((person) => (
+                <li className="about-person" key={person.name}>
+                  <div className="about-person__photo">
+                    {person.photo ? (
+                      <Image src={person.photo} alt={person.name} width={740} height={906} sizes="(max-width: 620px) 100vw, (max-width: 820px) 220px, 240px" />
+                    ) : (
+                      <span className="about-person__placeholder" aria-hidden="true">{person.initials}</span>
+                    )}
+                  </div>
+                  <div className="about-person__copy">
+                    <h3>{person.name}</h3>
+                    <p>{person.role}</p>
+                    <a href={person.linkedin} target="_blank" rel="noopener noreferrer">
+                      <Icon name="linkedin" size={16} />
+                      LinkedIn
+                      <span className="visually-hidden"> di {person.name}</span>
+                    </a>
+                  </div>
+                </li>
+              ))}
+            </ul>
             <ol className="about-principles">
-              <li><span>01</span><strong>Partiamo da chi fa il lavoro</strong><p>Ascoltiamo te e chi gestisce ogni giorno ordini, fatture o commesse.</p></li>
-              <li><span>02</span><strong>Creiamo la soluzione custom</strong><p>Realizziamo la soluzione custom, la proviamo sui vostri casi e vi accompagniamo nei primi utilizzi.</p></li>
-              <li><span>03</span><strong>Ci siamo anche dopo</strong><p>Supporto, manutenzione e aggiornamenti concordati fanno parte del percorso.</p></li>
+              <li><span>01</span><strong>Partiamo da chi fa il lavoro</strong><p>Guardiamo le email che arrivano, i file che aprite e i passaggi che rifate ogni giorno.</p></li>
+              <li><span>02</span><strong>Se non conviene, lo diciamo</strong><p>A volte un passaggio si elimina e basta. A volte è meglio lasciarlo com’è. Non vi vendiamo lavoro inutile.</p></li>
+              <li><span>03</span><strong>Ci siamo anche dopo</strong><p>Se cambia un listino o qualcosa si rompe, scrivete a noi. Non a un centralino.</p></li>
             </ol>
           </div>
         </section>
@@ -180,8 +220,9 @@ export default function Home() {
         <section className="section integrations" id="integrazioni">
           <div className="container">
             <div className="integrations__inner">
-            <div><p className="eyebrow">Gli strumenti che usi già</p><h2>Email, Excel e gestionale.{" "}<br /><span className="accent">Collegati tra loro.</span></h2></div>
-            <p>Colleghiamo gli strumenti che usate già, senza farvi ricopiare gli stessi dati.</p>
+              <p className="eyebrow">Gli strumenti che usate già</p>
+              <h2>Non dovete cambiare{" "}<br /><span className="accent">gestionale.</span></h2>
+              <p className="split-lead">Restano il vostro gestionale, i vostri Excel e la vostra casella email. Aggiungiamo solo il pezzo che li fa parlare tra loro.</p>
             </div>
             <IntegrationsVisual />
           </div>
@@ -189,7 +230,11 @@ export default function Home() {
 
         <section className="section contact-section" id="contatti">
           <div className="container contact-grid">
-            <div className="contact-copy"><p className="eyebrow eyebrow--light">Il primo passo è gratuito</p><h2>Richiedi una <span className="accent">consulenza gratuita.</span></h2><p>Descrivi il problema. Ti ricontattiamo per analizzarlo insieme.</p></div>
+            <div className="contact-copy">
+              <p className="eyebrow eyebrow--light">Il primo passo</p>
+              <h2>Richiedi <span className="accent">una valutazione.</span></h2>
+              <p>Raccontaci un’attività che vi fa perdere tempo. La valutiamo e ti chiamiamo per fissare una consulenza.</p>
+            </div>
             <ContactForm />
           </div>
         </section>

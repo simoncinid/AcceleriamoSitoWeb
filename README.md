@@ -33,7 +33,7 @@ Le variabili legali devono essere presenti al momento della build. Se mancano, l
 
 ## Privacy e condizioni
 
-Pagine: `/privacy-policy`, `/cookie-policy`, `/termini-e-condizioni`. Il footer riporta Diego Simoncini, P. IVA 02524780505. Il modulo richiede due caselle non preselezionate (presa visione privacy e accettazione termini), controllate anche dal server. Non è richiesto consenso marketing. Nell’email vengono registrate le dichiarazioni, la versione dei documenti e la data UTC del server, senza raccogliere IP a tale scopo. Nessun database applicativo aggiunto.
+Pagine: `/privacy-policy`, `/cookie-policy`, `/termini-e-condizioni`. Il footer riporta Diego Simoncini, P. IVA 02524780505. Il modulo richiede nome, azienda, email, telefono e due caselle non preselezionate (presa visione privacy e accettazione termini), controllate anche dal server. La richiesta copre la valutazione del caso e il ricontatto, anche telefonico, per fissare una consulenza. Non è richiesto consenso marketing. Nell’email vengono registrate le dichiarazioni, la versione dei documenti e la data UTC del server, senza raccogliere IP a tale scopo. Nessun database applicativo aggiunto.
 
 Prima della pubblicazione, completare i recapiti e verificare con il titolare:
 
@@ -41,7 +41,7 @@ Prima della pubblicazione, completare i recapiti e verificare con il titolare:
 - Tipo di account Google utilizzato, fornitori effettivi, accordi art. 28 GDPR, localizzazione, subfornitori e garanzie reali per trasferimenti extra SEE. Completare la sezione 7 della Privacy Policy con le informazioni verificate: il testo non certifica accordi o trasferimenti non verificati.
 - Applicazione del termine di 12 mesi dall’ultimo scambio per richieste senza incarico: impostare una revisione periodica e cancellare anche copie inviate e duplicati. Il codice invia email, non automatizza la cancellazione nelle caselle. Documentare tempi effettivi dei log e dei backup e aggiornare l’informativa.
 - Eventuali ulteriori dati obbligatori applicabili all’attività: registro imprese/REA o albo, se pertinente. Non sono stati inventati.
-- Gestione concreta dei diritti, accessi alla posta, sicurezza e cancellazione. Per incarichi a pagamento predisporre accordi e informative specifici: questi termini coprono il sito e la consulenza iniziale gratuita.
+- Gestione concreta dei diritti, accessi alla posta, sicurezza e cancellazione. Per incarichi a pagamento predisporre accordi e informative specifici: questi termini coprono il sito e la valutazione iniziale gratuita.
 
 Le pagine sono una base riferita all’implementazione corrente; la conformità richiede anche le verifiche e le procedure sopra indicate. Nessun deploy è incluso nella modifica.
 

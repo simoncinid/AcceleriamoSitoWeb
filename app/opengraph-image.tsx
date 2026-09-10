@@ -1,23 +1,23 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "ACCELERIAMO — Consulenza gratuita e soluzioni su misura per le PMI";
+export const alt = "ACCELERIAMO — Togliamo alle aziende italiane il lavoro rifatto a mano";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
 export default function OpenGraphImage() {
-  const steps = ["Consulenza gratuita", "Proposta", "Sviluppo su misura", "Supporto e manutenzione"];
+  const steps = ["Guardiamo", "Decidiamo insieme", "Costruiamo", "Restiamo"];
   return new ImageResponse(
     <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", justifyContent: "space-between", padding: 64, background: "#FFFDF8", color: "#1D1B19", fontFamily: "Arial, sans-serif" }}>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         <div style={{ display: "flex", fontSize: 29, fontWeight: 800, letterSpacing: -1 }}>
           ACCELER<span style={{ color: "#FF5A1F" }}>IA</span>MO
         </div>
-        <div style={{ fontSize: 18, color: "#625E58" }}>Soluzioni su misura per le PMI</div>
+        <div style={{ fontSize: 18, color: "#625E58" }}>Meno lavoro rifatto a mano</div>
       </div>
       <div style={{ display: "flex", flexDirection: "column", gap: 34 }}>
         <div style={{ display: "flex", flexDirection: "column", fontSize: 65, fontWeight: 600, lineHeight: 1.04, letterSpacing: -3 }}>
-          <span>Meno ore perse.</span>
-          <span>Più tempo per la tua azienda.</span>
+          <span>Ogni giorno rifate a mano</span>
+          <span>le stesse cose.</span>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           {steps.map((step, index) => (
@@ -30,7 +30,7 @@ export default function OpenGraphImage() {
           ))}
         </div>
       </div>
-      <div style={{ display: "flex", color: "#625E58", fontSize: 17 }}>Richiedi una consulenza gratuita · acceleriamo.it</div>
+      <div style={{ display: "flex", color: "#625E58", fontSize: 17 }}>Richiedi valutazione · acceleriamo.it</div>
     </div>,
     size,
   );
