@@ -1,9 +1,13 @@
 import type { MetadataRoute } from "next";
+import { aiCrawlers, siteUrl } from "@/lib/site";
 
 export default function robots(): MetadataRoute.Robots {
-  const base = process.env.NEXT_PUBLIC_SITE_URL ?? "https://acceleriamo.it";
   return {
-    rules: { userAgent: "*", allow: "/" },
-    sitemap: `${base}/sitemap.xml`,
+    rules: [
+      { userAgent: "*", allow: "/", disallow: ["/api/"] },
+      { userAgent: [...aiCrawlers], allow: "/", disallow: ["/api/"] },
+    ],
+    sitemap: `${siteUrl}/sitemap.xml`,
+    host: new URL(siteUrl).host,
   };
 }

@@ -87,7 +87,7 @@ svg { display: block; }
 .brand__ia { color: var(--orange); }
 .brand--light { color: var(--paper); }
 .logo-link { padding: 8px 0; }
-.desktop-nav { display: flex; align-items: center; gap: 28px; margin-left: auto; }
+.desktop-nav { display: flex; align-items: center; gap: 22px; margin-left: auto; }
 .desktop-nav a { font-size: 14px; font-weight: 580; }
 .desktop-nav a:hover { color: var(--orange); }
 .button { min-height: 50px; max-width: 100%; display: inline-flex; align-items: center; justify-content: center; gap: 11px; padding: 12px 22px; border: 1px solid transparent; border-radius: var(--radius); font-weight: 650; line-height: 1.2; white-space: normal; text-align: center; transition: transform .2s ease, background-color .2s ease, color .2s ease, border-color .2s ease; }
@@ -330,6 +330,8 @@ svg { display: block; }
 }
 
 @media (max-width: 1040px) {
+  .desktop-nav, .header-cta { display: none; }
+  .mobile-actions { display: flex; }
   .desktop-nav { gap: 17px; }.desktop-nav a { font-size: 13px; }
   .hero { padding: 48px 0 32px; }
   .hero__grid { grid-template-columns: 1fr 1fr; gap: 24px; }
@@ -522,6 +524,10 @@ svg { display: block; }
 .approval-art { width: 42px !important; height: 42px !important; }
 .example-detail { max-width: 850px; margin: -4px 0 24px 190px; }
 .example-detail > p { margin: 0 0 18px; color: var(--body); font-size: var(--type-card-body); line-height: 1.5; }
+.faq-section { background: var(--paper); }
+.faq-item summary { grid-template-columns: 1fr 44px; min-height: 96px; }
+.faq-item .example-title { font-size: clamp(24px, 2.1vw, 32px); }
+.faq-item .example-detail { margin-left: 0; max-width: 790px; }
 .contact-section { position: relative; isolation: isolate; overflow: clip; background-image: radial-gradient(ellipse at 0 50%, #82411e30, transparent 55%), radial-gradient(#fffdf80d .7px, transparent .7px); background-size: auto, 24px 24px; }
 .contact-form { box-shadow: 0 20px 60px #00000018; }
 @media (max-width: 820px) { .example-detail { margin-left: 0; } }

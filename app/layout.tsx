@@ -4,30 +4,65 @@ import "@fontsource-variable/inter";
 import "@fontsource-variable/mona-sans";
 import { degularDisplay } from "./fonts";
 import "./globals.css";
-
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://acceleriamo.it";
+import { JsonLd } from "@/components/JsonLd";
+import { siteGraph } from "@/lib/structured-data";
+import {
+  defaultDescription,
+  defaultTitle,
+  keywords,
+  people,
+  siteName,
+  siteUrl,
+  socialDescription,
+  socialTitle,
+} from "@/lib/site";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: "ACCELERIAMO | Meno lavoro rifatto a mano nella tua azienda",
-  description:
-    "Preventivi, ordini, documenti e giri dei tecnici: guardiamo come lavorate oggi e costruiamo il pezzo che vi toglie il lavoro ripetuto. Non dovete cambiare gestionale.",
-  alternates: { canonical: "/" },
+  title: { default: defaultTitle, template: `%s | ${siteName}` },
+  description: defaultDescription,
+  applicationName: siteName,
+  category: "business",
+  keywords,
+  authors: people.map(({ name, linkedin }) => ({ name, url: linkedin })),
+  creator: siteName,
+  publisher: siteName,
+  referrer: "origin-when-cross-origin",
+  formatDetection: { email: false, address: false, telephone: false },
+  alternates: {
+    canonical: "/",
+    languages: { "it-IT": "/", "x-default": "/" },
+  },
   openGraph: {
     type: "website",
     locale: "it_IT",
     url: "/",
-    siteName: "ACCELERIAMO",
-    title: "Ogni giorno rifate a mano le stesse cose.",
-    description:
-      "Richiedi una valutazione: guardiamo un’attività che vi fa perdere tempo e ti chiamiamo per fissare una consulenza.",
+    siteName,
+    title: socialTitle,
+    description: socialDescription,
   },
   twitter: {
     card: "summary_large_image",
-    title: "ACCELERIAMO | Meno lavoro rifatto a mano",
-    description: "Preventivi, ordini, giri e appuntamenti: togliamo alle aziende italiane il lavoro ripetuto. Senza cambiare gestionale.",
+    title: `${siteName} | Meno lavoro rifatto a mano`,
+    description: defaultDescription,
   },
-  robots: { index: true, follow: true },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
+  appleWebApp: { capable: true, title: siteName, statusBarStyle: "default" },
+  other: {
+    "geo.region": "IT",
+    "geo.placename": "Italia",
+    "content-language": "it",
+  },
 };
 
 export const viewport: Viewport = {
@@ -36,26 +71,13 @@ export const viewport: Viewport = {
   themeColor: "#FFFDF8",
 };
 
-const structuredData = {
-  "@context": "https://schema.org",
-  "@type": "ProfessionalService",
-  name: "ACCELERIAMO",
-  url: siteUrl,
-  description:
-    "Analizziamo il lavoro ripetuto delle aziende italiane e costruiamo il pezzo che lo toglie alle persone: lettura dei documenti, collegamento tra i programmi già in uso e software su misura quando manca lo strumento giusto.",
-  areaServed: { "@type": "Country", name: "Italia" },
-};
-
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="it" className={degularDisplay.variable}>
       <body suppressHydrationWarning>
         <a className="skip-link" href="#contenuto">Vai al contenuto</a>
         {children}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-        />
+        <JsonLd data={siteGraph()} />
         <Analytics />
       </body>
     </html>

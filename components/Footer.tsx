@@ -11,7 +11,7 @@ export function Footer() {
             {legalIdentity.address && <p>{legalIdentity.address}</p>}
             {legalIdentity.email && <p><Link href={`mailto:${legalIdentity.email}`}>{legalIdentity.email}</Link></p>}
           </div>
-          <nav className="footer-links" aria-label="Navigazione nel footer"><Link href="/#servizi">Cosa facciamo</Link><Link href="/#metodo">Come lavoriamo</Link><Link href="/#chi-siamo">Chi siamo</Link><Link href="/#contatti">Richiedi valutazione</Link></nav>
+          <nav className="footer-links" aria-label="Navigazione nel footer"><Link href="/#servizi">Cosa facciamo</Link><Link href="/#metodo">Come lavoriamo</Link><Link href="/#chi-siamo">Chi siamo</Link><Link href="/#domande">Domande</Link><Link href="/#contatti">Richiedi valutazione</Link></nav>
         </div>
         <div className="footer-bottom">
           <span>© {new Date().getFullYear()} ACCELERIAMO · {legalIdentity.name} · P. IVA {legalIdentity.vat}</span>

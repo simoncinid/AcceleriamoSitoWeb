@@ -10,6 +10,7 @@ const links = [
   ["Come lavoriamo", "/#metodo"],
   ["Esempi", "/#esempi"],
   ["Chi siamo", "/#chi-siamo"],
+  ["Domande", "/#domande"],
 ];
 
 export function Header() {

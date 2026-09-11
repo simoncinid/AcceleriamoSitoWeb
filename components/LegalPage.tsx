@@ -3,14 +3,19 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { Header } from "./Header";
 import { Footer } from "./Footer";
+import { JsonLd } from "./JsonLd";
 import { LEGAL_DATE, LEGAL_VERSION, legalIdentity, legalLinks } from "@/lib/legal";
+import { siteName } from "@/lib/site";
+import { legalPageGraph } from "@/lib/structured-data";
 
 export function legalMetadata(title: string, description: string, path: string): Metadata {
   return {
-    title: `${title} | ACCELERIAMO`, description,
-    alternates: { canonical: path },
-    openGraph: { title, description, url: path, type: "website", locale: "it_IT", siteName: "ACCELERIAMO" },
+    title,
+    description,
+    alternates: { canonical: path, languages: { "it-IT": path, "x-default": path } },
+    openGraph: { title, description, url: path, type: "website", locale: "it_IT", siteName },
     twitter: { card: "summary_large_image", title, description },
+    robots: { index: true, follow: true },
   };
 }
 
@@ -25,6 +30,7 @@ export function LegalIdentity() {
 
 export function LegalPage({ title, intro, path, children }: { title: string; intro: string; path: string; children: ReactNode }) {
   return <><Header /><main id="contenuto" className="container legal-page">
+    <JsonLd data={legalPageGraph(title, intro, path)} />
     <Link className="legal-back" href="/">← Torna alla homepage</Link>
     <p className="eyebrow">Informazioni legali</p>
     <h1>{title}</h1><p className="legal-intro">{intro}</p>

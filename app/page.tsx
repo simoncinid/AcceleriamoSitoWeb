@@ -1,30 +1,23 @@
 import Image from "next/image";
+import type { Metadata } from "next";
 import { Footer } from "@/components/Footer";
 import { ContactForm } from "@/components/ContactForm";
 import { Header } from "@/components/Header";
+import { JsonLd } from "@/components/JsonLd";
 import { ProcessComparison } from "@/components/ProcessComparison";
 import { ServiceCarousel } from "@/components/ServiceCarousel";
 import { HeroProcessDemo } from "@/components/HeroProcessDemo";
 import { Icon } from "@/components/Icons";
 import { MotionScene, SectionEntrances } from "@/components/MotionScene";
 import { MethodVisual, ServiceVisual, HumanVisual, IntegrationsVisual, ExampleVisual, ProblemVisual } from "@/components/StoryVisuals";
+import { faqs, people, siteName, socialDescription, socialTitle } from "@/lib/site";
+import { homeGraph } from "@/lib/structured-data";
 
-const people = [
-  {
-    name: "Diego Simoncini",
-    role: "Consulenza e sviluppo",
-    linkedin: "https://www.linkedin.com/in/diego-simoncini-019909223/",
-    photo: "/team/diego-simoncini.jpg",
-    initials: "DS",
-  },
-  {
-    name: "Tommaso Rovini",
-    role: "Commerciale e marketing",
-    linkedin: "https://www.linkedin.com/in/tommasorovini/",
-    photo: "/team/tommaso-rovini.jpg",
-    initials: "TR",
-  },
-];
+export const metadata: Metadata = {
+  title: { absolute: `${siteName} | Meno lavoro rifatto a mano nella tua azienda` },
+  alternates: { canonical: "/", languages: { "it-IT": "/", "x-default": "/" } },
+  openGraph: { title: socialTitle, description: socialDescription, url: "/" },
+};
 
 const examples = [
   ["Commercio all’ingrosso · Preventivi", "Il cliente chiede 30 articoli. Li ricopiate uno per uno?", "La richiesta arriva via email. Per rispondere servono il listino di quel cliente e la disponibilità. Il software scrive la bozza nel gestionale. Il commerciale controlla il prezzo e invia."],
@@ -39,6 +32,7 @@ export default function Home() {
     <>
       <Header />
       <SectionEntrances />
+      <JsonLd data={homeGraph()} />
       <main id="contenuto">
         <section className="hero" id="top">
           <div className="container hero__grid">
@@ -191,11 +185,7 @@ export default function Home() {
               {people.map((person) => (
                 <li className="about-person" key={person.name}>
                   <div className="about-person__photo">
-                    {person.photo ? (
-                      <Image src={person.photo} alt={person.name} width={740} height={906} sizes="(max-width: 620px) 100vw, (max-width: 820px) 220px, 240px" />
-                    ) : (
-                      <span className="about-person__placeholder" aria-hidden="true">{person.initials}</span>
-                    )}
+                    <Image src={person.photo} alt={`${person.name}, ${person.role} in ACCELERIAMO`} width={740} height={906} sizes="(max-width: 620px) 100vw, (max-width: 820px) 220px, 240px" />
                   </div>
                   <div className="about-person__copy">
                     <h3>{person.name}</h3>
@@ -225,6 +215,24 @@ export default function Home() {
               <p className="split-lead">Restano il vostro gestionale, i vostri Excel e la vostra casella email. Aggiungiamo solo il pezzo che li fa parlare tra loro.</p>
             </div>
             <IntegrationsVisual />
+          </div>
+        </section>
+
+        <section className="section faq-section" id="domande" aria-labelledby="faq-title">
+          <div className="container">
+            <div className="section-heading section-heading--split">
+              <p className="eyebrow">Domande</p>
+              <h2 id="faq-title">Prima di scriverci,{" "}<br /><span className="accent">le cose da sapere.</span></h2>
+              <p className="split-lead">Niente listini né promesse sul sito. Qui c’è cosa facciamo, cosa non facciamo e come inizia il lavoro.</p>
+            </div>
+            <div className="example-list">
+              {faqs.map((faq, index) => (
+                <details className="example-item faq-item" key={faq.question} open={index === 0}>
+                  <summary><strong className="example-title">{faq.question}</strong><i aria-hidden="true">+</i></summary>
+                  <div className="example-detail"><p>{faq.answer}</p></div>
+                </details>
+              ))}
+            </div>
           </div>
         </section>
 
