@@ -7,6 +7,7 @@ export type CaseStudy = {
   highlights: string[];
   outcome: string;
   logo?: { src: string; alt: string; width: number; height: number };
+  logoDarkBg?: boolean;
   icon?: string;
 };
 
@@ -23,6 +24,7 @@ export const caseStudies: CaseStudy[] = [
     ],
     outcome: "Circa 8 ore al giorno recuperate.",
     logo: { src: "/clients/megaron-logo.png", alt: "Logo Megaron Servizi Immobiliari", width: 200, height: 200 },
+    logoDarkBg: true,
   },
   {
     id: "cuormio",

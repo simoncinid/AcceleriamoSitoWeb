@@ -13,7 +13,7 @@ export function CaseStudyGallery() {
       {caseStudies.map((study) => (
         <article className={styles.card} key={study.id} aria-labelledby={`case-${study.id}-title`}>
           <div className={styles.card__top}>
-            <div className={styles.card__brand}>
+            <div className={`${styles.card__brand}${study.logoDarkBg ? ` ${styles["card__brand--dark"]}` : ""}`}>
               {study.logo ? (
                 <Image
                   unoptimized
