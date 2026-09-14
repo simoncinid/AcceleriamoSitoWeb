@@ -19,7 +19,7 @@ export const sectors = [
   {
     id: "agenzie-immobiliari", label: "Agenzie immobiliari", real: true,
     problem: "Cento richieste al giorno da girare a mano.",
-    description: "Un’agenzia immobiliare in Toscana: oggi ogni nuova richiesta arriva all’agente della zona.",
+    description: "Megaron, agenzia immobiliare in Toscana: oggi ogni nuova richiesta arriva all’agente della zona.",
     steps: ["Arriva la richiesta di info per mail", "Il sistema la assegna all’agente della zona", "Il cliente riceve subito la mail con il nome dell’agente"],
   },
   {

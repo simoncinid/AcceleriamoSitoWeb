@@ -74,7 +74,7 @@ Le regole le decidi tu: il sistema le applica e, quando un caso non torna, si fe
 - Agenti di commercio: ordini su WhatsApp o moduli fotografati da ribattere.
 - Impianti e manutenzioni: rapportini da foto e vocali dei tecnici.
 - Officine: avviso al cliente quando la macchina è pronta.
-- Caso reale, agenzia immobiliare in Toscana: circa 100 richieste al giorno smistate a mano; oggi ogni richiesta arriva da sola all’agente della zona, con conferma automatica al cliente. Circa 8 ore al giorno recuperate.
+- Caso reale, Megaron Servizi Immobiliari (Toscana): circa 100 richieste al giorno smistate a mano; oggi ogni richiesta arriva da sola all’agente della zona, con conferma automatica al cliente. Circa 8 ore al giorno recuperate.
 - Caso reale, Cuormio.it (Toscana): automatizzazione di procedure interne di magazzino (ordini, scarico, spedizioni). Diverse ore a settimana risparmiate.
 - Servizi su appuntamento: disdette e urgenze che sfasciano l’agenda.
 

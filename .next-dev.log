@@ -1,0 +1,1958 @@
+
+> acceleriamo@1.0.0 dev
+> next dev
+
+▲ Next.js 16.3.4 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.1.42:3000
+✓ Ready in 322ms
+✓ Running next.config took 16ms
+
+ GET / 200 in 520ms (next.js: 204ms, application-code: 316ms)
+
+> acceleriamo@1.0.0 dev
+> next dev
+
+▲ Next.js 16.3.4 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.1.42:3000
+✓ Ready in 407ms
+✓ Running next.config took 7ms
+
+
+> acceleriamo@1.0.0 dev
+> next dev
+
+▲ Next.js 16.3.4 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.1.42:3000
+✓ Ready in 281ms
+✓ Running next.config took 6ms
+
+ GET / 200 in 503ms (next.js: 199ms, application-code: 303ms)
+ GET / 200 in 146ms (next.js: 4ms, application-code: 143ms)
+✓ Compiled in 8ms
+✓ Compiled in 8ms
+ GET / 200 in 214ms (next.js: 7ms, application-code: 207ms)
+✓ Compiled in 12ms
+✓ Compiled in 7ms
+✓ Compiled in 8ms
+✓ Compiled in 9ms
+✓ Compiled in 8ms
+ GET /?v=align 200 in 144ms (next.js: 6ms, application-code: 139ms)
+[browser] Image with src "/team/diego-simoncini.jpg" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
+Read more: https://nextjs.org/docs/app/api-reference/components/image#loading
+✓ Compiled in 17ms
+ GET /?v=ink 200 in 134ms (next.js: 5ms, application-code: 128ms)
+✓ Compiled in 8ms
+✓ Compiled in 10ms
+ GET / 200 in 126ms (next.js: 4ms, application-code: 122ms)
+[browser] Image with src "/team/diego-simoncini.jpg" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
+Read more: https://nextjs.org/docs/app/api-reference/components/image#loading
+[browser] A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <ScrollAndMaybeFocusHandler cacheNode={{rsc:{...}, ...}}>
+      <InnerScrollHandlerNew focusAndScrollRef={{scrollRef:null, ...}} cacheNode={{rsc:{...}, ...}}>
+        <ErrorBoundary errorComponent={undefined} errorStyles={undefined} errorScripts={undefined}>
+          <LoadingBoundary name="/" loading={null}>
+            <HTTPAccessFallbackBoundary notFound={{...}} forbidden={undefined} unauthorized={undefined}>
+              <HTTPAccessFallbackErrorBoundary pathname="/" notFound={{...}} forbidden={undefined} ...>
+                <RedirectBoundary>
+                  <RedirectErrorBoundary router={{...}}>
+                    <InnerLayoutRouter url="/#chi-siamo" tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} ...>
+                      <SegmentViewNode type="page" pagePath="page.tsx">
+                        <SegmentTrieNode>
+                        <Home>
+                          <Header>
+                          <SectionEntrances>
+                          <main id="contenuto">
+                            <section className="hero" id="top">
+                              <div className="container ...">
+                                <div className="hero__copy">
+                                  <p
+                                    className="eyebrow"
+-                                   data-cursor-ref="e42"
+                                  >
++                                   Per le aziende dove tutto passa da email, Excel e telefonate
+                                  <h1
+-                                   data-cursor-ref="e43"
+                                  >
+                                  <p
+-                                   data-cursor-ref="e44"
+                                  >
++                                   Documenti da ribattere, preventivi da scrivere, giri da organizzare, appuntamenti d...
+                                  <div className="button-row">
+                                    <a
+                                      className="button button--primary"
+                                      href="#contatti"
+-                                     data-cursor-ref="e7"
+                                    >
+                                <HeroProcessDemo>
+                                  <MotionScene className="hero-process" label="Esempio: 3...">
+                                    <div ref={{current:null}} className="SiteMotion..." data-scene="Esempio: 3..." ...>
+                                      <div>
+                                      <p
+                                        className="hero-process__heading"
+-                                       data-cursor-ref="e45"
+                                      >
++                                       Il cliente chiede 30 articoli via email
+                                      <HeroStory>
+                                        <div className="StoryVisua...">
+                                          <div>
+                                          <ol className="StoryVisua..." aria-label="Dall’email...">
+                                            <li
+-                                             data-cursor-ref="e46"
+                                            >
+                                            <li
+-                                             data-cursor-ref="e47"
+                                            >
+                                            <li
+-                                             data-cursor-ref="e48"
+                                            >
+                                          ...
+                            <section className="section pr..." id="problemi">
+                              <div className="container">
+                                <div className="section-he...">
+                                  <p
+                                    className="eyebrow"
+-                                   data-cursor-ref="e49"
+                                  >
++                                   Riconosci il tuo caso?
+                                  <h2
+-                                   data-cursor-ref="e50"
+                                  >
+                                  <p
+-                                   data-cursor-ref="e51"
+                                  >
++                                   Grossisti, installatori, officine, manutentori: cambia il mestiere, non il lavoro r...
+                                ...
+                                  <div className="ServiceCar..." ref={{current:null}} ...>
+                                    <article className="editorial-...">
+                                      <div className="editorial-...">
+                                        <span>
+                                        <p
+                                          className="card-kicker"
+-                                         data-cursor-ref="e52"
+                                        >
++                                         Documenti da ribattere
+                                        <h3
+-                                         data-cursor-ref="e53"
+                                        >
++                                         Lo stesso ordine viene scritto due volte.
+                                        <p
+-                                         data-cursor-ref="e54"
+                                        >
++                                         Arriva per email o su WhatsApp. Poi qualcuno lo rilegge e lo ribatte nel gest...
+                                      ...
+                                    <article className="editorial-...">
+                                      <div className="editorial-...">
+                                        <span>
+                                        <p
+                                          className="card-kicker"
+-                                         data-cursor-ref="e55"
+                                        >
++                                         Richieste che aspettano
+                                        <h3
+-                                         data-cursor-ref="e56"
+                                        >
++                                         Il cliente aspetta ancora il preventivo.
+                                        <p
+-                                         data-cursor-ref="e57"
+                                        >
++                                         Per rispondere servono il listino giusto, lo sconto di quel cliente e la disp...
+                                      ...
+                                    <article className="editorial-...">
+                                      <div className="editorial-...">
+                                        <span>
+                                        <p
+                                          className="card-kicker"
+-                                         data-cursor-ref="e58"
+                                        >
++                                         Giri e appuntamenti
+                                        <h3
+-                                         data-cursor-ref="e59"
+                                        >
++                                         Ogni sera prepari i giri di domani.
+                                        <p
+-                                         data-cursor-ref="e60"
+                                        >
++                                         Zone, orari, ricambi, tecnici disponibili. Se uno dà buca, si rifà tutto a mano.
+                                      ...
+                                    <article className="editorial-...">
+                                      <div className="editorial-...">
+                                        <span>
+                                        <p
+                                          className="card-kicker"
+-                                         data-cursor-ref="e61"
+                                        >
++                                         «A che punto siamo?»
+                                        <h3
+-                                         data-cursor-ref="e62"
+                                        >
++                                         Il cliente chiede quando consegnate.
+                                        <p
+-                                         data-cursor-ref="e63"
+                                        >
++                                         Per rispondere chiami due persone e cerchi un’email di tre settimane fa.
+                                      ...
+                            <section className="section me..." id="metodo">
+                              <div className="container">
+                                <div className="section-he...">
+                                  <p
+                                    className="eyebrow"
+-                                   data-cursor-ref="e64"
+                                  >
++                                   Come lavoriamo
+                                  <h2
+-                                   data-cursor-ref="e65"
+                                  >
+                                  <p
+                                    className="method-heading__note"
+-                                   data-cursor-ref="e66"
+                                  >
++                                   A volte la risposta giusta è che un passaggio non va automatizzato: va eliminato.
+                                <MotionScene className="method-layout" label="Le quattro...">
+                                  <div ref={{current:null}} className="SiteMotion..." data-scene="Le quattro..." ...>
+                                    <ol className="method-grid">
+                                      <li
+                                        data-motion="focus"
+                                        data-at="0.2"
+-                                       data-cursor-ref="e67"
+                                      >
+                                        <span>
+                                        <h3
+-                                         data-cursor-ref="e68"
+                                        >
++                                         Guardiamo come lavorate
+                                        <p
+-                                         data-cursor-ref="e69"
+                                        >
++                                         Le email che arrivano, i file che aprite, i passaggi che rifate ogni giorno.
+                                      <li
+                                        data-motion="focus"
+                                        data-at="1.7"
+-                                       data-cursor-ref="e70"
+                                      >
+                                        <span>
+                                        <h3
+-                                         data-cursor-ref="e71"
+                                        >
++                                         Ti diciamo cosa conviene
+                                        <p
+-                                         data-cursor-ref="e72"
+                                        >
++                                         Alcune cose si eliminano. Altre le fa il computer. Altre è meglio lasciarle c...
+                                      <li
+                                        data-motion="focus"
+                                        data-at="3.2"
+-                                       data-cursor-ref="e73"
+                                      >
+                                        <span>
+                                        <h3
+-                                         data-cursor-ref="e74"
+                                        >
++                                         Costruiamo il pezzo che manca
+                                        <p
+-                                         data-cursor-ref="e75"
+                                        >
++                                         Lo proviamo sui vostri casi veri. Poi lo usate voi, davanti a noi.
+                                      <li
+                                        data-motion="focus"
+                                        data-at="4.7"
+-                                       data-cursor-ref="e76"
+                                      >
+                                        <span>
+                                        <h3
+-                                         data-cursor-ref="e77"
+                                        >
++                                         Restiamo raggiungibili
+                                        <p
+-                                         data-cursor-ref="e78"
+                                        >
++                                         Se cambia un listino o qualcosa si rompe, scrivete a noi.
+                                    <MethodVisual>
+                                      <div className="StoryVisua..." data-motion-viewport={true}>
+                                        <div>
+                                        <ol className="StoryVisua..." aria-label="Guardiamo,...">
+                                          <li
+-                                           data-cursor-ref="e79"
+                                          >
+                                          <li
+-                                           data-cursor-ref="e80"
+                                          >
+                                          <li
+-                                           data-cursor-ref="e81"
+                                          >
+                                          <li
+-                                           data-cursor-ref="e82"
+                                          >
+                                        ...
+                            <section className="section se..." id="servizi">
+                              <div className="container">
+                                <div className="section-he...">
+                                  <p
+                                    className="eyebrow"
+-                                   data-cursor-ref="e83"
+                                  >
++                                   Cosa facciamo
+                                  <h2
+-                                   data-cursor-ref="e84"
+                                  >
+                                ...
+                                  <div className="ServiceCar..." ref={{current:null}} ...>
+                                    <article className="service-card">
+                                      <div className="service-ca...">
+                                        <span>
+                                        <h3
+-                                         data-cursor-ref="e85"
+                                        >
++                                         I dati passano da soli
+                                        <p
+-                                         data-cursor-ref="e86"
+                                        >
++                                         L’ordine arriva via email e finisce nel gestionale. Nessuno lo ribatte.
+                                      ...
+                                    <article className="service-card">
+                                      <div className="service-ca...">
+                                        <span>
+                                        <h3
+-                                         data-cursor-ref="e87"
+                                        >
++                                         Leggiamo i documenti al posto vostro
+                                        <p
+-                                         data-cursor-ref="e88"
+                                        >
++                                         Fatture, bolle, ordini e PDF: il software tira fuori i dati e segnala solo le...
+                                      ...
+                                    <article className="service-card" id="software">
+                                      <div className="service-ca...">
+                                        <span>
+                                        <h3
+-                                         data-cursor-ref="e89"
+                                        >
++                                         Il programma che vi manca
+                                        <p
+-                                         data-cursor-ref="e90"
+                                        >
++                                         Quando nessun gestionale segue il vostro modo di lavorare, costruiamo la sche...
+                                      ...
+                            <section
+                              className="section comparison-section"
+                              id="confronto"
+                              aria-labelledby="comparison-title"
+-                             data-cursor-ref="e91"
+                            >
+                              <div className="container">
+                                <div className="section-he...">
+                                  <p
+                                    className="eyebrow"
+-                                   data-cursor-ref="e92"
+                                  >
++                                   Prima e dopo
+                                  <h2
+                                    id="comparison-title"
+-                                   data-cursor-ref="e93"
+                                  >
+                                  <p
+                                    className="split-lead"
+-                                   data-cursor-ref="e94"
+                                  >
++                                   Stessa richiesta, stesso listino, stesso gestionale. Cambia solo chi fa la parte no...
+                                ...
+                                  <div className="ProcessCom..." ref={{current:null}} ...>
+                                    <Panel active={true} restartKey={0}>
+                                      <article ref={{current:null}} className="ProcessCom..." data-running={false}>
+                                        <div className="ProcessCom...">
+                                          <span>
+                                          <h3
+-                                           data-cursor-ref="e95"
+                                          >
+                                          <p
+-                                           data-cursor-ref="e96"
+                                          >
++                                           Il commerciale cerca codici, prezzi e disponibilità tra email, listino e ge...
+                                        <div className="ProcessCom...">
+                                          <div>
+                                          <ol className="ProcessCom..." aria-label="Passaggi m...">
+                                            <li
+                                              className="ProcessComparison-module__vnTs8a__step"
+                                              style={{--shift:"0px"}}
+-                                             data-cursor-ref="e97"
+                                            >
+                                            <li
+                                              className="ProcessComparison-module__vnTs8a__step"
+                                              style={{--shift:"18px"}}
+-                                             data-cursor-ref="e98"
+                                            >
+                                            <li
+                                              className="ProcessComparison-module__vnTs8a__step"
+                                              style={{--shift:"-8px"}}
+-                                             data-cursor-ref="e99"
+                                            >
+                                            <li
+                                              className="ProcessComparison-module__vnTs8a__step"
+                                              style={{--shift:"14px"}}
+-                                             data-cursor-ref="e100"
+                                            >
+                                            <li
+                                              className="ProcessComparison-module__vnTs8a__step"
+                                              style={{--shift:"0px"}}
+-                                             data-cursor-ref="e101"
+                                            >
+                                        <p
+                                          className="ProcessComparison-module__vnTs8a__footer"
+-                                         data-cursor-ref="e102"
+                                        >
+                                    <Panel after={true} active={true} restartKey={0}>
+                                      <article ref={{current:null}} className="ProcessCom..." data-running={false}>
+                                        <div className="ProcessCom...">
+                                          <span>
+                                          <h3
+-                                           data-cursor-ref="e103"
+                                          >
+                                          <p
+-                                           data-cursor-ref="e104"
+                                          >
++                                           Codici, quantità e prezzi sono già dentro la bozza.
+                                        <div className="ProcessCom...">
+                                          <span>
+                                          <div>
+                                          <div className="ProcessCom...">
+                                            <span>
+                                            <div>
+                                            <ol className="ProcessCom..." aria-label="Passaggi a...">
+                                              <li
+                                                className="ProcessComparison-module__vnTs8a__step"
+-                                               data-cursor-ref="e105"
+                                              >
+                                              <li
+                                                className="ProcessComparison-module__vnTs8a__step"
+-                                               data-cursor-ref="e106"
+                                              >
+                                          ...
+                                        <p
+                                          className="ProcessComparison-module__vnTs8a__footer"
+-                                         data-cursor-ref="e107"
+                                        >
+                            <section className="section ex..." id="esempi">
+                              <div className="container">
+                                <div className="section-he...">
+                                  <p
+                                    className="eyebrow"
+-                                   data-cursor-ref="e108"
+                                  >
++                                   Esempi
+                                  <h2
+-                                   data-cursor-ref="e109"
+                                  >
+                                  <p
+                                    className="split-lead"
+-                                   data-cursor-ref="e110"
+                                  >
++                                   Cinque casi. Se somigliano al vostro, il vostro lo guardiamo davvero.
+                                <div className="example-list">
+                                  <details className="example-item">
+                                    <summary
+-                                     data-cursor-ref="e8"
+                                    >
+                                    <div className="example-de...">
+                                      <p
+-                                       data-cursor-ref="e111"
+                                      >
++                                       La richiesta arriva via email. Per rispondere servono il listino di quel client...
+                                      ...
+                                  <details className="example-item">
+                                    <summary
+-                                     data-cursor-ref="e9"
+                                    >
+                                    <div className="example-de...">
+                                      <p
+-                                       data-cursor-ref="e112"
+                                      >
++                                       Foto di moduli, note vocali, righe scritte a mano. Il software legge codici e q...
+                                      ...
+                                  <details className="example-item">
+                                    <summary
+-                                     data-cursor-ref="e10"
+                                    >
+                                    <div className="example-de...">
+                                      <p
+-                                       data-cursor-ref="e113"
+                                      >
++                                       Zone, orari, competenze e scadenze dei contratti stanno spesso solo nella testa...
+                                      ...
+                                  <details className="example-item">
+                                    <summary
+-                                     data-cursor-ref="e11"
+                                    >
+                                    <div className="example-de...">
+                                      <p
+-                                       data-cursor-ref="e114"
+                                      >
++                                       Interventi fatti, ricambi in arrivo e ore già spese finiscono in una schermata ...
+                                      ...
+                                  <details className="example-item">
+                                    <summary
+-                                     data-cursor-ref="e12"
+                                    >
+                                    <div className="example-de...">
+                                      <p
+-                                       data-cursor-ref="e115"
+                                      >
++                                       Il telefono squilla mentre state lavorando. Il calendario libera il posto, prop...
+                                      ...
+                            <section className="section hu..." id="controllo-...">
+                              <div className="container ...">
+                                <div>
+                                  <p
+                                    className="eyebrow"
+-                                   data-cursor-ref="e116"
+                                  >
++                                   Le decisioni restano vostre
+                                  <h2
+-                                   data-cursor-ref="e117"
+                                  >
+                                  <p
+-                                   data-cursor-ref="e118"
+                                  >
++                                   Quando un prezzo non torna o una quantità non corrisponde, il sistema si ferma e ve...
+                                <HumanVisual>
+                                  <MotionScene className="StoryVisua..." label="Le righe c...">
+                                    <div ref={{current:null}} className="SiteMotion..." data-scene="Le righe c..." ...>
+                                      <div>
+                                      <div>
+                                      <p
+                                        className="StoryVisuals-module__7iE3cq__humanNote"
+                                        data-motion="reveal"
+                                        data-at={5.5}
+-                                       data-cursor-ref="e119"
+                                      >
+                            <section className="section ab..." id="chi-siamo">
+                              <div className="container ...">
+                                <p
+                                  className="eyebrow"
+-                                 data-cursor-ref="e120"
+                                >
++                                 Chi siamo
+                                <h2
+-                                 data-cursor-ref="e121"
+                                >
+                                <div className="about-copy">
+                                  <p
+                                    className="split-lead"
+-                                   data-cursor-ref="e122"
+                                  >
++                                   Parliamo con chi il lavoro lo fa davvero: chi apre le email al mattino, chi ribatte...
+                                <ul className="about-people">
+                                  <li
+                                    className="about-person"
+-                                   data-cursor-ref="e123"
+                                  >
+                                    <div>
+                                    <div className="about-pers...">
+                                      <h3
+-                                       data-cursor-ref="e124"
+                                      >
++                                       Diego Simoncini
+                                      <p
+-                                       data-cursor-ref="e125"
+                                      >
++                                       Consulenza e sviluppo
+                                      <a
+                                        href="https://www.linkedin.com/in/diego-simoncini-019909223/"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+-                                       data-cursor-ref="e13"
+                                      >
+                                  <li
+                                    className="about-person"
+-                                   data-cursor-ref="e126"
+                                  >
+                                    <div>
+                                    <div className="about-pers...">
+                                      <h3
+-                                       data-cursor-ref="e127"
+                                      >
++                                       Tommaso Rovini
+                                      <p
+-                                       data-cursor-ref="e128"
+                                      >
++                                       Commerciale e marketing
+                                      <a
+                                        href="https://www.linkedin.com/in/tommasorovini/"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+-                                       data-cursor-ref="e14"
+                                      >
+                                <ol className="about-prin...">
+                                  <li
+-                                   data-cursor-ref="e129"
+                                  >
+                                    <span>
+                                    <strong>
+                                    <p
+-                                     data-cursor-ref="e130"
+                                    >
++                                     Guardiamo le email che arrivano, i file che aprite e i passaggi che rifate ogni g...
+                                  <li
+-                                   data-cursor-ref="e131"
+                                  >
+                                    <span>
+                                    <strong>
+                                    <p
+-                                     data-cursor-ref="e132"
+                                    >
++                                     A volte un passaggio si elimina e basta. A volte è meglio lasciarlo com’è. Non vi...
+                                  <li
+-                                   data-cursor-ref="e133"
+                                  >
+                                    <span>
+                                    <strong>
+                                    <p
+-                                     data-cursor-ref="e134"
+                                    >
++                                     Se cambia un listino o qualcosa si rompe, scrivete a noi. Non a un centralino.
+                            <section className="section in..." id="integrazioni">
+                              <div className="container">
+                                <div className="integratio...">
+                                  <p
+                                    className="eyebrow"
+-                                   data-cursor-ref="e135"
+                                  >
++                                   Gli strumenti che usate già
+                                  <h2
+-                                   data-cursor-ref="e136"
+                                  >
+                                  <p
+                                    className="split-lead"
+-                                   data-cursor-ref="e137"
+                                  >
++                                   Restano il vostro gestionale, i vostri Excel e la vostra casella email. Aggiungiamo...
+                                <IntegrationsVisual>
+                                  <MotionScene className="StoryVisua..." label="Gli strume...">
+                                    <div ref={{current:null}} className="SiteMotion..." data-scene="Gli strume..." ...>
+                                      <ul className="StoryVisua...">
+                                        <li
+                                          data-motion="rise"
+                                          data-at={0.2}
+-                                         data-cursor-ref="e138"
+                                        >
+                                        <li
+                                          data-motion="rise"
+                                          data-at={0.7}
+-                                         data-cursor-ref="e139"
+                                        >
+                                        <li
+                                          data-motion="rise"
+                                          data-at={1.2}
+-                                         data-cursor-ref="e140"
+                                        >
+                                        <li
+                                          data-motion="rise"
+                                          data-at={1.7}
+-                                         data-cursor-ref="e141"
+                                        >
+                                        <li
+                                          data-motion="rise"
+                                          data-at={2.2}
+-                                         data-cursor-ref="e142"
+                                        >
+                                        <li
+                                          data-motion="rise"
+                                          data-at={2.7}
+-                                         data-cursor-ref="e143"
+                                        >
+                                      ...
+                            <section className="section co..." id="contatti">
+                              <div className="container ...">
+                                <div className="contact-copy">
+                                  <p
+                                    className="eyebrow eyebrow--light"
+-                                   data-cursor-ref="e144"
+                                  >
++                                   Il primo passo
+                                  <h2
+-                                   data-cursor-ref="e145"
+                                  >
+                                  <p
+-                                   data-cursor-ref="e146"
+                                  >
++                                   Raccontaci un’attività che vi fa perdere tempo. La valutiamo e ti chiamiamo per fis...
+                                <ContactForm>
+                                  <form className="contact-form" onSubmit={function handleSubmit} ...>
+                                    <div className="form-row">
+                                      <label
+-                                       data-cursor-ref="e147"
+                                      >
+                                        <span>
+                                        <input
+                                          name="name"
+                                          autoComplete="name"
+                                          required={true}
+-                                         data-cursor-ref="e15"
+                                        >
+                                      <label
+-                                       data-cursor-ref="e148"
+                                      >
+                                        <span>
+                                        <input
+                                          name="company"
+                                          autoComplete="organization"
+                                          required={true}
+-                                         data-cursor-ref="e16"
+                                        >
+                                    <div className="form-row">
+                                      <label
+-                                       data-cursor-ref="e149"
+                                      >
+                                        <span>
+                                        <input
+                                          name="email"
+                                          type="email"
+                                          autoComplete="email"
+                                          required={true}
+-                                         data-cursor-ref="e17"
+                                        >
+                                      <label
+-                                       data-cursor-ref="e150"
+                                      >
+                                        <span>
+                                        <input
+                                          name="phone"
+                                          type="tel"
+                                          autoComplete="tel"
+                                          inputMode="tel"
+                                          required={true}
+                                          placeholder="Es. +39 333 123 4567"
+-                                         data-cursor-ref="e18"
+                                        >
+                                    <div className="form-row">
+                                      <label
+-                                       data-cursor-ref="e151"
+                                      >
+                                        <span>
+                                        <input
+                                          name="role"
+                                          autoComplete="organization-title"
+                                          placeholder="Es. Titolare"
+-                                         data-cursor-ref="e19"
+                                        >
+                                      <label
+-                                       data-cursor-ref="e152"
+                                      >
+                                        <span>
+                                        <select
+                                          name="activity"
+                                          required={true}
+                                          defaultValue=""
+-                                         data-cursor-ref="e20"
+                                        >
+                                    <label
+-                                     data-cursor-ref="e153"
+                                    >
+                                      <span>
+                                      <textarea
+                                        name="currentProcess"
+                                        rows={3}
+                                        placeholder="Es. Gli ordini arrivano via email e li ribattiamo nel gestionale."
+-                                       data-cursor-ref="e21"
+                                      >
+                                    <details className="optional-f...">
+                                      <summary
+-                                       data-cursor-ref="e22"
+                                      >
+                                      <div className="form-row">
+                                        <label
+-                                         data-cursor-ref="e154"
+                                        >
+                                          <span>
+                                          <select
+                                            name="people"
+                                            defaultValue=""
+-                                           data-cursor-ref="e23"
+                                          >
+                                        <label
+-                                         data-cursor-ref="e155"
+                                        >
+                                          <span>
+                                          <select
+                                            name="frequency"
+                                            defaultValue=""
+-                                           data-cursor-ref="e24"
+                                          >
+                                      <label
+-                                       data-cursor-ref="e156"
+                                      >
+                                        <span>
+                                        <input
+                                          name="tools"
+                                          placeholder="Es. Excel, Outlook, Danea"
+-                                         data-cursor-ref="e25"
+                                        >
+                                    <label
+                                      className="privacy-check"
+-                                     data-cursor-ref="e157"
+                                    >
+                                      <input
+                                        type="checkbox"
+                                        name="privacy"
+                                        value="accepted"
+                                        required={true}
+-                                       data-cursor-ref="e26"
+                                      >
+                                      <span>
+                                        <a
+                                          href="/privacy-policy"
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+-                                         data-cursor-ref="e27"
+                                        >
++                                         informativa privacy
+                                        ...
+                                    <label
+                                      className="privacy-check"
+-                                     data-cursor-ref="e158"
+                                    >
+                                      <input
+                                        type="checkbox"
+                                        name="terms"
+                                        value="accepted"
+                                        required={true}
+-                                       data-cursor-ref="e28"
+                                      >
+                                      <span>
+                                        <a
+                                          href="/termini-e-condizioni"
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+-                                         data-cursor-ref="e29"
+                                        >
++                                         termini e le condizioni
+                                        ...
+                                    <input>
+                                    <input>
+                                    <div className="form-submit">
+                                      <button
+                                        className="button button--primary"
+                                        type="submit"
+                                        disabled={false}
+-                                       data-cursor-ref="e30"
+                                      >
+                          <Footer>
+                            <footer className="site-footer">
+                              <div className="container">
+                                <div className="footer-main">
+                                  <div>
+                                    <LinkComponent>
+                                      <LinkComponent href="/" aria-label="ACCELERIAM...">
+                                        <a
+                                          aria-label="ACCELERIAMO, homepage"
+                                          ref={function}
+                                          onClick={function onClick}
+                                          onMouseEnter={function onMouseEnter}
+                                          onTouchStart={function onTouchStart}
+                                          href="/"
+-                                         data-cursor-ref="e31"
+                                        >
+                                    <p
+-                                     data-cursor-ref="e159"
+                                    >
++                                     Togliamo alle aziende italiane il lavoro che oggi rifanno a mano.
+                                  <nav
+                                    className="footer-links"
+                                    aria-label="Navigazione nel footer"
+-                                   data-cursor-ref="e160"
+                                  >
+                                    <LinkComponent>
+                                      <LinkComponent href="/#servizi">
+                                        <a
+                                          ref={function}
+                                          onClick={function onClick}
+                                          onMouseEnter={function onMouseEnter}
+                                          onTouchStart={function onTouchStart}
+                                          href="/#servizi"
+-                                         data-cursor-ref="e32"
+                                        >
++                                         Cosa facciamo
+                                    <LinkComponent>
+                                      <LinkComponent href="/#metodo">
+                                        <a
+                                          ref={function}
+                                          onClick={function onClick}
+                                          onMouseEnter={function onMouseEnter}
+                                          onTouchStart={function onTouchStart}
+                                          href="/#metodo"
+-                                         data-cursor-ref="e33"
+                                        >
++                                         Come lavoriamo
+                                    <LinkComponent>
+                                      <LinkComponent href="/#chi-siamo">
+                                        <a
+                                          ref={function}
+                                          onClick={function onClick}
+                                          onMouseEnter={function onMouseEnter}
+                                          onTouchStart={function onTouchStart}
+                                          href="/#chi-siamo"
+-                                         data-cursor-ref="e34"
+                                        >
++                                         Chi siamo
+                                    <LinkComponent>
+                                      <LinkComponent href="/#contatti">
+                                        <a
+                                          ref={function}
+                                          onClick={function onClick}
+                                          onMouseEnter={function onMouseEnter}
+                                          onTouchStart={function onTouchStart}
+                                          href="/#contatti"
+-                                         data-cursor-ref="e35"
+                                        >
++                                         Richiedi valutazione
+                                <div className="footer-bottom">
+                                  <span>
+                                  <nav
+                                    aria-label="Informazioni legali"
+-                                   data-cursor-ref="e161"
+                                  >
+                                    <LinkComponent>
+                                      <LinkComponent href="/privacy-p...">
+                                        <a
+                                          ref={function}
+                                          onClick={function onClick}
+                                          onMouseEnter={function onMouseEnter}
+                                          onTouchStart={function onTouchStart}
+                                          href="/privacy-policy"
+-                                         data-cursor-ref="e36"
+                                        >
++                                         Privacy Policy
+                                    <LinkComponent>
+                                      <LinkComponent href="/cookie-po...">
+                                        <a
+                                          ref={function}
+                                          onClick={function onClick}
+                                          onMouseEnter={function onMouseEnter}
+                                          onTouchStart={function onTouchStart}
+                                          href="/cookie-policy"
+-                                         data-cursor-ref="e37"
+                                        >
++                                         Cookie Policy
+                                    <LinkComponent>
+                                      <LinkComponent href="/termini-e...">
+                                        <a
+                                          ref={function}
+                                          onClick={function onClick}
+                                          onMouseEnter={function onMouseEnter}
+                                          onTouchStart={function onTouchStart}
+                                          href="/termini-e-condizioni"
+-                                         data-cursor-ref="e38"
+                                        >
++                                         Termini e condizioni
+                      ...
+                    ...
+        ...
+ 
+ GET / 200 in 153ms (next.js: 13ms, application-code: 140ms)
+ GET / 200 in 72ms (next.js: 2ms, application-code: 70ms)
+[browser] Image with src "/team/tommaso-rovini.jpg" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
+Read more: https://nextjs.org/docs/app/api-reference/components/image#loading
+ GET / 200 in 247ms (next.js: 9ms, application-code: 238ms)
+[browser] A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <ScrollAndMaybeFocusHandler cacheNode={{rsc:{...}, ...}}>
+      <InnerScrollHandlerNew focusAndScrollRef={{scrollRef:null, ...}} cacheNode={{rsc:{...}, ...}}>
+        <ErrorBoundary errorComponent={undefined} errorStyles={undefined} errorScripts={undefined}>
+          <LoadingBoundary name="/" loading={null}>
+            <HTTPAccessFallbackBoundary notFound={{...}} forbidden={undefined} unauthorized={undefined}>
+              <HTTPAccessFallbackErrorBoundary pathname="/" notFound={{...}} forbidden={undefined} ...>
+                <RedirectBoundary>
+                  <RedirectErrorBoundary router={{...}}>
+                    <InnerLayoutRouter url="/#chi-siamo" tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} ...>
+                      <SegmentViewNode type="page" pagePath="page.tsx">
+                        <SegmentTrieNode>
+                        <Home>
+                          <Header>
+                          <SectionEntrances>
+                          <main id="contenuto">
+                            <section className="hero" id="top">
+                              <div className="container ...">
+                                <div className="hero__copy">
+                                  <p>
+                                  <h1
+-                                   data-cursor-ref="e52"
+                                  >
+                                  <p
+-                                   data-cursor-ref="e53"
+                                  >
++                                   Documenti da ribattere, preventivi da scrivere, giri da organizzare, appuntamenti d...
+                                  <div className="button-row">
+                                    <a
+                                      className="button button--primary"
+                                      href="#contatti"
+-                                     data-cursor-ref="e9"
+                                    >
+                                <HeroProcessDemo>
+                                  <MotionScene className="hero-process" label="Esempio: 3...">
+                                    <div ref={{current:null}} className="SiteMotion..." data-scene="Esempio: 3..." ...>
+                                      <div>
+                                      <p
+                                        className="hero-process__heading"
+-                                       data-cursor-ref="e54"
+                                      >
++                                       Il cliente chiede 30 articoli via email
+                                      <HeroStory>
+                                        <div className="StoryVisua...">
+                                          <div>
+                                          <ol className="StoryVisua..." aria-label="Dall’email...">
+                                            <li
+-                                             data-cursor-ref="e55"
+                                            >
+                                            <li
+-                                             data-cursor-ref="e56"
+                                            >
+                                            <li
+-                                             data-cursor-ref="e57"
+                                            >
+                                          ...
+                            <section className="section pr..." id="problemi">
+                              <div className="container">
+                                <div className="section-he...">
+                                  <p
+                                    className="eyebrow"
+-                                   data-cursor-ref="e58"
+                                  >
++                                   Riconosci il tuo caso?
+                                  <h2
+-                                   data-cursor-ref="e59"
+                                  >
+                                  <p
+-                                   data-cursor-ref="e60"
+                                  >
++                                   Grossisti, installatori, officine, manutentori: cambia il mestiere, non il lavoro r...
+                                <ServiceCarousel className="problem-grid" label="Quattro ti..." variant="story">
+                                  <div className="problem-gr..." data-variant="story">
+                                    <div className="ServiceCar..." ref={{current:null}} ...>
+                                      <article className="editorial-...">
+                                        <div className="editorial-...">
+                                          <span>
+                                          <p
+                                            className="card-kicker"
+-                                           data-cursor-ref="e61"
+                                          >
++                                           Documenti da ribattere
+                                          <h3
+-                                           data-cursor-ref="e62"
+                                          >
++                                           Lo stesso ordine viene scritto due volte.
+                                          <p
+-                                           data-cursor-ref="e63"
+                                          >
++                                           Arriva per email o su WhatsApp. Poi qualcuno lo rilegge e lo ribatte nel ge...
+                                        ...
+                                      <article className="editorial-...">
+                                        <div className="editorial-...">
+                                          <span>
+                                          <p
+                                            className="card-kicker"
+-                                           data-cursor-ref="e64"
+                                          >
++                                           Richieste che aspettano
+                                          <h3
+-                                           data-cursor-ref="e65"
+                                          >
++                                           Il cliente aspetta ancora il preventivo.
+                                          <p
+-                                           data-cursor-ref="e66"
+                                          >
++                                           Per rispondere servono il listino giusto, lo sconto di quel cliente e la di...
+                                        ...
+                                      <article className="editorial-...">
+                                        <div className="editorial-...">
+                                          <span>
+                                          <p
+                                            className="card-kicker"
+-                                           data-cursor-ref="e67"
+                                          >
++                                           Giri e appuntamenti
+                                          <h3
+-                                           data-cursor-ref="e68"
+                                          >
++                                           Ogni sera prepari i giri di domani.
+                                          <p
+-                                           data-cursor-ref="e69"
+                                          >
++                                           Zone, orari, ricambi, tecnici disponibili. Se uno dà buca, si rifà tutto a ...
+                                        ...
+                                      <article className="editorial-...">
+                                        <div className="editorial-...">
+                                          <span>
+                                          <p
+                                            className="card-kicker"
+-                                           data-cursor-ref="e70"
+                                          >
++                                           «A che punto siamo?»
+                                          <h3
+-                                           data-cursor-ref="e71"
+                                          >
++                                           Il cliente chiede quando consegnate.
+                                          <p
+-                                           data-cursor-ref="e72"
+                                          >
++                                           Per rispondere chiami due persone e cerchi un’email di tre settimane fa.
+                                        ...
+                                    <div className="ServiceCar..." role="tablist" aria-label="Quattro ti...">
+                                      <button
+                                        type="button"
+                                        role="tab"
+                                        className="ServiceCarousel-module__o_e8Oa__dot"
+                                        aria-selected={true}
+                                        data-seen="true"
+                                        aria-label="Quattro tipi di lavoro ripetuto 1"
+                                        onClick={function onClick}
+-                                       data-cursor-ref="e10"
+                                      >
+                                      <button
+                                        type="button"
+                                        role="tab"
+                                        className="ServiceCarousel-module__o_e8Oa__dot"
+                                        aria-selected={false}
+                                        data-seen={undefined}
+                                        aria-label="Quattro tipi di lavoro ripetuto 2"
+                                        onClick={function onClick}
+-                                       data-cursor-ref="e11"
+                                      >
+                                      <button
+                                        type="button"
+                                        role="tab"
+                                        className="ServiceCarousel-module__o_e8Oa__dot"
+                                        aria-selected={false}
+                                        data-seen={undefined}
+                                        aria-label="Quattro tipi di lavoro ripetuto 3"
+                                        onClick={function onClick}
+-                                       data-cursor-ref="e12"
+                                      >
+                                      <button
+                                        type="button"
+                                        role="tab"
+                                        className="ServiceCarousel-module__o_e8Oa__dot"
+                                        aria-selected={false}
+                                        data-seen={undefined}
+                                        aria-label="Quattro tipi di lavoro ripetuto 4"
+                                        onClick={function onClick}
+-                                       data-cursor-ref="e13"
+                                      >
+                            <section className="section me..." id="metodo">
+                              <div className="container">
+                                <div className="section-he...">
+                                  <p
+                                    className="eyebrow"
+-                                   data-cursor-ref="e73"
+                                  >
++                                   Come lavoriamo
+                                  <h2
+-                                   data-cursor-ref="e74"
+                                  >
+                                  <p
+                                    className="method-heading__note"
+-                                   data-cursor-ref="e75"
+                                  >
++                                   A volte la risposta giusta è che un passaggio non va automatizzato: va eliminato.
+                                <MotionScene className="method-layout" label="Le quattro...">
+                                  <div ref={{current:null}} className="SiteMotion..." data-scene="Le quattro..." ...>
+                                    <ol className="method-grid">
+                                      <li
+                                        data-motion="focus"
+                                        data-at="0.2"
+-                                       data-cursor-ref="e76"
+                                      >
+                                        <span>
+                                        <h3
+-                                         data-cursor-ref="e77"
+                                        >
++                                         Guardiamo come lavorate
+                                        <p
+-                                         data-cursor-ref="e78"
+                                        >
++                                         Le email che arrivano, i file che aprite, i passaggi che rifate ogni giorno.
+                                      <li
+                                        data-motion="focus"
+                                        data-at="1.7"
+-                                       data-cursor-ref="e79"
+                                      >
+                                        <span>
+                                        <h3
+-                                         data-cursor-ref="e80"
+                                        >
++                                         Ti diciamo cosa conviene
+                                        <p
+-                                         data-cursor-ref="e81"
+                                        >
++                                         Alcune cose si eliminano. Altre le fa il computer. Altre è meglio lasciarle c...
+                                      <li
+                                        data-motion="focus"
+                                        data-at="3.2"
+-                                       data-cursor-ref="e82"
+                                      >
+                                        <span>
+                                        <h3
+-                                         data-cursor-ref="e83"
+                                        >
++                                         Costruiamo il pezzo che manca
+                                        <p
+-                                         data-cursor-ref="e84"
+                                        >
++                                         Lo proviamo sui vostri casi veri. Poi lo usate voi, davanti a noi.
+                                      <li
+                                        data-motion="focus"
+                                        data-at="4.7"
+-                                       data-cursor-ref="e85"
+                                      >
+                                        <span>
+                                        <h3
+-                                         data-cursor-ref="e86"
+                                        >
++                                         Restiamo raggiungibili
+                                        <p
+-                                         data-cursor-ref="e87"
+                                        >
++                                         Se cambia un listino o qualcosa si rompe, scrivete a noi.
+                                    <MethodVisual>
+                                      <div className="StoryVisua..." data-motion-viewport={true}>
+                                        <div>
+                                        <ol className="StoryVisua..." aria-label="Guardiamo,...">
+                                          <li
+-                                           data-cursor-ref="e88"
+                                          >
+                                          <li
+-                                           data-cursor-ref="e89"
+                                          >
+                                          <li
+-                                           data-cursor-ref="e90"
+                                          >
+                                          <li
+-                                           data-cursor-ref="e91"
+                                          >
+                                        ...
+                            <section className="section se..." id="servizi">
+                              <div className="container">
+                                <div className="section-he...">
+                                  <p
+                                    className="eyebrow"
+-                                   data-cursor-ref="e92"
+                                  >
++                                   Cosa facciamo
+                                  <h2
+-                                   data-cursor-ref="e93"
+                                  >
+                                <ServiceCarousel>
+                                  <div className="service-st..." data-variant="dots">
+                                    <div className="ServiceCar..." ref={{current:null}} ...>
+                                      <article className="service-card">
+                                        <div className="service-ca...">
+                                          <span>
+                                          <h3
+-                                           data-cursor-ref="e94"
+                                          >
++                                           I dati passano da soli
+                                          <p
+-                                           data-cursor-ref="e95"
+                                          >
++                                           L’ordine arriva via email e finisce nel gestionale. Nessuno lo ribatte.
+                                        ...
+                                      <article className="service-card">
+                                        <div className="service-ca...">
+                                          <span>
+                                          <h3
+-                                           data-cursor-ref="e96"
+                                          >
++                                           Leggiamo i documenti al posto vostro
+                                          <p
+-                                           data-cursor-ref="e97"
+                                          >
++                                           Fatture, bolle, ordini e PDF: il software tira fuori i dati e segnala solo ...
+                                        ...
+                                      <article className="service-card" id="software">
+                                        <div className="service-ca...">
+                                          <span>
+                                          <h3
+-                                           data-cursor-ref="e98"
+                                          >
++                                           Il programma che vi manca
+                                          <p
+-                                           data-cursor-ref="e99"
+                                          >
++                                           Quando nessun gestionale segue il vostro modo di lavorare, costruiamo la sc...
+                                        ...
+                                    <div className="ServiceCar..." role="tablist" aria-label="Servizi">
+                                      <button
+                                        type="button"
+                                        role="tab"
+                                        className="ServiceCarousel-module__o_e8Oa__dot"
+                                        aria-selected={true}
+                                        data-seen="true"
+                                        aria-label="Servizi 1"
+                                        onClick={function onClick}
+-                                       data-cursor-ref="e14"
+                                      >
+                                      <button
+                                        type="button"
+                                        role="tab"
+                                        className="ServiceCarousel-module__o_e8Oa__dot"
+                                        aria-selected={false}
+                                        data-seen={undefined}
+                                        aria-label="Servizi 2"
+                                        onClick={function onClick}
+-                                       data-cursor-ref="e15"
+                                      >
+                                      <button
+                                        type="button"
+                                        role="tab"
+                                        className="ServiceCarousel-module__o_e8Oa__dot"
+                                        aria-selected={false}
+                                        data-seen={undefined}
+                                        aria-label="Servizi 3"
+                                        onClick={function onClick}
+-                                       data-cursor-ref="e16"
+                                      >
+                            <section
+                              className="section comparison-section"
+                              id="confronto"
+                              aria-labelledby="comparison-title"
+-                             data-cursor-ref="e100"
+                            >
+                              <div className="container">
+                                <div className="section-he...">
+                                  <p
+                                    className="eyebrow"
+-                                   data-cursor-ref="e101"
+                                  >
++                                   Prima e dopo
+                                  <h2
+                                    id="comparison-title"
+-                                   data-cursor-ref="e102"
+                                  >
+                                  <p
+                                    className="split-lead"
+-                                   data-cursor-ref="e103"
+                                  >
++                                   Stessa richiesta, stesso listino, stesso gestionale. Cambia solo chi fa la parte no...
+                                <ProcessComparison>
+                                  <div className="ProcessCom...">
+                                    <div className="ProcessCom..." role="tablist" aria-label="Confronto ..." ...>
+                                      <span>
+                                      <button
+                                        type="button"
+                                        role="tab"
+                                        className="ProcessComparison-module__vnTs8a__toggleButton"
+                                        aria-selected={true}
+                                        onClick={function onClick}
+-                                       data-cursor-ref="e17"
+                                      >
+                                      <button
+                                        type="button"
+                                        role="tab"
+                                        className="ProcessComparison-module__vnTs8a__toggleButton"
+                                        aria-selected={false}
+                                        onClick={function onClick}
+-                                       data-cursor-ref="e18"
+                                      >
+                                    <div className="ProcessCom..." ref={{current:null}} ...>
+                                      <Panel active={true} restartKey={0}>
+                                        <article ref={{current:null}} className="ProcessCom..." data-running={false}>
+                                          <div className="ProcessCom...">
+                                            <span>
+                                            <h3
+-                                             data-cursor-ref="e104"
+                                            >
+                                            ...
+                                          <div className="ProcessCom...">
+                                            <div>
+                                            <ol className="ProcessCom..." aria-label="Passaggi m...">
+                                              <li
+                                                className="ProcessComparison-module__vnTs8a__step"
+                                                style={{--shift:"0px"}}
+-                                               data-cursor-ref="e105"
+                                              >
+                                              <li
+                                                className="ProcessComparison-module__vnTs8a__step"
+                                                style={{--shift:"18px"}}
+-                                               data-cursor-ref="e106"
+                                              >
+                                              <li
+                                                className="ProcessComparison-module__vnTs8a__step"
+                                                style={{--shift:"-8px"}}
+-                                               data-cursor-ref="e107"
+                                              >
+                                              <li
+                                                className="ProcessComparison-module__vnTs8a__step"
+                                                style={{--shift:"14px"}}
+-                                               data-cursor-ref="e108"
+                                              >
+                                              <li
+                                                className="ProcessComparison-module__vnTs8a__step"
+                                                style={{--shift:"0px"}}
+-                                               data-cursor-ref="e109"
+                                              >
+                                          ...
+                                      <Panel after={true} active={true} restartKey={0}>
+                                        <article ref={{current:null}} className="ProcessCom..." data-running={false}>
+                                          <div className="ProcessCom...">
+                                            <span>
+                                            <h3
+-                                             data-cursor-ref="e110"
+                                            >
+                                            ...
+                                          <div className="ProcessCom...">
+                                            <span>
+                                            <div>
+                                            <div className="ProcessCom...">
+                                              <span>
+                                              <div>
+                                              <ol className="ProcessCom..." aria-label="Passaggi a...">
+                                                <li
+                                                  className="ProcessComparison-module__vnTs8a__step"
+-                                                 data-cursor-ref="e111"
+                                                >
+                                                <li
+                                                  className="ProcessComparison-module__vnTs8a__step"
+-                                                 data-cursor-ref="e112"
+                                                >
+                                            ...
+                                          ...
+                            <section className="section ex..." id="esempi">
+                              <div className="container">
+                                <div className="section-he...">
+                                  <p
+                                    className="eyebrow"
+-                                   data-cursor-ref="e113"
+                                  >
++                                   Esempi
+                                  <h2
+-                                   data-cursor-ref="e114"
+                                  >
+                                  <p
+                                    className="split-lead"
+-                                   data-cursor-ref="e115"
+                                  >
++                                   Cinque casi. Se somigliano al vostro, il vostro lo guardiamo davvero.
+                                <div className="example-list">
+                                  <details className="example-item">
+                                    <summary
+-                                     data-cursor-ref="e19"
+                                    >
+                                    <div className="example-de...">
+                                      <p
+-                                       data-cursor-ref="e116"
+                                      >
++                                       La richiesta arriva via email. Per rispondere servono il listino di quel client...
+                                      ...
+                                  <details className="example-item">
+                                    <summary
+-                                     data-cursor-ref="e20"
+                                    >
+                                    <div className="example-de...">
+                                      <p
+-                                       data-cursor-ref="e117"
+                                      >
++                                       Foto di moduli, note vocali, righe scritte a mano. Il software legge codici e q...
+                                      ...
+                                  <details className="example-item">
+                                    <summary
+-                                     data-cursor-ref="e21"
+                                    >
+                                    <div className="example-de...">
+                                      <p
+-                                       data-cursor-ref="e118"
+                                      >
++                                       Zone, orari, competenze e scadenze dei contratti stanno spesso solo nella testa...
+                                      ...
+                                  <details className="example-item">
+                                    <summary
+-                                     data-cursor-ref="e22"
+                                    >
+                                    <div className="example-de...">
+                                      <p
+-                                       data-cursor-ref="e119"
+                                      >
++                                       Interventi fatti, ricambi in arrivo e ore già spese finiscono in una schermata ...
+                                      ...
+                                  <details className="example-item">
+                                    <summary
+-                                     data-cursor-ref="e23"
+                                    >
+                                    <div className="example-de...">
+                                      <p
+-                                       data-cursor-ref="e120"
+                                      >
++                                       Il telefono squilla mentre state lavorando. Il calendario libera il posto, prop...
+                                      ...
+                            <section className="section hu..." id="controllo-...">
+                              <div className="container ...">
+                                <div>
+                                  <p
+                                    className="eyebrow"
+-                                   data-cursor-ref="e121"
+                                  >
++                                   Le decisioni restano vostre
+                                  <h2
+-                                   data-cursor-ref="e122"
+                                  >
+                                  <p
+-                                   data-cursor-ref="e123"
+                                  >
++                                   Quando un prezzo non torna o una quantità non corrisponde, il sistema si ferma e ve...
+                                <HumanVisual>
+                                  <MotionScene className="StoryVisua..." label="Le righe c...">
+                                    <div ref={{current:null}} className="SiteMotion..." data-scene="Le righe c..." ...>
+                                      <div>
+                                      <div>
+                                      <p
+                                        className="StoryVisuals-module__7iE3cq__humanNote"
+                                        data-motion="reveal"
+                                        data-at={5.5}
+-                                       data-cursor-ref="e124"
+                                      >
+                            <section className="section ab..." id="chi-siamo">
+                              <div className="container ...">
+                                <p
+                                  className="eyebrow"
+-                                 data-cursor-ref="e125"
+                                >
++                                 Chi siamo
+                                <h2
+-                                 data-cursor-ref="e126"
+                                >
+                                <div className="about-copy">
+                                  <p
+                                    className="split-lead"
+-                                   data-cursor-ref="e127"
+                                  >
++                                   Parliamo con chi il lavoro lo fa davvero: chi apre le email al mattino, chi ribatte...
+                                <ul className="about-people">
+                                  <li
+                                    className="about-person"
+-                                   data-cursor-ref="e128"
+                                  >
+                                    <div>
+                                    <div className="about-pers...">
+                                      <h3
+-                                       data-cursor-ref="e129"
+                                      >
++                                       Diego Simoncini
+                                      <p
+-                                       data-cursor-ref="e130"
+                                      >
++                                       Consulenza e sviluppo
+                                      <a
+                                        href="https://www.linkedin.com/in/diego-simoncini-019909223/"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+-                                       data-cursor-ref="e24"
+                                      >
+                                  <li
+                                    className="about-person"
+-                                   data-cursor-ref="e131"
+                                  >
+                                    <div>
+                                    <div className="about-pers...">
+                                      <h3
+-                                       data-cursor-ref="e132"
+                                      >
++                                       Tommaso Rovini
+                                      <p
+-                                       data-cursor-ref="e133"
+                                      >
++                                       Commerciale e marketing
+                                      <a
+                                        href="https://www.linkedin.com/in/tommasorovini/"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+-                                       data-cursor-ref="e25"
+                                      >
+                                <ol className="about-prin...">
+                                  <li
+-                                   data-cursor-ref="e134"
+                                  >
+                                    <span>
+                                    <strong>
+                                    <p
+-                                     data-cursor-ref="e135"
+                                    >
++                                     Guardiamo le email che arrivano, i file che aprite e i passaggi che rifate ogni g...
+                                  <li
+-                                   data-cursor-ref="e136"
+                                  >
+                                    <span>
+                                    <strong>
+                                    <p
+-                                     data-cursor-ref="e137"
+                                    >
++                                     A volte un passaggio si elimina e basta. A volte è meglio lasciarlo com’è. Non vi...
+                                  <li
+-                                   data-cursor-ref="e138"
+                                  >
+                                    <span>
+                                    <strong>
+                                    <p
+-                                     data-cursor-ref="e139"
+                                    >
++                                     Se cambia un listino o qualcosa si rompe, scrivete a noi. Non a un centralino.
+                            <section className="section in..." id="integrazioni">
+                              <div className="container">
+                                <div className="integratio...">
+                                  <p
+                                    className="eyebrow"
+-                                   data-cursor-ref="e140"
+                                  >
++                                   Gli strumenti che usate già
+                                  <h2
+-                                   data-cursor-ref="e141"
+                                  >
+                                  <p
+                                    className="split-lead"
+-                                   data-cursor-ref="e142"
+                                  >
++                                   Restano il vostro gestionale, i vostri Excel e la vostra casella email. Aggiungiamo...
+                                <IntegrationsVisual>
+                                  <MotionScene className="StoryVisua..." label="Gli strume...">
+                                    <div ref={{current:null}} className="SiteMotion..." data-scene="Gli strume..." ...>
+                                      <ul className="StoryVisua...">
+                                        <li
+                                          data-motion="rise"
+                                          data-at={0.2}
+-                                         data-cursor-ref="e143"
+                                        >
+                                        <li
+                                          data-motion="rise"
+                                          data-at={0.7}
+-                                         data-cursor-ref="e144"
+                                        >
+                                        <li
+                                          data-motion="rise"
+                                          data-at={1.2}
+-                                         data-cursor-ref="e145"
+                                        >
+                                        <li
+                                          data-motion="rise"
+                                          data-at={1.7}
+-                                         data-cursor-ref="e146"
+                                        >
+                                        <li
+                                          data-motion="rise"
+                                          data-at={2.2}
+-                                         data-cursor-ref="e147"
+                                        >
+                                        <li
+                                          data-motion="rise"
+                                          data-at={2.7}
+-                                         data-cursor-ref="e148"
+                                        >
+                                      ...
+                            <section className="section co..." id="contatti">
+                              <div className="container ...">
+                                <div className="contact-copy">
+                                  <p
+                                    className="eyebrow eyebrow--light"
+-                                   data-cursor-ref="e149"
+                                  >
++                                   Il primo passo
+                                  <h2
+-                                   data-cursor-ref="e150"
+                                  >
+                                  <p
+-                                   data-cursor-ref="e151"
+                                  >
++                                   Raccontaci un’attività che vi fa perdere tempo. La valutiamo e ti chiamiamo per fis...
+                                <ContactForm>
+                                  <form className="contact-form" onSubmit={function handleSubmit} ...>
+                                    <div className="form-row">
+                                      <label
+-                                       data-cursor-ref="e152"
+                                      >
+                                        <span>
+                                        <input
+                                          name="name"
+                                          autoComplete="name"
+                                          required={true}
+-                                         data-cursor-ref="e26"
+                                        >
+                                      <label
+-                                       data-cursor-ref="e153"
+                                      >
+                                        <span>
+                                        <input
+                                          name="company"
+                                          autoComplete="organization"
+                                          required={true}
+-                                         data-cursor-ref="e27"
+                                        >
+                                    <div className="form-row">
+                                      <label
+-                                       data-cursor-ref="e154"
+                                      >
+                                        <span>
+                                        <input
+                                          name="email"
+                                          type="email"
+                                          autoComplete="email"
+                                          required={true}
+-                                         data-cursor-ref="e28"
+                                        >
+                                      <label
+-                                       data-cursor-ref="e155"
+                                      >
+                                        <span>
+                                        <input
+                                          name="phone"
+                                          type="tel"
+                                          autoComplete="tel"
+                                          inputMode="tel"
+                                          required={true}
+                                          placeholder="Es. +39 333 123 4567"
+-                                         data-cursor-ref="e29"
+                                        >
+                                    <div className="form-row">
+                                      <label
+-                                       data-cursor-ref="e156"
+                                      >
+                                        <span>
+                                        <input
+                                          name="role"
+                                          autoComplete="organization-title"
+                                          placeholder="Es. Titolare"
+-                                         data-cursor-ref="e30"
+                                        >
+                                      <label
+-                                       data-cursor-ref="e157"
+                                      >
+                                        <span>
+                                        <select
+                                          name="activity"
+                                          required={true}
+                                          defaultValue=""
+-                                         data-cursor-ref="e31"
+                                        >
+                                    <label
+-                                     data-cursor-ref="e158"
+                                    >
+                                      <span>
+                                      <textarea
+                                        name="currentProcess"
+                                        rows={3}
+                                        placeholder="Es. Gli ordini arrivano via email e li ribattiamo nel gestionale."
+-                                       data-cursor-ref="e32"
+                                      >
+                                    <details className="optional-f...">
+                                      <summary
+-                                       data-cursor-ref="e33"
+                                      >
+                                      <div className="form-row">
+                                        <label
+-                                         data-cursor-ref="e159"
+                                        >
+                                          <span>
+                                          <select
+                                            name="people"
+                                            defaultValue=""
+-                                           data-cursor-ref="e34"
+                                          >
+                                        <label
+-                                         data-cursor-ref="e160"
+                                        >
+                                          <span>
+                                          <select
+                                            name="frequency"
+                                            defaultValue=""
+-                                           data-cursor-ref="e35"
+                                          >
+                                      <label
+-                                       data-cursor-ref="e161"
+                                      >
+                                        <span>
+                                        <input
+                                          name="tools"
+                                          placeholder="Es. Excel, Outlook, Danea"
+-                                         data-cursor-ref="e36"
+                                        >
+                                    <label
+                                      className="privacy-check"
+-                                     data-cursor-ref="e162"
+                                    >
+                                      <input
+                                        type="checkbox"
+                                        name="privacy"
+                                        value="accepted"
+                                        required={true}
+-                                       data-cursor-ref="e37"
+                                      >
+                                      <span>
+                                        <a
+                                          href="/privacy-policy"
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+-                                         data-cursor-ref="e38"
+                                        >
++                                         informativa privacy
+                                        ...
+                                    <label
+                                      className="privacy-check"
+-                                     data-cursor-ref="e163"
+                                    >
+                                      <input
+                                        type="checkbox"
+                                        name="terms"
+                                        value="accepted"
+                                        required={true}
+-                                       data-cursor-ref="e39"
+                                      >
+                                      <span>
+                                        <a
+                                          href="/termini-e-condizioni"
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+-                                         data-cursor-ref="e40"
+                                        >
++                                         termini e le condizioni
+                                        ...
+                                    <input>
+                                    <input>
+                                    <div className="form-submit">
+                                      <button
+                                        className="button button--primary"
+                                        type="submit"
+                                        disabled={false}
+-                                       data-cursor-ref="e41"
+                                      >
+                          <Footer>
+                            <footer className="site-footer">
+                              <div className="container">
+                                <div className="footer-main">
+                                  <div>
+                                    <LinkComponent>
+                                      <LinkComponent href="/" aria-label="ACCELERIAM...">
+                                        <a
+                                          aria-label="ACCELERIAMO, homepage"
+                                          ref={function}
+                                          onClick={function onClick}
+                                          onMouseEnter={function onMouseEnter}
+                                          onTouchStart={function onTouchStart}
+                                          href="/"
+-                                         data-cursor-ref="e42"
+                                        >
+                                    <p
+-                                     data-cursor-ref="e164"
+                                    >
++                                     Togliamo alle aziende italiane il lavoro che oggi rifanno a mano.
+                                  <nav
+                                    className="footer-links"
+                                    aria-label="Navigazione nel footer"
+-                                   data-cursor-ref="e165"
+                                  >
+                                    <LinkComponent>
+                                      <LinkComponent href="/#servizi">
+                                        <a
+                                          ref={function}
+                                          onClick={function onClick}
+                                          onMouseEnter={function onMouseEnter}
+                                          onTouchStart={function onTouchStart}
+                                          href="/#servizi"
+-                                         data-cursor-ref="e43"
+                                        >
++                                         Cosa facciamo
+                                    <LinkComponent>
+                                      <LinkComponent href="/#metodo">
+                                        <a
+                                          ref={function}
+                                          onClick={function onClick}
+                                          onMouseEnter={function onMouseEnter}
+                                          onTouchStart={function onTouchStart}
+                                          href="/#metodo"
+-                                         data-cursor-ref="e44"
+                                        >
++                                         Come lavoriamo
+                                    <LinkComponent>
+                                      <LinkComponent href="/#chi-siamo">
+                                        <a
+                                          ref={function}
+                                          onClick={function onClick}
+                                          onMouseEnter={function onMouseEnter}
+                                          onTouchStart={function onTouchStart}
+                                          href="/#chi-siamo"
+-                                         data-cursor-ref="e45"
+                                        >
++                                         Chi siamo
+                                    <LinkComponent>
+                                      <LinkComponent href="/#contatti">
+                                        <a
+                                          ref={function}
+                                          onClick={function onClick}
+                                          onMouseEnter={function onMouseEnter}
+                                          onTouchStart={function onTouchStart}
+                                          href="/#contatti"
+-                                         data-cursor-ref="e46"
+                                        >
++                                         Richiedi valutazione
+                                <div className="footer-bottom">
+                                  <span>
+                                  <nav
+                                    aria-label="Informazioni legali"
+-                                   data-cursor-ref="e166"
+                                  >
+                                    <LinkComponent>
+                                      <LinkComponent href="/privacy-p...">
+                                        <a
+                                          ref={function}
+                                          onClick={function onClick}
+                                          onMouseEnter={function onMouseEnter}
+                                          onTouchStart={function onTouchStart}
+                                          href="/privacy-policy"
+-                                         data-cursor-ref="e47"
+                                        >
++                                         Privacy Policy
+                                    <LinkComponent>
+                                      <LinkComponent href="/cookie-po...">
+                                        <a
+                                          ref={function}
+                                          onClick={function onClick}
+                                          onMouseEnter={function onMouseEnter}
+                                          onTouchStart={function onTouchStart}
+                                          href="/cookie-policy"
+-                                         data-cursor-ref="e48"
+                                        >
++                                         Cookie Policy
+                                    <LinkComponent>
+                                      <LinkComponent href="/termini-e...">
+                                        <a
+                                          ref={function}
+                                          onClick={function onClick}
+                                          onMouseEnter={function onMouseEnter}
+                                          onTouchStart={function onTouchStart}
+                                          href="/termini-e-condizioni"
+-                                         data-cursor-ref="e49"
+                                        >
++                                         Termini e condizioni
+                      ...
+                    ...
+        ...
+ 
+[?25h

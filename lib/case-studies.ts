@@ -13,15 +13,16 @@ export type CaseStudy = {
 export const caseStudies: CaseStudy[] = [
   {
     id: "immobiliare-toscana",
-    client: "Nota agenzia immobiliare",
+    client: "Megaron Immobiliare",
+    clientUrl: "https://megaronimmobiliare.it",
     region: "Toscana",
     title: "Cento richieste al giorno, smistate a mano.",
     highlights: [
-      "Circa 100 mail al giorno da leggere e girare all’agente giusto.",
-      "Ora ogni richiesta parte da sola, con conferma automatica al cliente.",
+      "Circa 100 richieste al giorno via mail, da leggere e girare all’agente immobiliare giusto.",
+      "Ora ogni richiesta viene smistata automaticamente all’agente di quella zona ed il cliente riceve una mail di conferma di presa in carico.",
     ],
     outcome: "Circa 8 ore al giorno recuperate.",
-    icon: "inbox",
+    logo: { src: "/clients/megaron-logo.png", alt: "Logo Megaron Servizi Immobiliari", width: 200, height: 200 },
   },
   {
     id: "cuormio",
