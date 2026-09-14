@@ -204,3 +204,4 @@
   .problemArtwork { width: 96px; height: 96px; }
   .problemArtwork .art { width: 90px; height: 90px; }
 }
+:global([data-near="false"]) .art { background-image: none; }

@@ -74,6 +74,10 @@ export function MotionScene({ children, className = "", label, duration = 11000 
       }
       update();
     };
+    const assetObserver = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) { element.dataset.near = "true"; assetObserver.disconnect(); }
+    }, { rootMargin: "350px" });
+    assetObserver.observe(element);
     build();
     const observer = new IntersectionObserver(([entry]) => {
       visible = entry.isIntersecting;
@@ -84,6 +88,7 @@ export function MotionScene({ children, className = "", label, duration = 11000 
     document.addEventListener("visibilitychange", update);
     return () => {
       observer.disconnect();
+      assetObserver.disconnect();
       preference.removeEventListener("change", build);
       document.removeEventListener("visibilitychange", update);
       animations.forEach(animation => animation.cancel());
@@ -91,7 +96,7 @@ export function MotionScene({ children, className = "", label, duration = 11000 
   }, [duration]);
 
   return (
-    <div ref={root} className={`${styles.scene} ${className}`} data-scene={label} role="group" aria-label={label}>
+    <div ref={root} className={`${styles.scene} ${className}`} data-near={className.includes("hero-process") ? "true" : "false"} data-scene={label} role="group" aria-label={label}>
       {children}
     </div>
   );
@@ -110,7 +115,7 @@ export function SectionEntrances() {
         { opacity: 1, transform: "translateY(0)" },
       ], { duration: 650, easing: "cubic-bezier(.16,1,.3,1)" }));
     }), { threshold: .15 });
-    document.querySelectorAll(".hero__copy, section:not(#confronto) .section-heading, .human-grid > div:first-child, .integrations__inner, .contact-copy, .footer-main").forEach(element => observer.observe(element));
+    document.querySelectorAll("section:not(#confronto) .section-heading, .human-grid > div:first-child, .integrations__inner, .contact-copy, .footer-main").forEach(element => observer.observe(element));
     const stop = () => { if (preference.matches) animations.forEach(animation => animation.finish()); };
     preference.addEventListener("change", stop);
     return () => { observer.disconnect(); preference.removeEventListener("change", stop); animations.forEach(animation => animation.cancel()); };

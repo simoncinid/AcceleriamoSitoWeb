@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
-import { LEGAL_VERSION, PRIVACY_ACKNOWLEDGEMENT, TERMS_ACKNOWLEDGEMENT } from "@/lib/legal";
+import { randomUUID } from "node:crypto";
+import { sendMetaLead } from "@/lib/meta";
+import { LEGAL_VERSION } from "@/lib/legal";
 
 type ContactBody = Record<string, unknown>;
 
@@ -19,7 +21,7 @@ function isValidPhone(value: string) {
   return digits.length >= 8 && digits.length <= 15;
 }
 
-function buildEmailText(body: ContactBody) {
+function buildEmailText(body: ContactBody, eventId: string) {
   const optional = [
     ["Ruolo", asString(body.role)],
     ["Persone coinvolte", asString(body.people)],
@@ -45,11 +47,17 @@ function buildEmailText(body: ContactBody) {
     optional.forEach(([label, value]) => lines.push(`${label}: ${value}`));
   }
 
-  lines.push("", "Dichiarazioni del richiedente:",
-    `Privacy: ${PRIVACY_ACKNOWLEDGEMENT}`,
-    `Termini: ${TERMS_ACKNOWLEDGEMENT}`,
+  lines.push("", "Provenienza della richiesta:");
+  for (const key of ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content", "utm_id", "sector"]) {
+    const value = asString(body[key]).replace(/[\r\n]/g, " ").slice(0, 250);
+    if (value) lines.push(`${key}: ${value}`);
+  }
+  lines.push("", "Informativa resa al momento dell’invio:",
     `Versione documenti: ${LEGAL_VERSION}`,
     "Documenti: /privacy-policy · /termini-e-condizioni",
+    "Richiesta gratuita di ricontatto; nessuna accettazione contrattuale o iscrizione al marketing.",
+    `Consenso misurazione Meta: ${body.marketingConsent === true ? "sì" : "no"}`,
+    `ID richiesta / evento: ${eventId}`,
     `Ricevuto dal server il: ${new Date().toISOString()}`);
   return lines.join("\n");
 }
@@ -66,7 +74,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: "Dati non validi." }, { status: 400 });
   }
 
-  if (body.website) return NextResponse.json({ message: "Richiesta ricevuta." });
+  if (body.website) return NextResponse.json({ message: "Richiesta ricevuta.", accepted: false });
 
   const name = asString(body.name);
   const company = asString(body.company);
@@ -74,19 +82,15 @@ export async function POST(request: Request) {
   const phone = asString(body.phone);
   const activity = asString(body.activity);
 
-  if (!name || !company || !email || !phone || !activity) {
+  if (!name || !company || !phone || !activity) {
     return NextResponse.json({ message: "Completa i campi obbligatori." }, { status: 422 });
   }
 
-  if (body.privacy !== "accepted" || body.terms !== "accepted") {
-    return NextResponse.json({ message: "Conferma di aver letto l’informativa privacy e di accettare i termini e le condizioni." }, { status: 422 });
-  }
-
   if (body.legalVersion !== LEGAL_VERSION) {
-    return NextResponse.json({ message: "I documenti legali sono stati aggiornati. Ricarica la pagina, leggili e invia nuovamente la richiesta." }, { status: 409 });
+    return NextResponse.json({ message: "I documenti legali sono stati aggiornati. Ricarica la pagina e invia nuovamente la richiesta." }, { status: 409 });
   }
 
-  if (!isValidEmail(email)) {
+  if (email && !isValidEmail(email)) {
     return NextResponse.json({ message: "Inserisci un indirizzo email valido." }, { status: 422 });
   }
 
@@ -94,37 +98,45 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: "Inserisci un numero di telefono valido." }, { status: 422 });
   }
 
-  const fromAddress = process.env.GMAIL_FROM_ADDRESS;
-  const toAddress = process.env.GMAIL_TO_ADDRESS;
-  const appPassword = process.env.GMAIL_APP_PASSWORD;
+  const fromAddress = process.env.ARUBA_USER?.trim();
+  const toAddress = process.env.LEAD_DEST?.trim();
+  const arubaPassword = process.env.ARUBA_PASS;
 
-  if (!fromAddress || !toAddress || !appPassword) {
+  if (!fromAddress || !toAddress || !arubaPassword) {
     return NextResponse.json({
       message: "Il modulo è temporaneamente non disponibile. La richiesta non è stata inviata. Riprova più tardi.",
     }, { status: 503 });
   }
 
   const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
+    host: "smtps.aruba.it",
     port: 465,
     secure: true,
     auth: {
       user: fromAddress,
-      pass: appPassword,
+      pass: arubaPassword,
+    },
+    tls: {
+      minVersion: "TLSv1.2",
+      ciphers: "HIGH:MEDIUM:!aNULL:!eNULL:@STRENGTH:!DH:!kEDH",
     },
   });
 
+  const eventId = randomUUID();
   try {
     await transporter.sendMail({
       from: `"ACCELERIAMO" <${fromAddress}>`,
       to: toAddress,
-      replyTo: `"${name}" <${email}>`,
+      ...(email ? { replyTo: { name, address: email } } : {}),
       subject: `Valutazione · ${company} · ${name}`,
-      text: buildEmailText(body),
+      text: buildEmailText(body, eventId),
     });
 
+    try { await sendMetaLead({ request, body, eventId }); }
+    catch { console.error("Meta Lead: misurazione non disponibile; richiesta ricevuta"); }
     return NextResponse.json({
-      message: "Grazie! Abbiamo ricevuto la tua richiesta. Ti contattiamo per approfondire e fissare una consulenza.",
+      accepted: true, eventId,
+      message: "Grazie! Abbiamo ricevuto la tua richiesta. Ti chiamiamo entro un giorno lavorativo per approfondire e fissare una consulenza.",
     });
   } catch {
     return NextResponse.json({ message: "Invio temporaneamente non disponibile. Riprova tra poco." }, { status: 502 });

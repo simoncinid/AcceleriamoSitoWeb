@@ -17,7 +17,7 @@
 .manual { display: grid; gap: 14px; width: calc(100% - 36px); max-width: 410px; margin-inline: auto; }
 .step { --shift: 0px; position: relative; display: grid; grid-template-columns: 56px minmax(0, 1fr) 20px; align-items: center; gap: 10px; min-height: 64px; padding: 2px 16px 2px 5px; border: 1px solid #d7cec0; border-radius: 10px; background: var(--paper); box-shadow: 0 4px 12px #37281907; font-size: 14px; line-height: 1.4; font-weight: 500; transform: translateX(var(--shift)); }
 .step > small { color: var(--body); font-size: 10px; font-weight: 400; }
-.artwork { display: block; width: 56px; height: 56px; background-image: url('/assets/generated/comparison-icons-v1.png'); background-size: 200% 200%; background-repeat: no-repeat; flex-shrink: 0; }
+.artwork { display: block; width: 56px; height: 56px; background-image: url('/assets/generated/comparison-icons-motion-v1.webp'); background-size: 200% 200%; background-repeat: no-repeat; flex-shrink: 0; }
 .email { background-position: 0 0; clip-path: inset(0 0 9% 0); }
 .document { background-position: 100% 0; clip-path: inset(0 0 9% 0); }
 .database { background-position: 0 100%; }

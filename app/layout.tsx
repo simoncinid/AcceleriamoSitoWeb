@@ -1,4 +1,6 @@
 import type { Metadata, Viewport } from "next";
+import { MarketingConsent } from "@/components/MarketingConsent";
+import { WhatsAppLink } from "@/components/WhatsAppLink";
 import { Analytics } from "@vercel/analytics/next";
 import "@fontsource-variable/inter";
 import "@fontsource-variable/mona-sans";
@@ -59,8 +61,8 @@ export const metadata: Metadata = {
   },
   appleWebApp: { capable: true, title: siteName, statusBarStyle: "default" },
   other: {
-    "geo.region": "IT",
-    "geo.placename": "Italia",
+    "geo.region": "IT-52",
+    "geo.placename": "Toscana",
     "content-language": "it",
   },
 };
@@ -78,6 +80,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <a className="skip-link" href="#contenuto">Vai al contenuto</a>
         {children}
         <JsonLd data={siteGraph()} />
+        <WhatsAppLink className="whatsapp-floating" source="fisso">WhatsApp</WhatsAppLink>
+        <MarketingConsent />
         <Analytics />
       </body>
     </html>

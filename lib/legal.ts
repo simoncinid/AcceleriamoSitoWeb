@@ -1,14 +1,12 @@
 // Incrementare la versione quando cambia il testo dei documenti o delle dichiarazioni.
-export const LEGAL_VERSION = "2026-09-10";
-export const LEGAL_DATE = "10 settembre 2026";
-export const PRIVACY_ACKNOWLEDGEMENT = "Ho letto l’informativa privacy e chiedo di essere ricontattato, anche per telefono, per la valutazione del caso e per fissare una consulenza.";
-export const TERMS_ACKNOWLEDGEMENT = "Ho letto e accetto i termini e le condizioni del sito e della richiesta di valutazione.";
+export const LEGAL_VERSION = "2026-09-14";
+export const LEGAL_DATE = "14 settembre 2026";
 
 export const legalIdentity = {
   name: "Diego Simoncini",
   vat: "02524780505",
   address: process.env.LEGAL_BUSINESS_ADDRESS?.trim() ?? "",
-  email: process.env.LEGAL_CONTACT_EMAIL?.trim() ?? "",
+  email: "info@acceleriamo.it",
 };
 
 export const legalLinks = [

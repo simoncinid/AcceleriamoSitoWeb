@@ -3,9 +3,9 @@ import { HeroStory } from "./StoryVisuals";
 
 export function HeroProcessDemo() {
   return (
-    <MotionScene className="hero-process" label="Esempio: 30 articoli chiesti via email a un grossista">
-      <div className="hero-process__caption"><span className="signal-square" />Un esempio concreto</div>
-      <p className="hero-process__heading">Il cliente chiede 30 articoli via email</p>
+    <MotionScene className="hero-process" label="Come passano i dati tra i tuoi programmi">
+      <div className="hero-process__caption"><span className="signal-square" />Come funziona</div>
+      <p className="hero-process__heading">Dai documenti ai tuoi programmi</p>
       <HeroStory />
     </MotionScene>
   );

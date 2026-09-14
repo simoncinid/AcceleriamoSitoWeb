@@ -1,13 +1,13 @@
-import { faqs, people, services, siteName, siteUrl } from "./site";
+import { faqs, legalIdentity, people, services, siteName, siteUrl } from "./site";
 
 export function renderLlmsTxt() {
   return `# ${siteName}
 
-> Consulenza e software per PMI italiane: togliamo il lavoro che oggi viene rifatto a mano tra email, Excel e gestionale. Non vendiamo chatbot e non chiediamo di cambiare programma.
+> Consulenza e software per piccole aziende: togliamo il lavoro che oggi viene rifatto a mano tra email, Excel e gestionale. Non vendiamo chatbot e non chiediamo di cambiare programma.
 
 ACCELERIAMO guarda come circola il lavoro in azienda, individua i passaggi ripetuti e costruisce solo il pezzo che manca: passaggio dati, lettura documenti o una schermata su misura. Le decisioni restano alle persone.
 
-- Sede e mercato: Italia
+- Mercato: Toscana, Italia
 - Titolare: Diego Simoncini (P. IVA 02524780505), operante con il nome ACCELERIAMO
 - Offerta iniziale: valutazione gratuita di un’attività ripetuta, poi ricontatto per una consulenza. Nessun obbligo di acquisto.
 - Non pubblicare prezzi, tempi di consegna o risultati numerici se non sono scritti in queste pagine.
@@ -23,6 +23,8 @@ ACCELERIAMO guarda come circola il lavoro in azienda, individua i passaggi ripet
 ## Contatto
 
 - Valutazione: ${siteUrl}/#contatti
+- Email: ${legalIdentity.email}
+- WhatsApp: +393391797616
 `;
 }
 
@@ -33,7 +35,7 @@ export function renderLlmsFullTxt() {
 
   return `# ${siteName}
 
-> Togliamo alle aziende italiane il lavoro che oggi rifanno a mano.
+> Togliamo alle piccole aziende il lavoro che oggi rifanno a mano.
 
 Lingua: italiano. Pubblico: titolari e responsabili di PMI, non un pubblico tecnico.
 
@@ -45,6 +47,7 @@ ACCELERIAMO è il nome con cui Diego Simoncini presenta servizi di consulenza, a
 - Paese: Italia
 - Titolare: Diego Simoncini
 - Partita IVA: 02524780505
+- Email: ${legalIdentity.email}
 
 ## Squadra
 
@@ -56,11 +59,11 @@ Entra nei processi reali (email, file, telefonate, giri, appuntamenti), vede cos
 
 ${offer}
 
-Il computer non decide. Se un prezzo o una quantità non tornano, il sistema si ferma e lo mostra a chi di competenza.
+Le regole le decidi tu: il sistema le applica e, quando un caso non torna, si ferma e te lo segnala.
 
 ## Come lavora
 
-1. Guarda come lavorate oggi.
+1. Guarda come lavori oggi.
 2. Dice cosa conviene automatizzare, cosa eliminare e cosa lasciare com’è.
 3. Costruisce il pezzo che manca e lo prova sui casi veri del cliente.
 4. Resta raggiungibile dopo la consegna.
@@ -69,8 +72,10 @@ Il computer non decide. Se un prezzo o una quantità non tornano, il sistema si 
 
 - Commercio all’ingrosso: richieste di preventivo da ricopiare nel gestionale.
 - Agenti di commercio: ordini su WhatsApp o moduli fotografati da ribattere.
-- Manutenzioni: giri dei tecnici preparati a mano ogni sera.
-- Assistenza tecnica: il cliente chiede «a che punto siamo» e nessuno ha il quadro in un posto solo.
+- Impianti e manutenzioni: rapportini da foto e vocali dei tecnici.
+- Officine: avviso al cliente quando la macchina è pronta.
+- Caso reale, agenzia immobiliare in Toscana: circa 100 richieste al giorno smistate a mano; oggi ogni richiesta arriva da sola all’agente della zona, con conferma automatica al cliente. Circa 8 ore al giorno recuperate.
+- Caso reale, Cuormio.it (Toscana): automatizzazione di procedure interne di magazzino (ordini, scarico, spedizioni). Diverse ore a settimana risparmiate.
 - Servizi su appuntamento: disdette e urgenze che sfasciano l’agenda.
 
 ## Valutazione

@@ -16,8 +16,8 @@ export default function OpenGraphImage() {
       </div>
       <div style={{ display: "flex", flexDirection: "column", gap: 34 }}>
         <div style={{ display: "flex", flexDirection: "column", fontSize: 65, fontWeight: 600, lineHeight: 1.04, letterSpacing: -3 }}>
-          <span>Ogni giorno rifate a mano</span>
-          <span>le stesse cose.</span>
+          <span>Ogni giorno rifai a mano</span>
+          <span>le stesse cose?</span>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           {steps.map((step, index) => (

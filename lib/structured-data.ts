@@ -1,3 +1,4 @@
+import { whatsappNumber } from "./contact";
 import {
   absoluteUrl,
   defaultDescription,
@@ -26,8 +27,9 @@ function organizationNode(): JsonLd {
     logo: { "@type": "ImageObject", url: absoluteUrl("/icon.svg") },
     image: absoluteUrl("/opengraph-image"),
     description: defaultDescription,
+    telephone: whatsappNumber,
     vatID: legalIdentity.vat,
-    areaServed: { "@type": "Country", name: "Italia" },
+    areaServed: { "@type": "AdministrativeArea", name: "Toscana" },
     availableLanguage: "it",
     inLanguage: "it-IT",
     knowsAbout: [
@@ -53,7 +55,7 @@ function organizationNode(): JsonLd {
           name: service.name,
           description: service.description,
           provider: { "@id": organizationId },
-          areaServed: { "@type": "Country", name: "Italia" },
+          areaServed: { "@type": "AdministrativeArea", name: "Toscana" },
         },
       })),
     },
@@ -73,6 +75,7 @@ function organizationNode(): JsonLd {
     node.contactPoint = {
       "@type": "ContactPoint",
       contactType: "sales",
+      telephone: whatsappNumber,
       email: legalIdentity.email,
       availableLanguage: ["Italian"],
       url: absoluteUrl("/#contatti"),
@@ -85,8 +88,7 @@ function organizationNode(): JsonLd {
       streetAddress: legalIdentity.address,
       addressCountry: "IT",
     };
-  } else {
-    node.address = { "@type": "PostalAddress", addressCountry: "IT" };
+
   }
 
   return node;

@@ -18,14 +18,14 @@ function Link({ at = 1 }: { at?: number }) {
 export function HeroStory() {
   return <div className={styles.heroStage}>
     <div className={styles.sceneEyebrow}><span /> Cosa succede senza che nessuno ribatta niente</div>
-    <ol className={styles.heroNodes} aria-label="Dall’email del cliente alla bozza di preventivo nel gestionale">
-      {[{ icon: "inbox", title: "Arriva l’email", detail: "30 codici e quantità" }, { icon: "aiExtract", title: "Il software legge i codici", detail: "e cerca il listino giusto" }, { icon: "database", title: "La bozza è nel gestionale", detail: "coi prezzi di quel cliente" }].map((step, i) => <li key={step.title}>
+    <ol className={styles.heroNodes} aria-label="Dai documenti ai programmi che usi già">
+      {[{ icon: "email", title: "Arriva il documento", detail: "Email, PDF o foto" }, { icon: "document", title: "Il software legge i dati", detail: "e applica le tue regole" }, { icon: "database", title: "I dati sono al loro posto", detail: "nei programmi che usi" }].map((step, i) => <li key={step.title}>
         <div className={styles.heroObject} data-motion="rise" data-at={.2 + i * 1.5}><StoryArt kind={step.icon as ArtKind} at={.4 + i * 1.5} /></div>
         <strong data-motion="reveal" data-at={.4 + i * 1.5}>{step.title}</strong><small data-motion="reveal" data-at={.5 + i * 1.5}>{step.detail}</small>
         {i < 2 && <Link at={1.1 + i * 1.5} />}
       </li>)}
     </ol>
-    <div className={styles.heroReview} data-motion="rise" data-at={4.8}><StoryArt kind="person" at={5} /><div><small>Il tuo commerciale</small><strong>Controlla il prezzo e invia.</strong></div><span className={styles.check} data-motion="pop" data-at={5.5}><Icon name="check" size={18} /></span></div>
+    <div className={styles.heroReview} data-motion="rise" data-at={4.8}><StoryArt kind="person" at={5} /><div><small>Quando un dato non torna</small><strong>Ti segnala cosa controllare.</strong></div><span className={styles.check} data-motion="pop" data-at={5.5}><Icon name="check" size={18} /></span></div>
   </div>;
 }
 
@@ -82,7 +82,7 @@ export function HumanVisual() {
 }
 
 export function IntegrationsVisual() {
-  return <MotionScene className={styles.integrationsStage} label="Gli strumenti che usate già, collegati tra loro">
+  return <MotionScene className={styles.integrationsStage} label="Gli strumenti che usi già, collegati tra loro">
     <ul className={styles.integrationNodes}>
       {[["email", "Email"], ["duplicate", "Excel"], ["support", "Clienti"], ["software", "Gestionale"], ["document", "Documenti"], ["database", "Magazzino"]].map(([icon, title], i) => <li key={title} data-motion="rise" data-at={.2 + i * .5}><StoryArt kind={icon as ArtKind} at={.35 + i * .5} /><span>{title}</span></li>)}
     </ul>
