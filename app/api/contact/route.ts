@@ -138,7 +138,8 @@ export async function POST(request: Request) {
       accepted: true, eventId,
       message: "Grazie! Abbiamo ricevuto la tua richiesta. Ti chiamiamo entro un giorno lavorativo per approfondire e fissare una consulenza.",
     });
-  } catch {
+  } catch (error) {
+    console.error("Contact SMTP failed:", error);
     return NextResponse.json({ message: "Invio temporaneamente non disponibile. Riprova tra poco." }, { status: 502 });
   }
 }
