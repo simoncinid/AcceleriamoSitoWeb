@@ -26,7 +26,7 @@ Copia `.env.example` in `.env.local`. Le variabili pubbliche e i dati legali ric
 - `META_GRAPH_API_VERSION`: versione Graph supportata dall’account Meta, nel formato `vXX.X`. Se manca, l’API Conversioni resta spenta.
 - `META_TEST_EVENT_CODE`: facoltativo, solo per Gestione eventi; rimuoverlo per il traffico reale.
 
-WhatsApp: **+39 339 179 7616**, configurato in `lib/contact.ts`, con messaggio precompilato. Il caso Megaron è citato con autorizzazione del cliente.
+WhatsApp: **+39 349 786 8504**, configurato in `lib/contact.ts`, con messaggio precompilato. Il caso Megaron è citato con autorizzazione del cliente.
 
 ## Settori e campagne
 

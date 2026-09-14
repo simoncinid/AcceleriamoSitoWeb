@@ -24,7 +24,7 @@ ACCELERIAMO guarda come circola il lavoro in azienda, individua i passaggi ripet
 
 - Valutazione: ${siteUrl}/#contatti
 - Email: ${legalIdentity.email}
-- WhatsApp: +393391797616
+- WhatsApp: +393497868504
 `;
 }
 
