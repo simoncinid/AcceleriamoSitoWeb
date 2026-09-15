@@ -24,7 +24,7 @@ function organizationNode(): JsonLd {
     name: siteName,
     legalName: legalIdentity.name,
     url: siteUrl,
-    logo: { "@type": "ImageObject", url: absoluteUrl("/icon.svg") },
+    logo: { "@type": "ImageObject", url: absoluteUrl("/assets/logo/logo/principale/acceleriamo-principale-colore.png") },
     image: absoluteUrl("/opengraph-image"),
     description: defaultDescription,
     telephone: whatsappNumber,

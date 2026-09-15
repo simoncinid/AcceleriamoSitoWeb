@@ -1,7 +1,15 @@
+import Image from "next/image";
+import { brandLogos, brandMarkSize } from "@/lib/brand";
+
 export function Brand({ light = false }: { light?: boolean }) {
   return (
-    <span className={`brand${light ? " brand--light" : ""}`} aria-label="ACCELERIAMO">
-      ACCELER<span className="brand__ia">IA</span>MO
-    </span>
+    <Image
+      className="brand-mark"
+      src={light ? brandLogos.principaleCrema : brandLogos.principaleColore}
+      alt="ACCELERIAMO"
+      width={brandMarkSize.width}
+      height={brandMarkSize.height}
+      priority
+    />
   );
 }

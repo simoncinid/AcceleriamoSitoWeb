@@ -8,6 +8,7 @@ import { degularDisplay } from "./fonts";
 import "./globals.css";
 import { JsonLd } from "@/components/JsonLd";
 import { siteGraph } from "@/lib/structured-data";
+import { brandLogos } from "@/lib/brand";
 import {
   defaultDescription,
   defaultTitle,
@@ -58,6 +59,13 @@ export const metadata: Metadata = {
       "max-snippet": -1,
       "max-video-preview": -1,
     },
+  },
+  icons: {
+    icon: [
+      { url: brandLogos.faviconSvg, type: "image/svg+xml" },
+      { url: brandLogos.faviconPng, sizes: "512x512", type: "image/png" },
+    ],
+    apple: [{ url: brandLogos.appIcon, sizes: "1024x1024", type: "image/png" }],
   },
   appleWebApp: { capable: true, title: siteName, statusBarStyle: "default" },
   other: {

@@ -83,10 +83,8 @@ svg { display: block; }
 .site-header { --header-height: 76px; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid var(--line); background: rgba(255,253,248,.94); backdrop-filter: blur(14px); }
 .site-header__inner { height: 76px; display: flex; align-items: center; gap: 32px; }
 
-.brand { color: var(--ink); font-family: var(--font-degular-display), var(--font-degular-fallback); font-size: 20px; font-weight: 700; letter-spacing: -.03em; }
-.brand__ia { color: var(--orange); }
-.brand--light { color: var(--paper); }
-.logo-link { padding: 8px 0; }
+.logo-link { display: inline-flex; align-items: center; padding: 8px 0; }
+.brand-mark { display: block; width: auto; height: 36px; max-width: min(229px, 62vw); }
 .desktop-nav { display: flex; align-items: center; gap: 22px; margin-left: auto; }
 .desktop-nav a { font-size: 14px; font-weight: 580; }
 .desktop-nav a:hover { color: var(--orange); }
@@ -679,14 +677,14 @@ svg { display: block; }
 }
 @media (max-width: 620px) {
   .site-header__inner { gap: 10px; }
-  .brand { font-size: 18px; }
+  .brand-mark { height: 32px; max-width: min(203px, 58vw); }
   .mobile-actions { gap: 6px; }
   .mobile-cta { font-size: 11px; }
   .form-submit .button { white-space: normal; }
   .cookie-banner .button-row { flex-direction: row; align-items: stretch; }
 }
 @media (max-width: 360px) {
-  .brand { font-size: 16px; }
+  .brand-mark { height: 30px; max-width: min(190px, 56vw); }
   .mobile-cta { font-size: 10px; }
   .site-header__inner { gap: 8px; }
 }

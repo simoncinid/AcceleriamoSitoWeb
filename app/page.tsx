@@ -33,7 +33,7 @@ export default function Home() {
             <div className="hero__copy">
               <p className="eyebrow">Per le piccole aziende italiane</p>
               <h1><span>Ogni giorno</span>{" "}<br /><em>rifai a mano</em>{" "}<br /><span>le stesse cose?</span></h1>
-              <p>Ordini, preventivi, rapportini: facciamo passare i dati da soli, nei programmi che usi già.</p>
+              <p>Se le tue giornate si riempiono di ordini, preventivi e dati da ricopiare, con Acceleriamo puoi farli passare da soli nei programmi che usi già.</p>
               <div className="button-row">
                 <a className="button button--primary" href="#contatti">Richiedi la valutazione gratuita <Icon name="arrow" size={19} /></a>
               </div>
@@ -57,7 +57,7 @@ export default function Home() {
             <div className="section-heading section-heading--center">
               <p className="eyebrow">Riconosci il tuo caso?</p>
               <h2>In che settore <span className="accent">lavori?</span></h2>
-              <p>Non conta cosa vendi. Conta cosa rifai ogni giorno.</p>
+              <p>Ordini da riscrivere, telefonate che interrompono il lavoro, documenti in attesa: cosa succede nella tua giornata?</p>
             </div>
             <SectorSelector />
           </div>
@@ -67,7 +67,7 @@ export default function Home() {
           <div className="container">
             <div className="section-heading method-heading">
               <p className="eyebrow">Come lavoriamo</p>
-              <h2>Guardiamo come lavori.{" "}<br /><span className="accent">Poi semplifichiamo.</span></h2>
+              <h2>Parti da ciò che{" "}<br /><span className="accent">ti porta via tempo.</span></h2>
               <p className="method-heading__note">A volte la risposta giusta è che un passaggio non va automatizzato: va eliminato.</p>
             </div>
             <MotionScene className="method-layout" label="Le quattro fasi del metodo">
@@ -85,20 +85,20 @@ export default function Home() {
         <section className="section services" id="servizi">
           <div className="container">
             <div className="section-heading">
-              <p className="eyebrow">Cosa facciamo</p>
+              <p className="eyebrow">Cosa puoi semplificare</p>
               <h2>Tre modi per toglierti{" "}<br /><span className="accent">il copia e incolla.</span></h2>
             </div>
             <div className="services-list">
               <article className="service-card">
-                <div className="service-card__copy"><span>01</span><h3>I dati passano da soli</h3><p>Colleghiamo i programmi: ogni dato si scrive una volta sola.</p></div>
+                <div className="service-card__copy"><span>01</span><h3>I dati passano da soli</h3><p>Tu o i tuoi collaboratori riscrivete gli stessi dati in più programmi? Con i programmi collegati, basta inserirli una volta.</p></div>
                 <ServiceVisual type="automation" />
               </article>
               <article className="service-card">
-                <div className="service-card__copy"><span>02</span><h3>Leggiamo i documenti al posto tuo</h3><p>Il software estrae i dati e segnala le righe che non tornano.</p></div>
+                <div className="service-card__copy"><span>02</span><h3>I documenti diventano dati pronti</h3><p>Fatture, bolle e PDF da ricopiare uno alla volta: il software estrae i dati e ti segnala le righe da controllare.</p></div>
                 <ServiceVisual type="ai" />
               </article>
               <article className="service-card" id="software">
-                <div className="service-card__copy"><span>03</span><h3>Il programma che ti manca</h3><p>Costruiamo la schermata che segue il tuo modo di lavorare.</p></div>
+                <div className="service-card__copy"><span>03</span><h3>Il programma che ti manca</h3><p>Per finire un lavoro devi saltare tra fogli, chat e app? Una schermata su misura riunisce i passaggi che ti servono.</p></div>
                 <ServiceVisual type="software" />
               </article>
             </div>
@@ -110,7 +110,7 @@ export default function Home() {
             <p className="eyebrow">Chi siamo</p>
             <h2><span className="about-title__lead">Meno tempo a ricopiare,</span><br className="break-keep" /><span className="accent">più tempo per il lavoro vero.</span></h2>
             <div className="about-copy">
-              <p className="split-lead">Parliamo con te, guardiamo come lavori e semplifichiamo le parti ripetitive.</p>
+              <p className="split-lead">La tua giornata è il punto di partenza. Con Diego e Tommaso puoi parlare di ciò che ti rallenta e capire come semplificarlo.</p>
             </div>
             <ul className="about-people">
               {people.map((person) => (
@@ -139,7 +139,7 @@ export default function Home() {
             <div className="contact-copy">
               <p className="eyebrow eyebrow--light">Il primo passo</p>
               <h2>Richiedi la <span className="accent">valutazione gratuita.</span></h2>
-              <p>Raccontaci un’attività che ti fa perdere tempo. La valutiamo e ti chiamiamo per fissare una consulenza.</p>
+              <p>Se hai pensato «succede anche da noi», raccontaci l’attività che ti porta via tempo. Ti richiamiamo per capire insieme cosa puoi semplificare.</p>
               <WhatsAppLink source="modulo">WhatsApp · {whatsappDisplay}</WhatsAppLink>
             </div>
             <ContactForm />

@@ -2,14 +2,14 @@ import { LEGAL_VERSION, legalIdentity, legalLinks } from "./legal";
 
 export const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://acceleriamo.it").replace(/\/$/, "");
 export const siteName = "ACCELERIAMO";
-export const siteUpdated = "2026-09-14";
+export const siteUpdated = "2026-09-15";
 
 export const defaultTitle = "ACCELERIAMO | Meno lavoro rifatto a mano nella tua azienda";
 export const defaultDescription =
-  "Preventivi, ordini, documenti e giri dei tecnici: ACCELERIAMO guarda come lavorano le piccole aziende e costruisce il pezzo che toglie il lavoro ripetuto. Senza cambiare gestionale.";
+  "Ordini, preventivi e documenti da ricopiare ogni giorno? Con ACCELERIAMO puoi ridurre il lavoro ripetitivo nella tua azienda, senza cambiare gestionale.";
 export const socialTitle = "Ogni giorno rifai a mano le stesse cose?";
 export const socialDescription =
-  "Richiedi la valutazione gratuita: guardiamo un’attività che ti fa perdere tempo e ti chiamiamo per fissare una consulenza.";
+  "Quanto tempo ti portano via le stesse attività ogni giorno? Raccontaci la tua situazione e scopri cosa puoi semplificare, con una valutazione gratuita.";
 
 export const keywords = [
   "automazione processi aziendali PMI",
@@ -59,7 +59,7 @@ export const faqs = [
   { question: "Cosa fa ACCELERIAMO?", answer: "Guardiamo come lavori oggi e costruiamo il software che semplifica i passaggi ripetuti tra email, documenti e programmi." },
   { question: "Devo cambiare gestionale?", answer: "No. Restano il tuo gestionale, i tuoi Excel e la tua casella email. Aggiungiamo solo il pezzo che li fa parlare tra loro." },
   { question: "Il software decide al posto mio?", answer: "Le regole le decidi tu: il sistema le applica e, quando un caso non torna, si ferma e te lo segnala." },
-  { question: "Per quali aziende lavorate?", answer: "Piccole aziende italiane: ingrosso, impianti e manutenzioni, officine, agenzie immobiliari, agenti di commercio e servizi su appuntamento." },
+  { question: "Come capisco se fa al caso mio?", answer: "Nella tua piccola azienda gli ordini si ricopiano, i documenti si accumulano o le stesse attività portano via tempo ogni giorno? Sono situazioni da cui partire. Gli esempi qui sopra riguardano ingrosso, impianti e manutenzioni, officine, agenzie immobiliari, agenti di commercio e servizi su appuntamento. La valutazione gratuita serve a capire cosa conviene nel tuo caso." },
   { question: "Cos’è la valutazione e quanto costa?", answer: "Ci racconti l’attività e ti chiamiamo entro un giorno lavorativo. La valutazione e il primo confronto sono gratuiti e senza impegno. Prezzi e tempi di un eventuale incarico si concordano dopo, sul tuo caso." },
 ] as const;
 

@@ -10,7 +10,7 @@ export function Footer() {
     <footer className="site-footer">
       <div className="container">
         <div className="footer-main">
-          <div><Link href="/" aria-label="ACCELERIAMO, homepage"><Brand light /></Link><p>Togliamo alle piccole aziende il lavoro che oggi rifanno a mano.</p>
+          <div><Link href="/" aria-label="ACCELERIAMO, homepage"><Brand light /></Link><p>Meno tempo a ricopiare dati, più tempo per la tua azienda.</p>
             <WhatsAppLink className="footer-whatsapp" source="footer">{whatsappDisplay}</WhatsAppLink>
             {legalIdentity.email && <p><Link href={`mailto:${legalIdentity.email}`}>{legalIdentity.email}</Link></p>}
           </div>
