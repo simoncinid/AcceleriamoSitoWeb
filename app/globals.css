@@ -84,7 +84,8 @@ svg { display: block; }
 .site-header__inner { height: 76px; display: flex; align-items: center; gap: 32px; }
 
 .logo-link { display: inline-flex; align-items: center; padding: 8px 0; }
-.brand-mark { display: block; width: auto; height: 36px; max-width: min(229px, 62vw); }
+.brand-mark { display: block; width: auto; height: 36px; max-width: min(191px, 62vw); }
+.brand-mark--light { filter: brightness(0) invert(1); }
 .desktop-nav { display: flex; align-items: center; gap: 22px; margin-left: auto; }
 .desktop-nav a { font-size: 14px; font-weight: 580; }
 .desktop-nav a:hover { color: var(--orange); }
@@ -677,14 +678,14 @@ svg { display: block; }
 }
 @media (max-width: 620px) {
   .site-header__inner { gap: 10px; }
-  .brand-mark { height: 32px; max-width: min(203px, 58vw); }
+  .brand-mark { height: 32px; max-width: min(170px, 58vw); }
   .mobile-actions { gap: 6px; }
   .mobile-cta { font-size: 11px; }
   .form-submit .button { white-space: normal; }
   .cookie-banner .button-row { flex-direction: row; align-items: stretch; }
 }
 @media (max-width: 360px) {
-  .brand-mark { height: 30px; max-width: min(190px, 56vw); }
+  .brand-mark { height: 30px; max-width: min(159px, 56vw); }
   .mobile-cta { font-size: 10px; }
   .site-header__inner { gap: 8px; }
 }
