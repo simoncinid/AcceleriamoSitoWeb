@@ -93,7 +93,7 @@ Il worker e la scadenza Redis eliminano i lead non acquistati dopo 30 giorni dal
 ## Configurazione manuale necessaria
 
 1. Configurare `WORKMAP_AI_API_KEY`, `WORKMAP_AI_MODEL`, eventuale `WORKMAP_AI_BASE_URL`, `WORKMAP_AI_PROVIDER_NAME` e supporto temperature. Non mettere segreti in variabili `NEXT_PUBLIC_*`.
-2. In Vercel: Storage → Create Database → Upstash Redis (piano free) e collegarlo al progetto. Usare `STORAGE_KV_REST_API_URL` come URL e `STORAGE_KV_REST_API_TOKEN` come token (non il read-only, non `STORAGE_REDIS_URL`). In alternativa si possono copiare negli alias `WORKMAP_REDIS_URL` e `WORKMAP_REDIS_TOKEN`. Regione UE se disponibile.
+2. In Vercel: Storage → Create Database → Upstash Redis (piano free) e collegarlo al progetto. Lasciare vuoto `WORKMAP_REDIS_URL` se è un valore `rediss://…`. Usare `STORAGE_KV_REST_API_URL` (`https://…`) e `STORAGE_KV_REST_API_TOKEN` (non il read-only, non `STORAGE_REDIS_URL`). Regione UE se disponibile.
 3. Generare `WORKMAP_ACCESS_SECRET` e `CRON_SECRET` con almeno 32 caratteri casuali; conservarli stabilmente. Il cron giornaliero è già in `vercel.json`.
 4. Configurare Stripe secret e webhook secret. Endpoint: `/api/workmap/webhook`. Eventi: `checkout.session.completed`, `checkout.session.async_payment_succeeded`. Configurare URL termini e privacy nelle impostazioni Checkout, dati venditore, imposte e flusso amministrativo.
 5. Configurare Aruba con `ARUBA_USER`, `ARUBA_PASS`. Riusa le credenziali del sito, non `LEAD_DEST` (che resta il destinatario del modulo contatti).

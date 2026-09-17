@@ -13,16 +13,61 @@ import path from "node:path";
 import type { Session } from "./schema";
 export const sessionDirectory = () =>
   process.env.WORKMAP_DATA_DIR || path.join(process.cwd(), ".workmap-data");
-export const redisRestUrl = () =>
-  process.env.WORKMAP_REDIS_URL ||
-  process.env.STORAGE_KV_REST_API_URL ||
-  process.env.KV_REST_API_URL ||
-  process.env.UPSTASH_REDIS_REST_URL;
+const envValue = (...keys: string[]) => {
+  for (const key of keys) {
+    const value = process.env[key]?.trim();
+    if (value) return value;
+  }
+};
+const fromRedisUrl = (raw: string) => {
+  if (!/^rediss?:\/\//i.test(raw)) return {};
+  try {
+    const parsed = new URL(raw);
+    if (!parsed.hostname) return {};
+    return {
+      url: `https://${parsed.hostname}`,
+      token: decodeURIComponent(parsed.password || ""),
+    };
+  } catch {
+    return {};
+  }
+};
+export const redisRestUrl = () => {
+  for (const key of [
+    "WORKMAP_REDIS_URL",
+    "STORAGE_KV_REST_API_URL",
+    "KV_REST_API_URL",
+    "UPSTASH_REDIS_REST_URL",
+  ]) {
+    const raw = process.env[key]?.trim();
+    if (raw && /^https:\/\//i.test(raw) && !raw.includes("@"))
+      return raw.replace(/\/$/, "");
+  }
+  for (const key of [
+    "WORKMAP_REDIS_URL",
+    "STORAGE_REDIS_URL",
+    "STORAGE_KV_URL",
+    "REDIS_URL",
+  ]) {
+    const converted = fromRedisUrl(process.env[key]?.trim() || "");
+    if (converted.url) return converted.url;
+  }
+};
 export const redisRestToken = () =>
-  process.env.WORKMAP_REDIS_TOKEN ||
-  process.env.STORAGE_KV_REST_API_TOKEN ||
-  process.env.KV_REST_API_TOKEN ||
-  process.env.UPSTASH_REDIS_REST_TOKEN;
+  envValue(
+    "WORKMAP_REDIS_TOKEN",
+    "STORAGE_KV_REST_API_TOKEN",
+    "KV_REST_API_TOKEN",
+    "UPSTASH_REDIS_REST_TOKEN",
+  ) ||
+  fromRedisUrl(
+    envValue(
+      "WORKMAP_REDIS_URL",
+      "STORAGE_REDIS_URL",
+      "STORAGE_KV_URL",
+      "REDIS_URL",
+    ) || "",
+  ).token;
 export const remoteStore = () => Boolean(redisRestUrl() && redisRestToken());
 export const hashToken = (token: string) =>
   createHash("sha256").update(token).digest("hex");

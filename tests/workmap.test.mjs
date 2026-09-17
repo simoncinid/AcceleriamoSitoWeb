@@ -409,6 +409,25 @@ test("persistenza CAS e lease impediscono sovrascritture e lavorazioni concorren
   }
 });
 
+test("Redis REST ignora rediss con password e preferisce https", () => {
+  const rest = modules({
+    env: {
+      WORKMAP_REDIS_URL: "rediss://default:secret@example.upstash.io:6379",
+      STORAGE_KV_REST_API_URL: "https://example.upstash.io",
+      STORAGE_KV_REST_API_TOKEN: "rest-token",
+    },
+  })("lib/workmap/store.ts");
+  assert.equal(rest.redisRestUrl(), "https://example.upstash.io");
+  assert.equal(rest.redisRestToken(), "rest-token");
+  const derived = modules({
+    env: {
+      STORAGE_REDIS_URL: "rediss://default:secret%2Btoken@example.upstash.io:6379",
+    },
+  })("lib/workmap/store.ts");
+  assert.equal(derived.redisRestUrl(), "https://example.upstash.io");
+  assert.equal(derived.redisRestToken(), "secret+token");
+});
+
 test("worker cron autenticato riprende la generazione senza coda esterna", async () => {
   const s = await setup();
   try {
