@@ -1,6 +1,6 @@
 // Incrementare la versione quando cambia il testo dei documenti o delle dichiarazioni.
-export const LEGAL_VERSION = "2026-09-14";
-export const LEGAL_DATE = "14 settembre 2026";
+export const LEGAL_VERSION = "2026-09-18";
+export const LEGAL_DATE = "18 settembre 2026";
 
 export const legalIdentity = {
   name: "Diego Simoncini",

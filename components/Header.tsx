@@ -13,7 +13,9 @@ const links = [
   ["Domande", "/#domande"],
 ];
 
-export function Header() {
+export function Header({ workmap = false }: { workmap?: boolean } = {}) {
+  const ctaHref = workmap ? "/ai-workmap/analisi" : "/#contatti";
+  const ctaLabel = workmap ? "Analizza il mio lavoro" : "Richiedi la valutazione gratuita";
   const mobileMenu = useRef<HTMLDetailsElement>(null);
 
   function closeMobileMenu() {
@@ -27,14 +29,18 @@ export function Header() {
         <nav className="desktop-nav" aria-label="Navigazione principale">
           {links.map(([label, href]) => <Link href={href} key={href}>{label}</Link>)}
         </nav>
-        <Link className="button button--small button--primary header-cta" href="/#contatti">Richiedi la valutazione gratuita <Icon name="arrow" size={17} /></Link>
+        <div className="header-actions">
+          {!workmap && <Link className="button button--small button--dark" href="/ai-workmap">AI WorkMap</Link>}
+          <Link className="button button--small button--primary header-cta" href={ctaHref}>{ctaLabel} <Icon name="arrow" size={17} /></Link>
+        </div>
         <div className="mobile-actions">
-          <Link className="mobile-cta" href="/#contatti" onClick={closeMobileMenu}>Valutazione gratuita</Link>
+          <Link className="mobile-cta" href={ctaHref} onClick={closeMobileMenu}>{workmap ? "Analisi gratuita" : "Valutazione gratuita"}</Link>
           <details className="mobile-menu" ref={mobileMenu}>
             <summary aria-label="Apri o chiudi il menu"><Icon name="menu" size={20} /></summary>
             <nav aria-label="Navigazione mobile">
               {links.map(([label, href]) => <Link href={href} key={href} onClick={closeMobileMenu}>{label}</Link>)}
-              <Link className="button button--small button--primary" href="/#contatti" onClick={closeMobileMenu}>Richiedi la valutazione gratuita</Link>
+              {!workmap && <Link className="button button--small button--dark" href="/ai-workmap" onClick={closeMobileMenu}>AI WorkMap</Link>}
+              <Link className="button button--small button--primary" href={ctaHref} onClick={closeMobileMenu}>{ctaLabel}</Link>
             </nav>
           </details>
         </div>

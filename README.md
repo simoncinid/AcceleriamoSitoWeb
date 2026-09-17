@@ -57,3 +57,15 @@ Le verifiche automatiche usano SMTP e Meta simulati; non inviano email o convers
 Le pagine `/privacy-policy`, `/cookie-policy`, `/termini-e-condizioni` descrivono l’implementazione corrente. Il footer identifica Diego Simoncini e P.IVA 02524780505. Indirizzo omesso su istruzione; email pubblica `info@acceleriamo.it`. Restano da applicare nella gestione reale della posta il termine di conservazione di 12 mesi per le richieste senza incarico e le procedure per i diritti degli interessati: il sito non automatizza la cancellazione delle email.
 
 Riferimenti: [Vercel Web Analytics](https://vercel.com/docs/analytics/privacy-policy), [Garante: cookie](https://www.garanteprivacy.it/faq/cookie), [Meta: deduplicazione](https://developers.facebook.com/docs/marketing-api/conversions-api/deduplicate-pixel-and-server-events/).
+
+## AI WorkMap
+
+Nuova verticale `/ai-workmap`: analisi conversazionale, anteprima gratuita, pagamento una tantum, approfondimento e documento privato PDF/web. Architettura, route, schema, test e configurazione dei servizi sono in [docs/ai-workmap.md](docs/ai-workmap.md). Le vendite restano disattivate fino a OpenAI, Redis (piano free da Vercel Storage), Stripe, SMTP e `WORKMAP_SALES_ENABLED=true`. Non servono QStash né un database SQL.
+
+```bash
+npm test
+npm run build
+npm run test:e2e
+```
+
+I test browser usano Chrome locale e provider simulati. Non effettuano acquisti o invii reali.

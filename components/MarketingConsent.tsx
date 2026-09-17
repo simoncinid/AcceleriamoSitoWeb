@@ -22,7 +22,7 @@ export function MarketingConsent() {
     return () => window.removeEventListener("open-cookie-preferences", show);
   }, []);
   if (!metaConfigured || (!editing && choice !== "")) return null;
-  function choose(accepted: boolean) { setMarketingConsent(accepted); setEditing(false); }
+  function choose(accepted: boolean) { setMarketingConsent(accepted); setEditing(false); void fetch("/api/workmap/consent", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ marketingConsent: accepted }) }).then(() => window.dispatchEvent(new Event("workmap-consent-saved"))).catch(() => {}); }
   return <aside className="cookie-banner" aria-label="Preferenze cookie">
     <strong>Possiamo misurare le campagne?</strong>
     <p>Con il tuo consenso usiamo Meta Pixel per capire quali annunci portano contatti. Puoi rifiutare e usare comunque il sito. <a href="/cookie-policy">Cookie Policy</a></p>

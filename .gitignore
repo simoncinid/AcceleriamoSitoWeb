@@ -5,3 +5,8 @@ out
 !.env.example
 npm-debug.log*
 .DS_Store
+
+.workmap-data/
+artifacts/workmap/
+test-results/
+playwright-report/

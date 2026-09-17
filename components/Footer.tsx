@@ -14,7 +14,7 @@ export function Footer() {
             <WhatsAppLink className="footer-whatsapp" source="footer">{whatsappDisplay}</WhatsAppLink>
             {legalIdentity.email && <p><Link href={`mailto:${legalIdentity.email}`}>{legalIdentity.email}</Link></p>}
           </div>
-          <nav className="footer-links" aria-label="Navigazione nel footer"><Link href="/#servizi">Cosa facciamo</Link><Link href="/#metodo">Come lavoriamo</Link><Link href="/#chi-siamo">Chi siamo</Link><Link href="/#domande">Domande</Link><Link href="/#contatti">Richiedi la valutazione gratuita</Link></nav>
+          <nav className="footer-links" aria-label="Navigazione nel footer"><Link href="/#servizi">Cosa facciamo</Link><Link href="/ai-workmap">AI WorkMap</Link><Link href="/#metodo">Come lavoriamo</Link><Link href="/#chi-siamo">Chi siamo</Link><Link href="/#domande">Domande</Link><Link href="/#contatti">Richiedi la valutazione gratuita</Link></nav>
         </div>
         <div className="footer-bottom">
           <span>© {new Date().getFullYear()} ACCELERIAMO è il marchio con cui opera {legalIdentity.name}{legalIdentity.address && ` · ${legalIdentity.address}`} · P.IVA {legalIdentity.vat}{legalIdentity.email && <> · <a href={`mailto:${legalIdentity.email}`}>{legalIdentity.email}</a></>}</span>

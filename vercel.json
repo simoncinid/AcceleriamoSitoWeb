@@ -1,0 +1,8 @@
+{
+  "crons": [
+    {
+      "path": "/api/workmap/worker",
+      "schedule": "0 4 * * *"
+    }
+  ]
+}

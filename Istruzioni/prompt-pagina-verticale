@@ -1,0 +1,2451 @@
+CONTESTO GENERALE
+
+Stai lavorando sul repository esistente di acceleriamo.it.
+
+Devi progettare e implementare una nuova verticale commerciale integrata nel sito, dedicata a un prodotto digitale personalizzato chiamato provvisoriamente:
+
+AI WORKMAP
+
+Prima di scrivere codice devi analizzare attentamente tutto il progetto esistente.
+
+Non devi inventare una nuova identità grafica.
+
+Per palette, logo, font, icone, animazioni, componenti, button, input, header, footer, spaziature, border radius, ombre, breakpoint, transizioni, stile delle card e qualunque altro elemento visuale devi usare ciò che è già presente nel codice di acceleriamo.it.
+
+La nuova verticale deve sembrare parte nativa del sito.
+
+Prima dell'implementazione devi capire:
+
+stack
+framework
+routing
+design system
+componenti esistenti
+librerie già installate
+sistema analytics
+eventuale Meta Pixel
+backend
+database
+autenticazione
+provider email
+sistema di pagamento
+servizi AI già presenti
+gestione environment variables
+modalità di deploy
+convenzioni del repository
+
+Riusa tutto ciò che ha senso.
+
+Non aggiungere librerie nuove quando il progetto ha già strumenti equivalenti.
+
+OBIETTIVO DEL PRODOTTO
+
+AI WorkMap è un prodotto digitale acquistabile una sola volta.
+
+Non è un SaaS.
+
+Non è un abbonamento.
+
+Non è un corso.
+
+Non è un ebook generico.
+
+Non è una raccolta di prompt.
+
+Il cliente interagisce con un consulente AI conversazionale che analizza il suo lavoro.
+
+L'assistente deve capire:
+
+che lavoro svolge
+che tipo di azienda ha
+cosa fa ogni giorno
+cosa gli porta via più tempo
+cosa ripete spesso
+quali software usa
+quali attività vorrebbe velocizzare
+quanto conosce già l'AI
+quali attività hanno il miglior rapporto tra beneficio e difficoltà
+
+Dopo una prima analisi gratuita, il sistema deve mostrare alcune opportunità concrete.
+
+Successivamente propone l'acquisto della AI WorkMap completa.
+
+Prezzo iniziale:
+
+47 € IVA inclusa.
+
+Pagamento una tantum.
+
+Dopo il pagamento la conversazione continua.
+
+L'assistente raccoglie le informazioni mancanti.
+
+Il sistema genera poi un documento personalizzato che contiene workflow, procedure, prompt, assistenti AI, strumenti consigliati e un piano di applicazione.
+
+PROMESSA PRINCIPALE
+
+Il prodotto deve rispondere alla domanda:
+
+“Come posso applicare concretamente l'intelligenza artificiale al lavoro che faccio ogni giorno?”
+
+Il valore non deriva dalla quantità di prompt.
+
+Deriva dalla selezione.
+
+L'utente deve percepire:
+
+“Questo sistema ha capito il mio lavoro e mi sta indicando dove l'AI ha senso per me.”
+
+POSIZIONAMENTO
+
+Evita espressioni come:
+
+500 prompt
+prompt pack
+corso ChatGPT
+impara l'intelligenza artificiale
+diventa esperto AI
+ebook AI
+segreti dell'intelligenza artificiale
+rivoluziona il tuo lavoro
+porta la produttività al livello successivo
+
+Il posizionamento deve essere pratico.
+
+Idea centrale:
+
+“Dimmi che lavoro fai. Ti mostro quali parti del tuo lavoro puoi affidare all'AI e come farlo.”
+
+Oppure:
+
+“Quali parti del tuo lavoro stai ancora facendo a mano?”
+
+TARGET
+
+Il target deve restare ampio.
+
+Professionisti.
+Freelance.
+Consulenti.
+Commerciali.
+Agenti immobiliari.
+Commercialisti.
+Avvocati.
+Geometri.
+Architetti.
+Ingegneri.
+HR.
+Recruiter.
+Manager.
+Amministrativi.
+Marketing.
+Imprenditori.
+Titolari di PMI.
+Project manager.
+Customer service.
+Formatori.
+Coach.
+Altri lavori da ufficio o professionali.
+
+La landing deve essere adatta a traffico broad proveniente principalmente da campagne Meta.
+
+FUNNEL GENERALE
+
+Il funnel deve essere:
+
+Meta Ad
+
+↓
+
+Landing page
+
+↓
+
+CTA “Analizza il mio lavoro”
+
+↓
+
+Assistente AI conversazionale
+
+↓
+
+Qualificazione gratuita in circa 60-90 secondi
+
+↓
+
+Acquisizione email
+
+↓
+
+Analisi gratuita personalizzata
+
+↓
+
+3 opportunità concrete
+
+↓
+
+Anteprima della WorkMap completa
+
+↓
+
+Paywall
+
+↓
+
+Checkout 47 €
+
+↓
+
+Riapertura della stessa conversazione
+
+↓
+
+Domande di approfondimento
+
+↓
+
+Generazione AI WorkMap
+
+↓
+
+Controllo qualità
+
+↓
+
+PDF e versione web
+
+↓
+
+Email di consegna
+
+↓
+
+Download
+
+PRINCIPIO FONDAMENTALE DELL'ESPERIENZA
+
+Non costruire un classico questionario con:
+
+Domanda 1 di 7
+Domanda 2 di 7
+Domanda 3 di 7
+
+L'esperienza visiva deve sembrare una conversazione con un consulente AI.
+
+Tecnicamente, però, deve essere un questionario strutturato.
+
+La chat deve avere:
+
+quick reply
+multi-select
+testo libero
+input strutturati
+logica condizionale
+estrazione automatica di informazioni
+follow-up dinamici
+
+Circa il 70% delle interazioni deve essere veloce tramite pulsanti.
+
+Circa il 30% deve consentire testo libero.
+
+La chat non deve diventare infinita.
+
+L'utente deve capire che il percorso è breve.
+
+LANDING PAGE
+
+La landing deve essere verticale, mobile first e fortemente orientata alla conversione.
+
+Non trasformarla in una lunga pagina editoriale.
+
+SEZIONE HERO
+
+Headline:
+
+“Quali parti del tuo lavoro stai ancora facendo a mano?”
+
+Subheadline:
+
+“Parla per pochi minuti con il nostro assistente AI. Analizzerà quello che fai ogni giorno e individuerà dove l'intelligenza artificiale può esserti realmente utile.”
+
+CTA primaria:
+
+“Analizza il mio lavoro”
+
+Microcopy:
+
+“Analisi iniziale gratuita. Nessuna carta richiesta.”
+
+Vicino alla hero mostra una preview credibile della AI WorkMap.
+
+Esempio:
+
+AI WORKMAP
+
+Preparata per:
+Marco Rossi
+
+Ruolo:
+Responsabile commerciale
+
+14 workflow personali
+
+38 prompt operativi
+
+3 assistenti AI
+
+Piano 30 giorni
+
+La preview deve sembrare un vero prodotto professionale.
+
+Non una semplice copertina ebook.
+
+SEZIONE PROBLEMA
+
+Titolo:
+
+“ChatGPT sa fare tante cose. Il problema è capire quali servono a te.”
+
+Mostra esempi:
+
+Email
+Preventivi
+PDF
+Report
+Riunioni
+Ricerca
+Excel
+Follow-up
+CRM
+Presentazioni
+Documenti
+Clienti
+Analisi
+Procedure
+Contenuti
+
+Copy:
+
+“AI WorkMap parte dal tuo lavoro reale. Analizza attività, strumenti e problemi quotidiani e seleziona le applicazioni AI con maggiore utilità per il tuo profilo.”
+
+SEZIONE COME FUNZIONA
+
+Tre passaggi.
+
+1.
+
+“Raccontaci cosa fai.”
+
+2.
+
+“L'assistente individua le opportunità.”
+
+3.
+
+“Ricevi la tua AI WorkMap personale.”
+
+Poi CTA:
+
+“Analizza il mio lavoro”
+
+SEZIONE DIMOSTRAZIONE
+
+Mostra visivamente un esempio.
+
+Profilo:
+
+Responsabile commerciale
+
+Problemi:
+
+follow-up
+report
+offerte
+gestione agenti
+
+AI WorkMap individua:
+
+preparazione appuntamenti
+follow-up automatico
+sintesi report agenti
+prima bozza offerte
+analisi CRM
+preparazione riunioni
+
+Deve essere immediatamente evidente che il risultato cambia in base alla persona.
+
+ASSISTENTE AI GRATUITO
+
+Quando l'utente clicca “Analizza il mio lavoro”, entra nell'esperienza conversazionale.
+
+Può essere:
+
+overlay
+modal full-screen
+route dedicata
+
+Scegli la soluzione più coerente con il progetto.
+
+Su mobile deve sembrare quasi un'app.
+
+PRIMO MESSAGGIO
+
+Non usare:
+
+“Ciao, come posso aiutarti?”
+
+Usa qualcosa come:
+
+“Ciao. In circa 90 secondi cercherò di capire dove l'AI può essere più utile nel tuo lavoro.
+
+Partiamo dalla cosa più importante.
+
+Che lavoro fai?”
+
+INPUT PROFESSIONE
+
+Campo testo libero.
+
+Autocomplete con esempi:
+
+Commerciale
+Consulente
+Agente immobiliare
+Commercialista
+Avvocato
+Geometra
+Architetto
+Ingegnere
+HR
+Recruiter
+Marketing
+Imprenditore
+Manager
+Project Manager
+Amministrativo
+Customer Service
+Formatore
+Coach
+Freelance
+
+L'utente deve sempre poter scrivere un'altra professione.
+
+INTERPRETAZIONE
+
+Se l'utente scrive:
+
+“Sono responsabile commerciale di una piccola azienda e seguo una rete di 12 agenti.”
+
+Il sistema deve estrarre automaticamente:
+
+role: responsabile commerciale
+
+companyType: PMI
+
+teamContext: rete commerciale
+
+teamSize: circa 12
+
+Non chiedere successivamente:
+
+“Lavori da solo o con un team?”
+
+L'informazione è già presente.
+
+Questo è essenziale.
+
+La chat deve sembrare intelligente.
+
+NON RIPETERE DOMANDE GIÀ RISPOSTE
+
+Ad ogni turno:
+
+analizza la risposta
+
+aggiorna il profilo strutturato
+
+decidi quali informazioni mancano
+
+scegli la prossima domanda utile
+
+Non seguire ciecamente uno script.
+
+PROGRESSO
+
+Mostra un piccolo indicatore.
+
+Non:
+
+“Domanda 3 di 7”.
+
+Meglio:
+
+Profilo ✓
+
+Attività ✓
+
+Priorità ●
+
+Analisi
+
+Questo comunica che il percorso ha una fine.
+
+SECONDA FASE
+
+Dopo aver capito il lavoro:
+
+“Perfetto. Adesso vediamo dove passa il tuo tempo.”
+
+Quick replies:
+
+Email e comunicazioni
+
+Clienti
+
+Documenti
+
+Preventivi e offerte
+
+Report
+
+Riunioni
+
+Excel e dati
+
+Ricerca
+
+CRM
+
+Contenuti
+
+Organizzazione
+
+Altro
+
+Permetti scelta multipla.
+
+TERZA FASE
+
+Domanda:
+
+“Quali 3 attività ti portano via più tempo?”
+
+Mostra opzioni coerenti con il ruolo riconosciuto.
+
+Non mostrare sempre le stesse.
+
+Un agente immobiliare deve vedere opzioni differenti da un recruiter.
+
+QUARTA FASE
+
+Testo libero:
+
+“C'è un'attività ripetitiva che vorresti smettere di fare manualmente?”
+
+Questa risposta è molto importante.
+
+L'assistente deve eventualmente fare una domanda di follow-up.
+
+Esempio.
+
+Utente:
+
+“Ogni settimana devo raccogliere gli aggiornamenti degli agenti e preparare un riepilogo per la direzione.”
+
+AI:
+
+“Questa è una buona candidata. Oggi gli agenti ti mandano gli aggiornamenti sempre nello stesso formato oppure ognuno comunica in modo diverso?”
+
+Questo genera percezione di consulenza.
+
+Non fare più di un follow-up quando non serve.
+
+QUINTA FASE
+
+“Quanto usi già strumenti AI?”
+
+Quick replies:
+
+Mai
+
+Li ho provati
+
+Ogni tanto
+
+Quasi ogni giorno
+
+Li uso già in maniera avanzata
+
+ACQUISIZIONE EMAIL
+
+Non chiedere email come prima cosa.
+
+Chiedila dopo che l'utente ha ricevuto almeno un piccolo insight.
+
+Esempio:
+
+“Ho già individuato alcune opportunità interessanti.
+
+Dove vuoi che salvi la tua analisi?”
+
+Input email.
+
+Microcopy:
+
+“Ti invieremo il risultato e potrai riprenderlo se chiudi la pagina.”
+
+GESTIONE CONSENSI
+
+Integra privacy e consenso secondo le modalità già presenti nel sito.
+
+Non inserire checkbox inutili.
+
+Non iscrivere automaticamente l'utente a comunicazioni marketing se manca il consenso necessario.
+
+ANALISI GRATUITA
+
+Terminata la qualificazione, mostra una breve fase di elaborazione.
+
+Non fingere tempi lunghi.
+
+Possibili messaggi:
+
+“Sto ricostruendo il tuo flusso di lavoro”
+
+“Confronto attività e opportunità AI”
+
+“Ordino le applicazioni più utili”
+
+Poi mostra:
+
+“Ho capito abbastanza per costruire la tua WorkMap.”
+
+Subito dopo:
+
+“Ecco cosa ho capito del tuo lavoro.”
+
+Card riepilogo:
+
+Ruolo:
+Responsabile commerciale
+
+Contesto:
+PMI con rete agenti
+
+Attività principali:
+clienti
+offerte
+report
+rete vendita
+
+Problemi principali:
+raccolta informazioni
+follow-up
+reportistica manuale
+
+Livello AI:
+base
+
+Domanda:
+
+“È corretto?”
+
+Pulsanti:
+
+“Sì”
+
+“Modifica”
+
+PREVIEW GRATUITA
+
+Dopo conferma:
+
+“Ho individuato 12 applicazioni AI utili per il tuo profilo.”
+
+Mostra le 3 più rilevanti.
+
+Esempio:
+
+1.
+
+REPORT RETE COMMERCIALE
+
+“Puoi raccogliere gli aggiornamenti degli agenti in una struttura standard e ottenere automaticamente sintesi, criticità e prossime azioni.”
+
+2.
+
+FOLLOW-UP CLIENTI
+
+“Da note o trascrizioni puoi ottenere una bozza completa di follow-up con decisioni, attività e scadenze.”
+
+3.
+
+PREPARAZIONE APPUNTAMENTI
+
+“L'AI può organizzare le informazioni disponibili sul cliente e preparare un briefing prima della chiamata.”
+
+Aggiungi eventualmente:
+
+“Nel tuo caso non partirei dai contenuti social. Hai applicazioni con un impatto operativo maggiore.”
+
+Questa parte è importante.
+
+L'assistente deve saper anche non consigliare qualcosa.
+
+Evita di sembrare un generatore che considera tutto utile.
+
+PAYWALL
+
+Dopo le tre opportunità:
+
+“Queste sono le prime 3.
+
+Per il tuo profilo ne abbiamo individuate 12.”
+
+Poi visualizza:
+
+AI WORKMAP COMPLETA
+
+12 workflow personali
+
+32 prompt operativi
+
+3 assistenti AI
+
+strumenti consigliati
+
+procedure passo passo
+
+checklist
+
+indicazioni privacy
+
+piano di applicazione 30 giorni
+
+Prezzo:
+
+47 €
+
+“Pagamento una tantum.”
+
+CTA:
+
+“Genera la mia AI WorkMap”
+
+Secondaria:
+
+“Continua più tardi”
+
+Non usare:
+
+countdown falsi
+sconti inventati
+posti limitati
+pressione artificiale
+
+CHECKOUT
+
+Riusa il sistema esistente nel progetto.
+
+Se esiste Stripe, usa Stripe.
+
+Se esiste un altro provider già integrato e adatto, riusalo.
+
+Il prezzo deve essere configurabile in un unico punto.
+
+Gestisci server-side:
+
+checkout
+success
+cancel
+webhook
+payment status
+idempotenza
+ordine
+currency
+IVA se già gestita dal sistema
+
+Non considerare acquistato un ordine finché il pagamento non è confermato lato server.
+
+DOPO IL PAGAMENTO
+
+Non mandare il cliente in un questionario tradizionale.
+
+Riapri la stessa conversazione.
+
+Messaggio:
+
+“Perfetto. Adesso posso costruire la tua WorkMap completa.
+
+Ho già capito buona parte del tuo lavoro.
+
+Mi servono ancora alcune informazioni.”
+
+L'assistente deve sapere quali dati ha già.
+
+Non richiedere niente due volte.
+
+DOMANDE PREMIUM
+
+Raccogli, quando mancanti:
+
+nome
+
+settore
+
+azienda
+
+tipo di clienti
+
+dimensione team
+
+software usati
+
+strumenti AI già usati
+
+tipi di documenti prodotti
+
+file usati
+
+attività verso clienti
+
+attività interne
+
+attività ripetitive
+
+attività che richiedono maggiore tempo
+
+output più frequenti
+
+obiettivi
+
+vincoli
+
+privacy
+
+eventuali software aziendali
+
+Due domande aperte particolarmente importanti:
+
+“Descrivimi brevemente una tua giornata o settimana tipo.”
+
+“Se potessi eliminare tre attività ripetitive dal tuo lavoro, quali sceglieresti?”
+
+Non obbligare l'utente a scrivere testi lunghi.
+
+Deve sempre esserci la possibilità di rispondere brevemente.
+
+CONCLUSIONE INTERVISTA
+
+Quando hai informazioni sufficienti:
+
+“Perfetto. Adesso ho abbastanza informazioni per costruire la tua AI WorkMap.”
+
+Mostra breve riepilogo.
+
+Poi:
+
+“Genera la WorkMap”
+
+PIPELINE AI
+
+Non generare il PDF direttamente dalla conversazione.
+
+La pipeline deve essere:
+
+Chat
+
+↓
+
+estrazione dati
+
+↓
+
+JSON profilo
+
+↓
+
+analisi attività
+
+↓
+
+selezione workflow
+
+↓
+
+personalizzazione
+
+↓
+
+creazione assistenti
+
+↓
+
+piano 30 giorni
+
+↓
+
+controllo qualità
+
+↓
+
+documento strutturato
+
+↓
+
+HTML
+
+↓
+
+PDF
+
+STRUTTURA DATI DEL PROFILO
+
+Usa output strutturato e schema validation.
+
+Esempio:
+
+{
+"name": "",
+"role": "",
+"industry": "",
+"companyType": "",
+"teamSize": "",
+"seniority": "",
+"clients": [],
+"mainTasks": [],
+"repetitiveTasks": [],
+"timeConsumingTasks": [],
+"painPoints": [],
+"desiredOutcomes": [],
+"toolsUsed": [],
+"aiToolsUsed": [],
+"documentsUsed": [],
+"fileTypes": [],
+"customerFacingTasks": [],
+"internalTasks": [],
+"aiLevel": "",
+"constraints": [],
+"privacyConsiderations": []
+}
+
+L'LLM non deve restituire testo non strutturato quando serve JSON.
+
+Usa schema validation.
+
+DATABASE WORKFLOW
+
+Non affidare tutto al modello generativo.
+
+Crea un database curato di workflow.
+
+Ogni workflow deve avere almeno:
+
+id
+
+title
+
+description
+
+roles
+
+industries
+
+taskCategories
+
+painPoints
+
+requiredInputs
+
+outputType
+
+aiLevel
+
+recommendedTools
+
+privacyLevel
+
+humanReviewRequired
+
+baseProcedure
+
+basePrompt
+
+reviewPrompt
+
+example
+
+tags
+
+Le macrofamiglie iniziali devono includere:
+
+email
+
+documenti
+
+PDF
+
+ricerca
+
+riunioni
+
+follow-up
+
+vendite
+
+CRM
+
+Excel
+
+analisi dati
+
+report
+
+presentazioni
+
+contenuti
+
+customer service
+
+HR
+
+recruiting
+
+project management
+
+amministrazione
+
+knowledge management
+
+procedure
+
+gestione clienti
+
+offerte
+
+preventivi
+
+organizzazione
+
+SELEZIONE WORKFLOW
+
+Il motore deve scegliere circa 10-15 workflow.
+
+Non mostrare tutti quelli compatibili.
+
+Ordina per:
+
+rilevanza
+
+frequenza attività
+
+tempo assorbito
+
+facilità di implementazione
+
+beneficio atteso
+
+livello AI utente
+
+strumenti disponibili
+
+Non generare punteggi pseudo-scientifici.
+
+Usa categorie qualitative:
+
+Priorità alta
+
+Priorità media
+
+Da valutare
+
+Difficoltà:
+
+Semplice
+
+Intermedia
+
+Avanzata
+
+MASTER SYSTEM PROMPT DEL CONSULENTE
+
+Crea un prompt di sistema separato e versionato.
+
+Principi:
+
+“Sei un consulente operativo specializzato nell'applicazione pratica dell'intelligenza artificiale alle attività professionali.
+
+Il tuo obiettivo non è parlare genericamente di AI.
+
+Devi capire il lavoro della persona.
+
+Devi individuare attività ripetitive, informative, documentali, organizzative o analitiche nelle quali l'AI può dare un beneficio reale.
+
+Fai domande brevi.
+
+Non chiedere informazioni già ottenute.
+
+Quando una risposta contiene più informazioni, estrai tutte quelle disponibili.
+
+Preferisci quick reply quando una risposta strutturata è sufficiente.
+
+Usa testo libero quando serve comprendere un processo.
+
+Non trasformare la conversazione in un interrogatorio.
+
+Non promettere benefici non verificabili.
+
+Non inventare capacità di software.
+
+Non suggerire strumenti che non conosci con sufficiente sicurezza.
+
+Non presentare l'AI come sostituto del giudizio professionale.
+
+Per attività legali, fiscali, mediche, finanziarie o ad alto rischio, limita l'AI a supporto organizzativo, informativo o documentale.
+
+Non chiedere informazioni personali o riservate non necessarie.
+
+Invita l'utente a non inserire password, segreti aziendali o dati sensibili dei clienti.
+
+Il tuo compito è arrivare a capire:
+
+chi è
+
+cosa fa
+
+dove passa il suo tempo
+
+quali attività ripete
+
+quali strumenti usa
+
+cosa desidera velocizzare
+
+quanto conosce l'AI
+
+quali opportunità hanno priorità.
+
+Non devi vendere continuamente durante la conversazione.
+
+Prima dimostra di aver capito il lavoro.
+
+Poi presenta il valore della WorkMap completa.”
+
+PROMPT FOLLOW-UP
+
+Il sistema deve decidere se fare una domanda di approfondimento.
+
+Prompt concettuale:
+
+“Analizza le informazioni disponibili.
+
+Determina se esiste una lacuna che impedisce di comprendere il processo indicato dall'utente.
+
+Se una domanda di follow-up migliorerebbe significativamente la qualità delle raccomandazioni, genera una sola domanda breve.
+
+Altrimenti passa alla prossima fase.
+
+Non fare domande per semplice curiosità.
+
+Non chiedere informazioni già presenti.”
+
+PROMPT ANALISI ATTIVITÀ
+
+Per ogni attività estrai:
+
+task
+
+frequency
+
+painLevel
+
+repetitiveness
+
+informationIntensity
+
+documentIntensity
+
+humanJudgementRequired
+
+privacyRisk
+
+aiPotential
+
+implementationDifficulty
+
+recommendedApproach
+
+Non inventare percentuali.
+
+Usa livelli qualitativi.
+
+PROMPT PERSONALIZZAZIONE WORKFLOW
+
+“Adatta il workflow selezionato alla persona.
+
+Mantieni invariato il principio operativo del workflow.
+
+Personalizza:
+
+lessico
+
+esempi
+
+tipologia di input
+
+tipologia di output
+
+software
+
+contesto
+
+clienti
+
+documenti
+
+frequenza
+
+prompt
+
+checklist.
+
+Evita consigli generici.
+
+Ogni workflow deve essere applicabile immediatamente.
+
+Non inventare strumenti o funzionalità.
+
+Quando non sei sicuro di una caratteristica software, evita di citarla.
+
+Ogni workflow deve includere un controllo umano finale.”
+
+STRUTTURA DI OGNI WORKFLOW
+
+Titolo
+
+Perché è rilevante per te
+
+Quando usarlo
+
+Input necessario
+
+Strumento consigliato
+
+Procedura
+
+Prompt Master
+
+Prompt di revisione
+
+Esempio
+
+Output atteso
+
+Checklist finale
+
+Cosa controllare manualmente
+
+Errori frequenti
+
+Privacy
+
+PROMPT MASTER
+
+Ogni Prompt Master deve seguire questa struttura logica:
+
+RUOLO
+
+OBIETTIVO
+
+CONTESTO
+
+INPUT
+
+VINCOLI
+
+PROCESSO
+
+OUTPUT
+
+CONTROLLO
+
+Usa variabili leggibili:
+
+[NOME CLIENTE]
+
+[TESTO]
+
+[DATI]
+
+[OBIETTIVO]
+
+[CONTESTO]
+
+[PRODOTTO]
+
+[DOCUMENTO]
+
+[TONO]
+
+Non generare prompt inutilmente lunghi.
+
+La qualità conta più della lunghezza.
+
+PROMPT DI REVISIONE
+
+Ogni workflow deve avere anche un secondo prompt che serva per controllare l'output.
+
+Esempio:
+
+“Controlla la risposta precedente.
+
+Verifica:
+
+completezza
+
+coerenza
+
+dati mancanti
+
+affermazioni non supportate
+
+date
+
+nomi
+
+numeri
+
+tono
+
+istruzioni non rispettate.
+
+Non modificare dati reali senza segnalarlo.
+
+Restituisci prima eventuali problemi e poi una versione corretta.”
+
+ASSISTENTI AI
+
+Genera 3 assistenti personalizzati.
+
+Ogni assistente deve avere:
+
+name
+
+purpose
+
+whenToUse
+
+requiredInputs
+
+systemPrompt
+
+starterPrompts
+
+rules
+
+limitations
+
+humanReview
+
+Esempi commerciali:
+
+Preparatore Appuntamenti
+
+Assistente Follow-up
+
+Assistente Offerte
+
+Esempi HR:
+
+Assistente Screening CV
+
+Assistente Job Description
+
+Assistente Colloqui
+
+Esempi consulente:
+
+Assistente Ricerca
+
+Assistente Report
+
+Assistente Preparazione Cliente
+
+Non usare sempre gli stessi.
+
+Sceglili dai dati del profilo.
+
+PIANO 30 GIORNI
+
+Il piano deve impedire information overload.
+
+Settimana 1:
+
+implementare workflow più semplice e rilevante.
+
+Settimana 2:
+
+secondo workflow.
+
+Settimana 3:
+
+primo assistente AI.
+
+Settimana 4:
+
+ottimizzazione e integrazione.
+
+Non riempire ogni giorno di attività.
+
+Il piano deve sembrare realistico.
+
+QUALITY CONTROL
+
+Usa un secondo passaggio AI dedicato al controllo.
+
+Deve verificare:
+
+ripetizioni
+
+workflow troppo simili
+
+prompt generici
+
+informazioni inventate
+
+tool inesistenti
+
+funzioni software non corrette
+
+contraddizioni
+
+consigli non pertinenti
+
+privacy
+
+rischi
+
+linguaggio troppo promozionale
+
+errori di struttura
+
+workflow non collegati ai pain point
+
+Se trova problemi, deve correggerli prima della generazione finale.
+
+STRUTTURA AI WORKMAP
+
+Copertina.
+
+AI WorkMap di [nome]
+
+Ruolo.
+
+Data.
+
+Sezione 1.
+
+Il tuo profilo operativo.
+
+Sezione 2.
+
+Le opportunità AI individuate.
+
+Sezione 3.
+
+Da dove partire.
+
+Sezione 4.
+
+Workflow personalizzati.
+
+Sezione 5.
+
+I tuoi Prompt Master.
+
+Sezione 6.
+
+I tuoi 3 assistenti AI.
+
+Sezione 7.
+
+Strumenti consigliati.
+
+Sezione 8.
+
+Privacy e controlli.
+
+Sezione 9.
+
+Piano 30 giorni.
+
+Sezione 10.
+
+Checklist finale.
+
+PDF
+
+Genera un PDF professionale.
+
+Riprendi il visual system acceleriamo.it.
+
+Non deve sembrare un documento Word esportato.
+
+Usa:
+
+copertina
+
+indice
+
+gerarchia tipografica
+
+callout
+
+card
+
+icone
+
+header/footer
+
+numero pagina
+
+box prompt
+
+workflow separati
+
+spazio
+
+leggibilità mobile
+
+Ogni prompt deve poter essere copiato facilmente anche dalla versione web.
+
+VERSIONE WEB
+
+Oltre al PDF, genera una pagina privata web della WorkMap.
+
+Vantaggi:
+
+copia prompt
+
+leggibilità mobile
+
+download PDF
+
+accesso futuro
+
+Non trasformarla in una dashboard SaaS.
+
+Deve restare una semplice area risultato.
+
+PROGRESSO GENERAZIONE
+
+Dopo il pagamento:
+
+“Sto costruendo la tua WorkMap.”
+
+Mostra attività reali:
+
+Analizzo il profilo
+
+Seleziono i workflow
+
+Personalizzo i prompt
+
+Creo gli assistenti
+
+Controllo il risultato
+
+Genero il documento
+
+Non mostrare percentuali false.
+
+EMAIL
+
+Email 1:
+
+conferma acquisto.
+
+Email 2:
+
+WorkMap pronta.
+
+CTA:
+
+“Apri la mia WorkMap”
+
+Usa il provider email già presente.
+
+Se non esiste, crea un abstraction layer facilmente sostituibile.
+
+RECUPERO LEAD
+
+Se l'utente lascia l'email ma non compra, salva:
+
+email
+
+profilo sintetico
+
+numero opportunità individuate
+
+stato funnel
+
+Non salvare informazioni inutili.
+
+Prepara l'architettura per una successiva email:
+
+“Abbiamo salvato la tua analisi.”
+
+Non implementare campagne aggressive.
+
+ANALYTICS
+
+Traccia:
+
+PageView
+
+HeroCTA
+
+AnalysisStarted
+
+RoleProvided
+
+TasksProvided
+
+PainPointProvided
+
+EmailCaptured
+
+AnalysisCompleted
+
+ProfileConfirmed
+
+PreviewViewed
+
+PaywallViewed
+
+CheckoutStarted
+
+Purchase
+
+PremiumChatStarted
+
+PremiumChatCompleted
+
+GenerationStarted
+
+GenerationCompleted
+
+WorkMapViewed
+
+PDFDownloaded
+
+Passa quando utile:
+
+profession_category
+
+ai_level
+
+company_type
+
+workflow_count
+
+price
+
+currency
+
+Non passare a Meta:
+
+nome
+
+email
+
+testi della chat
+
+descrizione del lavoro
+
+dati personali
+
+informazioni aziendali specifiche
+
+META PIXEL
+
+Se il sito possiede già Pixel o Conversion API, integrali.
+
+Non duplicare eventi.
+
+Purchase deve essere server-side quando l'architettura esistente lo consente.
+
+MOBILE FIRST
+
+Il traffico arriverà principalmente da Meta mobile.
+
+Verifica attentamente:
+
+360 px
+
+375 px
+
+390 px
+
+430 px
+
+La chat deve essere ottima su smartphone.
+
+Input sempre visibile.
+
+Tastiera mobile gestita correttamente.
+
+Quick reply facili da toccare.
+
+Nessun elemento fuori viewport.
+
+No popup sopra popup.
+
+No scroll strani.
+
+No textarea enormi.
+
+STICKY CTA
+
+Sulla landing puoi mostrare una CTA sticky mobile:
+
+“Analizza il mio lavoro”
+
+Deve sparire quando l'utente entra nella chat.
+
+PERFORMANCE
+
+Ottimizza:
+
+LCP
+
+CLS
+
+bundle
+
+font
+
+immagini
+
+animazioni
+
+hydration
+
+lazy loading
+
+Non sacrificare velocità per effetti inutili.
+
+ACCESSIBILITÀ
+
+Label corrette.
+
+Focus.
+
+Keyboard navigation.
+
+Contrasto.
+
+Errori leggibili.
+
+ARIA quando necessario.
+
+PRIVACY
+
+Mostra durante la conversazione una microindicazione discreta:
+
+“Non inserire password, segreti aziendali o dati sensibili dei tuoi clienti.”
+
+Il sistema deve minimizzare la raccolta di dati.
+
+Rispetta le modalità privacy già presenti in acceleriamo.it.
+
+MODEL ABSTRACTION
+
+Non legare la piattaforma rigidamente a un singolo provider AI.
+
+Crea funzioni concettuali come:
+
+extractProfile()
+
+decideNextQuestion()
+
+analyzeTasks()
+
+selectWorkflows()
+
+personalizeWorkflow()
+
+generateAssistants()
+
+generatePlan()
+
+reviewWorkMap()
+
+generateFinalContent()
+
+Provider configurabile via environment variables.
+
+Usa structured output quando disponibile.
+
+TEMPERATURE
+
+Per estrazione dati:
+
+bassa.
+
+Per classificazione:
+
+bassa.
+
+Per personalizzazione:
+
+moderata.
+
+Per quality control:
+
+bassa.
+
+Evita output creativi imprevedibili.
+
+PROMPT VERSIONING
+
+Ogni prompt deve avere:
+
+id
+
+version
+
+purpose
+
+lastUpdated
+
+Non spargere prompt inline nel codice.
+
+Crea una struttura ordinata.
+
+Esempio:
+
+prompts/
+
+conversation-system
+
+profile-extractor
+
+followup-decider
+
+task-analyzer
+
+workflow-selector
+
+workflow-personalizer
+
+prompt-generator
+
+assistant-generator
+
+plan-generator
+
+quality-reviewer
+
+CHECKOUT FAILURE
+
+Gestisci correttamente:
+
+pagamento completato ma browser chiuso
+
+webhook duplicato
+
+generazione AI fallita
+
+timeout provider
+
+JSON non valido
+
+PDF fallito
+
+utente ricarica pagina
+
+utente perde connessione
+
+ordine già elaborato
+
+La generazione deve poter riprendere.
+
+Usa stati persistenti.
+
+Esempio:
+
+lead
+
+qualified
+
+checkout_started
+
+paid
+
+profile_complete
+
+generating
+
+reviewing
+
+ready
+
+failed
+
+DATA MODEL
+
+Prevedi entità simili a:
+
+Lead
+
+Conversation
+
+Message
+
+Profile
+
+Order
+
+Payment
+
+WorkMap
+
+WorkflowInstance
+
+GenerationJob
+
+Download
+
+Adatta naming e struttura al database esistente.
+
+Non aggiungere database nuovo se non serve.
+
+ADMIN
+
+Se esiste già un'area admin, aggiungi una vista minima:
+
+ordine
+
+email
+
+data
+
+professione
+
+stato
+
+pagamento
+
+stato generazione
+
+numero workflow
+
+download
+
+Non mostrare testi della conversazione se non necessari.
+
+Se non esiste un admin, evita di costruire un gestionale enorme.
+
+COPY DELLA LANDING
+
+Tono:
+
+professionale
+
+diretto
+
+concreto
+
+sobrio
+
+orientato al risultato
+
+No slogan vuoti.
+
+No linguaggio da guru.
+
+No pressione artificiale.
+
+Il brand acceleriamo.it deve trasmettere competenza tecnica e operativa.
+
+OBIEZIONE PRINCIPALE
+
+“Posso chiedere queste cose direttamente a ChatGPT.”
+
+La landing deve rispondere implicitamente.
+
+Sezione consigliata:
+
+“Perché non basta chiedere a ChatGPT?”
+
+Copy:
+
+“Puoi farlo.
+
+Il problema è sapere cosa chiedere, quali attività hanno senso, come strutturare il processo e come controllare il risultato.
+
+AI WorkMap parte dal tuo lavoro e costruisce una sequenza già organizzata.”
+
+Non attaccare ChatGPT.
+
+Il prodotto stesso dipende dagli strumenti AI.
+
+DIFFERENZA TRA DUE UTENTI
+
+Mostra esempio visuale.
+
+COMMERCIALISTA A
+
+Priorità:
+
+email clienti
+
+circolari
+
+documenti
+
+COMMERCIALISTA B
+
+Priorità:
+
+Excel
+
+report
+
+riunioni
+
+Messaggio:
+
+“Stessa professione. WorkMap diversa.”
+
+SOCIAL PROOF
+
+Non inventare recensioni.
+
+Non inventare clienti.
+
+Non inventare numeri.
+
+Se acceleriamo.it possiede già proof reali applicabili al progetto, puoi riutilizzarle.
+
+Altrimenti ometti.
+
+GARANZIA
+
+Non inventare politiche commerciali.
+
+Prepara però il componente in modo configurabile nel caso venga aggiunta in futuro.
+
+FAQ
+
+Inserisci:
+
+Cos'è AI WorkMap?
+
+È un manuale operativo personale costruito partendo dal tuo lavoro e dalle attività che svolgi.
+
+È un corso?
+
+No.
+
+È un ebook?
+
+Non nel senso tradizionale. Il contenuto varia in base al tuo profilo.
+
+Ricevo prompt?
+
+Sì, ma inseriti dentro procedure e workflow completi.
+
+Devo conoscere già l'AI?
+
+No.
+
+Quali strumenti vengono considerati?
+
+ChatGPT, Claude, Gemini e altri strumenti pertinenti.
+
+Devo avere abbonamenti?
+
+Molte procedure funzionano anche con piani gratuiti. Quando serve una funzione specifica, la WorkMap deve indicarlo.
+
+Quanto dura l'analisi iniziale?
+
+Circa 90 secondi.
+
+Quanto costa?
+
+47 € una tantum.
+
+È un abbonamento?
+
+No.
+
+Posso inserire qualsiasi lavoro?
+
+Sì.
+
+Cosa succede dopo l'acquisto?
+
+La conversazione continua per raccogliere le ultime informazioni e viene poi generata la WorkMap.
+
+CTA FINALE
+
+Headline:
+
+“Non devi imparare tutto sull'AI.
+
+Devi capire cosa può fare per il tuo lavoro.”
+
+CTA:
+
+“Analizza il mio lavoro”
+
+SEO
+
+Prepara:
+
+title
+
+description
+
+OpenGraph
+
+canonical
+
+structured data Product quando corretto
+
+La pagina nasce per paid traffic, non per keyword stuffing.
+
+ROUTE
+
+Scegli route coerente con il progetto.
+
+Possibili esempi:
+
+/ai-workmap
+
+/workmap-ai
+
+/intelligenza-artificiale-lavoro
+
+Preferisci naming breve.
+
+COPY DYNAMIC
+
+Alcune sezioni della landing possono adattarsi alla professione se l'utente torna dopo aver iniziato la chat.
+
+Esempio:
+
+“Abbiamo salvato la tua analisi da commerciale.”
+
+Non rendere necessaria questa funzione per il primo rilascio se aumenta troppo la complessità.
+
+NON FARE
+
+Non costruire:
+
+marketplace
+
+community
+
+chat generale
+
+SaaS ricorrente
+
+area account complessa
+
+editor PDF
+
+CRM
+
+sistema di corsi
+
+gamification
+
+app mobile
+
+Il prodotto deve restare semplice.
+
+Traffic → chat → valore → pagamento → WorkMap.
+
+ORDER BUMP FUTURO
+
+Prepara l'architettura senza attivarlo obbligatoriamente.
+
+Possibile:
+
+AI AUTOMATION PACK
+
+12 €
+
+Contiene workflow avanzati di automazione.
+
+Non deve rallentare il lancio.
+
+CRITERIO DI CONVERSIONE
+
+Chi arriva da Meta deve capire entro pochi secondi:
+
+questa cosa riguarda il mio lavoro
+
+non è un corso
+
+non è un ebook generico
+
+posso provarla gratis
+
+mi darà suggerimenti specifici
+
+costa 47 €
+
+non c'è abbonamento
+
+La conversione avviene soprattutto dopo che l'assistente dimostra di aver capito il lavoro.
+
+Non spingere il checkout troppo presto.
+
+PRINCIPIO COMMERCIALE FINALE
+
+Non vendiamo intelligenza artificiale.
+
+Non vendiamo prompt.
+
+Non vendiamo formazione.
+
+Vendiamo chiarezza operativa:
+
+“Fra tutte le cose che fai ogni giorno, queste sono quelle dove l'AI ha più senso. E questo è esattamente come iniziare.”
+
+QUESTA DEVE ESSERE L'ESPERIENZA
+
+Utente:
+
+“Sono responsabile commerciale e seguo 12 agenti.”
+
+Assistente:
+
+“Quindi hai almeno due flussi diversi: clienti e rete vendita.
+
+Quale ti porta via più tempo?”
+
+Utente:
+
+“Raccogliere informazioni dagli agenti e preparare report.”
+
+Assistente:
+
+“Questo è un buon candidato.
+
+Gli agenti ti mandano gli aggiornamenti in modo strutturato oppure ricevi messaggi, email e telefonate?”
+
+Utente:
+
+“Un po' di tutto.”
+
+Assistente:
+
+“Capito.
+
+Una delle opportunità che analizzerò è trasformare aggiornamenti sparsi in un report commerciale strutturato.
+
+Vediamo le altre attività.”
+
+Questa qualità conversazionale deve essere il riferimento.
+
+Non una serie di domande travestite da chat.
+
+PRIMA DI SCRIVERE CODICE
+
+Fai queste operazioni:
+
+1. Analizza repository.
+
+2. Individua stack.
+
+3. Individua design system.
+
+4. Individua componenti riusabili.
+
+5. Individua analytics.
+
+6. Individua pagamento.
+
+7. Individua database.
+
+8. Individua servizi AI.
+
+9. Individua email provider.
+
+10. Individua hosting e deploy.
+
+11. Definisci architettura.
+
+12. Implementa seguendo le convenzioni esistenti.
+
+Non chiedere conferma su scelte normali.
+
+Quando il repository offre già una strada, seguila.
+
+Quando manca, scegli la soluzione più semplice, solida e facilmente mantenibile.
+
+ORDINE DI IMPLEMENTAZIONE
+
+1. Landing.
+
+2. Chat UI.
+
+3. State machine conversazione.
+
+4. Profile extraction.
+
+5. Preview gratuita.
+
+6. Lead capture.
+
+7. Paywall.
+
+8. Checkout.
+
+9. Conversazione premium.
+
+10. Workflow database.
+
+11. Pipeline AI.
+
+12. Quality control.
+
+13. Output web.
+
+14. PDF.
+
+15. Email.
+
+16. Tracking.
+
+17. Recovery e gestione errori.
+
+18. Test.
+
+19. Ottimizzazione mobile.
+
+TEST DA ESEGUIRE
+
+Verifica almeno:
+
+utente sconosciuto
+
+professione standard
+
+professione non prevista
+
+utente che scrive molte informazioni subito
+
+utente con risposte brevi
+
+utente che modifica profilo
+
+email non valida
+
+abbandono chat
+
+ripresa conversazione
+
+checkout cancellato
+
+pagamento riuscito
+
+webhook doppio
+
+refresh dopo pagamento
+
+generazione fallita
+
+retry
+
+PDF disponibile
+
+download
+
+mobile
+
+desktop
+
+tracking
+
+BUILD FINALE
+
+Alla fine:
+
+esegui build
+
+lint
+
+typecheck
+
+test
+
+controlla console errors
+
+controlla network errors
+
+controlla mobile
+
+controlla desktop
+
+controlla accessibilità
+
+controlla funnel completo
+
+controlla checkout
+
+controlla persistenza
+
+controlla generazione
+
+controlla retry
+
+controlla PDF
+
+controlla analytics
+
+Correggi tutto ciò che trovi.
+
+DELIVERABLE FINALE
+
+Al termine restituisci un riepilogo sintetico con:
+
+architettura implementata
+
+route aggiunte
+
+componenti principali
+
+file aggiunti
+
+file modificati
+
+schema dati
+
+provider AI
+
+prompt implementati
+
+workflow iniziali
+
+checkout
+
+tracking
+
+email
+
+environment variables
+
+eventuali configurazioni manuali richieste
+
+eventuali decisioni tecniche importanti
+
+Non limitarti a descrivere cosa andrebbe fatto.
+
+Devi implementare realmente il flusso nel repository esistente, fino al massimo livello funzionante possibile.
