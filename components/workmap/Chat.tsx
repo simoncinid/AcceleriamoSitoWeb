@@ -18,6 +18,19 @@ function StepWait({ label }: { label: string }) {
     </section>
   );
 }
+function useMaxQuickChoices() {
+  const [max, setMax] = useState(8);
+  useEffect(() => {
+    const update = () => {
+      const w = window.innerWidth;
+      setMax(w <= 360 ? 4 : w <= 430 ? 5 : w <= 600 ? 6 : 8);
+    };
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, []);
+  return max;
+}
 async function api(
   action: string,
   body?: object,
@@ -48,6 +61,7 @@ export function WorkMapChat() {
     [previewStep, setPreviewStep] = useState(0),
     [waitKind, setWaitKind] = useState<null | "qualify" | "confirm">(null),
     [replyPending, setReplyPending] = useState(false);
+  const maxQuickChoices = useMaxQuickChoices();
   const input = useRef<HTMLTextAreaElement>(null);
   const thread = useRef<HTMLDivElement>(null);
   const pending = useRef<{ answer: string; id: string } | null>(null),
@@ -584,7 +598,7 @@ export function WorkMapChat() {
                   </section>
                 )}
                 {data.confirmed && !data.paid && onOffer && (
-                  <section className="wm-step">
+                  <section className="wm-step wm-step--checkout">
                     <p className="eyebrow">AI WorkMap completa</p>
                     <h2>
                       Queste erano le prime {apps.length}. La mappa continua.
@@ -594,10 +608,16 @@ export function WorkMapChat() {
                       assistenti · piano 30 giorni · PDF
                     </p>
                     {data.notRecommended ? (
-                      <p className="wm-micro">{data.notRecommended}</p>
+                      <p className="wm-micro wm-checkout-note">
+                        {data.notRecommended}
+                      </p>
                     ) : null}
-                    <p className="wm-price">{product.priceLabel}</p>
-                    <p className="wm-micro">IVA inclusa. Pagamento una tantum.</p>
+                    <div className="wm-price-row">
+                      <p className="wm-price">{product.priceLabel}</p>
+                      <p className="wm-price-meta">
+                        IVA inclusa. Pagamento una tantum.
+                      </p>
+                    </div>
                     <label className="wm-terms">
                       <input
                         type="checkbox"
@@ -749,7 +769,7 @@ export function WorkMapChat() {
                         !answer ||
                         option.toLowerCase().includes(answer.toLowerCase()),
                     )
-                    .slice(0, 8)
+                    .slice(0, maxQuickChoices)
                     .map((option) => (
                       <button
                         disabled={busy}
