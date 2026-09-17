@@ -53,9 +53,9 @@ for (const width of [360, 375, 390, 430, 1440])
       .getByRole("link", { name: "Analizza il mio lavoro" })
       .first()
       .click();
-    await expect(page.getByLabel("La tua risposta")).toBeVisible();
+    await expect(page.getByLabel("Messaggio")).toBeVisible();
     await page
-      .getByLabel("La tua risposta")
+      .getByLabel("Messaggio")
       .fill("Sono responsabile commerciale di una PMI e seguo 12 agenti");
     await page.getByRole("button", { name: "Invia", exact: true }).click();
     await expect(
@@ -66,11 +66,26 @@ for (const width of [360, 375, 390, 430, 1440])
       .click();
     await page.getByRole("button", { name: "Offerte", exact: true }).click();
     await page.getByRole("button", { name: "Conferma le 2 scelte" }).click();
-    await expect(page.getByLabel("La tua risposta")).toBeEnabled();
+    await expect(page.getByLabel("Messaggio")).toBeEnabled();
     expect(
       await page.evaluate(
         () => document.documentElement.scrollWidth <= innerWidth,
       ),
+    ).toBe(true);
+    expect(
+      await page.evaluate(() => {
+        const first = document.querySelector(".wm-message");
+        const log = document.querySelector(".wm-thread");
+        if (!first || !log) return false;
+        return first.getBoundingClientRect().top - log.getBoundingClientRect().top < 48;
+      }),
+    ).toBe(true);
+    expect(
+      await page.evaluate(() => {
+        const shell = document.querySelector(".wm-shell");
+        if (!shell) return false;
+        return Math.round(shell.getBoundingClientRect().height) <= innerHeight + 1;
+      }),
     ).toBe(true);
     await expect
       .poll(() =>
@@ -107,8 +122,12 @@ test("analisi gratuita, correzione profilo, anteprima e paywall", async ({
     "Formati diversi",
     "Mai",
   ]) {
-    await expect(page.getByLabel("La tua risposta")).toBeEnabled();
-    await page.getByLabel("La tua risposta").fill(answer);
+    if (
+      await page.getByLabel("Dove vuoi che salvi la tua analisi?").isVisible()
+    )
+      break;
+    await expect(page.getByLabel("Messaggio")).toBeEnabled();
+    await page.getByLabel("Messaggio").fill(answer);
     await page.getByRole("button", { name: "Invia", exact: true }).click();
   }
   await expect(
@@ -134,16 +153,23 @@ test("analisi gratuita, correzione profilo, anteprima e paywall", async ({
     page.getByRole("button", { name: "Sì, è corretto" }),
   ).toBeEnabled();
   await page.getByRole("button", { name: "Sì, è corretto" }).click();
+  await expect(page.getByRole("button", { name: "Ricomincia" })).toBeVisible();
   await expect(
     page.getByRole("heading", { name: /Ho individuato 12/ }),
   ).toBeVisible();
+  await expect(page.getByRole("button", { name: "Avanti", exact: true })).toBeVisible();
+  await page.getByRole("button", { name: "Avanti", exact: true }).click();
+  await page.getByRole("button", { name: "Avanti", exact: true }).click();
+  await page.getByRole("button", { name: "Avanti", exact: true }).click();
   await expect(
     page.getByRole("button", { name: "Genera la mia AI WorkMap" }),
   ).toBeDisabled();
   expect(
-    await page.evaluate(
-      () => document.documentElement.scrollWidth <= innerWidth,
-    ),
+    await page.evaluate(() => {
+      const shell = document.querySelector(".wm-shell");
+      if (!shell) return false;
+      return Math.round(shell.getBoundingClientRect().height) <= innerHeight + 1;
+    }),
   ).toBe(true);
   await page.screenshot({
     path: "artifacts/workmap/paywall-390.png",

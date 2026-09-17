@@ -95,12 +95,19 @@ async function setup() {
   }
   async function qualify() {
     await post("start");
-    await answer("Sono responsabile commerciale di una PMI e seguo 12 agenti");
-    await answer("Report agenti; Offerte");
-    await answer("Report agenti; Follow-up clienti");
-    await answer("Raccogliere gli aggiornamenti ogni settimana");
-    await answer("Email e messaggi diversi");
-    await answer("Mai");
+    const script = [
+      "Sono responsabile commerciale di una PMI e seguo 12 agenti",
+      "Report agenti; Offerte",
+      "Report agenti; Follow-up clienti",
+      "Raccogliere gli aggiornamenti ogni settimana",
+      "Email e messaggi diversi",
+      "Mai",
+    ];
+    for (const value of script) {
+      const data = await (await get()).json();
+      if (!data.question) break;
+      await answer(value);
+    }
     return post("qualify", { email: "test@example.test" });
   }
   async function finishGeneration() {
@@ -244,6 +251,10 @@ test("professioni non previste, risposte brevi, opzioni per ruolo e deduplicazio
     );
     const second = await s.post("start");
     assert.equal(second.data.profile.role, "Recruiter");
+    const reset = await s.post("reset");
+    assert.equal(reset.status, 200);
+    assert.equal(reset.data.profile.role, "");
+    assert.ok(reset.data.question);
   } finally {
     await s.cleanup();
   }
@@ -254,6 +265,20 @@ test("professioni non previste, risposte brevi, opzioni per ruolo e deduplicazio
     assert.equal(r.data.profile.role, "Restauratore di organi storici");
   } finally {
     await t.cleanup();
+  }
+  const greet = await setup();
+  try {
+    await greet.post("start");
+    const skipped = await greet.answer("ciao");
+    assert.equal(skipped.status, 200);
+    assert.equal(skipped.data.profile.role, "");
+    assert.equal(skipped.data.question.id, "role");
+    assert.match(skipped.data.messages.at(-1).text, /professione|ruolo|lavoro/i);
+    const named = await greet.answer("Sviluppo software");
+    assert.equal(named.data.profile.role, "Sviluppo software");
+    assert.notEqual(named.data.question?.id, "role");
+  } finally {
+    await greet.cleanup();
   }
 });
 test("email invalida, origine esterna, accesso privato e firma webhook", async () => {
@@ -369,20 +394,17 @@ test("provider JSON invalido e timeout non producono documenti inventati", async
 });
 test("profilo già completo salta le domande e non richiede team o strumenti due volte", () => {
   const { emptyProfile } = basic("lib/workmap/schema.ts");
-  const { nextCandidate } = basic("lib/workmap/conversation.ts");
+  const { analysisReady, missingFields } = basic("lib/workmap/conversation.ts");
   const profile = emptyProfile();
+  assert.equal(analysisReady(profile), false);
+  profile.role = "Recruiter";
+  profile.mainTasks = ["Colloqui"];
+  assert.equal(analysisReady(profile), true);
   for (const key of Object.keys(profile))
     profile[key] = Array.isArray(profile[key])
       ? ["Già indicato"]
       : "Già indicato";
-  assert.equal(
-    nextCandidate({
-      profile,
-      answered: [],
-      order: { paidAt: new Date().toISOString() },
-    }),
-    null,
-  );
+  assert.equal(missingFields(profile, true).length, 0);
 });
 test("persistenza CAS e lease impediscono sovrascritture e lavorazioni concorrenti", async () => {
   const s = await setup();

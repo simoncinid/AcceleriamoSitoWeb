@@ -137,6 +137,20 @@ export const questionSchema = z.object({
   kind: z.enum(["text", "multi", "single"]),
   options: z.array(z.string().max(100)).max(12),
 });
+export const conversationTurnSchema = z.object({
+  message: z.string().trim().min(1).max(450),
+  profile: profileSchema,
+  complete: z.boolean(),
+  insight: z.string().max(700),
+  field: z.enum(
+    Object.keys(profileSchema.shape) as [
+      keyof Profile,
+      ...Array<keyof Profile>,
+    ],
+  ),
+  kind: z.enum(["text", "multi", "single"]),
+  options: z.array(z.string().max(100)).max(8),
+});
 export type Question = z.infer<typeof questionSchema>;
 export type Content = z.infer<typeof contentSchema>;
 export type Selection = z.infer<typeof selectionSchema>;

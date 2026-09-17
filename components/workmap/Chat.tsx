@@ -1,9 +1,8 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { CookiePreferences } from "@/components/MarketingConsent";
 import { Brand } from "@/components/Brand";
-import { product, professions, stages } from "@/lib/workmap/config";
+import { product, stages } from "@/lib/workmap/config";
 import { contactAttribution } from "@/lib/tracking";
 import { trackWorkMap, type WorkMapEvent } from "./tracking";
 import type { view } from "@/lib/workmap/service";
@@ -36,10 +35,11 @@ export function WorkMapChat() {
     [email, setEmail] = useState(""),
     [editing, setEditing] = useState(false),
     [terms, setTerms] = useState(false),
-    [cancelled, setCancelled] = useState(false);
+    [cancelled, setCancelled] = useState(false),
+    [previewStep, setPreviewStep] = useState(0);
   const input = useRef<HTMLTextAreaElement>(null);
-  const bottom = useRef<HTMLDivElement>(null),
-    pending = useRef<{ answer: string; id: string } | null>(null),
+  const thread = useRef<HTMLDivElement>(null);
+  const pending = useRef<{ answer: string; id: string } | null>(null),
     events = useRef(new Set<string>()),
     initialized = useRef(false);
   const emit = (
@@ -95,17 +95,24 @@ export function WorkMapChat() {
     };
     const viewport = window.visualViewport;
     const reposition = () => {
+      const height = Math.round(viewport?.height ?? innerHeight);
+      document.documentElement.style.setProperty("--wm-app-height", `${height}px`);
       document.documentElement.style.setProperty(
         "--wm-keyboard-offset",
-        `${Math.max(0, innerHeight - (viewport?.height ?? innerHeight) - (viewport?.offsetTop ?? 0))}px`,
+        `${Math.max(0, innerHeight - height - (viewport?.offsetTop ?? 0))}px`,
       );
     };
     window.addEventListener("workmap-consent-saved", sync);
+    window.addEventListener("resize", reposition);
     viewport?.addEventListener("resize", reposition);
+    viewport?.addEventListener("scroll", reposition);
     reposition();
     return () => {
       window.removeEventListener("workmap-consent-saved", sync);
+      window.removeEventListener("resize", reposition);
       viewport?.removeEventListener("resize", reposition);
+      viewport?.removeEventListener("scroll", reposition);
+      document.documentElement.style.removeProperty("--wm-app-height");
       document.documentElement.style.removeProperty("--wm-keyboard-offset");
     };
   }, []);
@@ -113,13 +120,15 @@ export function WorkMapChat() {
     const field = input.current;
     if (field) {
       field.style.height = "auto";
-      field.style.height = `${Math.min(120, Math.max(50, field.scrollHeight + 2))}px`;
+      field.style.height = `${Math.min(72, Math.max(44, field.scrollHeight + 2))}px`;
       field.scrollTop = 0;
     }
   }, [answer, data?.question?.id, editing]);
   useEffect(() => {
-    bottom.current?.scrollIntoView({ behavior: "smooth", block: "end" });
-  }, [data?.messages.length, busy]);
+    const log = thread.current;
+    if (!log || log.classList.contains("wm-thread--step")) return;
+    log.scrollTop = log.scrollHeight;
+  }, [data?.messages.length, busy, data?.question?.id]);
   useEffect(() => {
     if (!data) return;
     if (data.state === "qualified") emit("AnalysisCompleted");
@@ -177,24 +186,36 @@ export function WorkMapChat() {
     }
   }
   async function submit(value: string) {
-    if (!data || !value.trim()) return;
+    if (!data || !value.trim() || busy) return;
+    const text = value.trim();
     const field = data.question?.field;
-    if (!pending.current || pending.current.answer !== value)
-      pending.current = { answer: value, id: crypto.randomUUID() };
+    const isEdit = editing;
+    if (!pending.current || pending.current.answer !== text)
+      pending.current = { answer: text, id: crypto.randomUUID() };
+    setAnswer("");
+    setSelected([]);
+    setEditing(false);
+    setError("");
+    setData((previous) =>
+      previous
+        ? {
+            ...previous,
+            messages: [...previous.messages, { role: "user", text }],
+            question: isEdit ? previous.question : null,
+          }
+        : previous,
+    );
     const next = await perform(
-      editing ? "edit" : "answer",
-      editing
-        ? { answer: value }
+      isEdit ? "edit" : "answer",
+      isEdit
+        ? { answer: text }
         : {
-            answer: value,
+            answer: text,
             version: data.version,
             requestId: pending.current.id,
           },
     );
     if (next) {
-      setAnswer("");
-      setSelected([]);
-      setEditing(false);
       pending.current = null;
       if (field === "role") emit("RoleProvided");
       if (field === "mainTasks") emit("TasksProvided");
@@ -204,6 +225,30 @@ export function WorkMapChat() {
   async function qualify() {
     const next = await perform("qualify", { email }, "EmailCaptured");
     if (next) await perform("email", {});
+  }
+  async function restart() {
+    setBusy(true);
+    setError("");
+    try {
+      const next = await api("reset", contactAttribution());
+      setData(next);
+      setAnswer("");
+      setSelected([]);
+      setEmail("");
+      setEditing(false);
+      setTerms(false);
+      setCancelled(false);
+      setPreviewStep(0);
+      pending.current = null;
+      events.current = new Set();
+      emit("AnalysisStarted");
+    } catch (e) {
+      setError(
+        e instanceof Error ? e.message : "Non riesco a ricominciare. Riprova.",
+      );
+    } finally {
+      setBusy(false);
+    }
   }
   const live = Boolean(data && (["generating", "reviewing", "checkout_started"].includes(data.state) || (data.state === "failed" && (data.job?.attempts ?? 5) < 5)));
   const advancing = Boolean(data && ["generating", "reviewing"].includes(data.state));
@@ -241,15 +286,44 @@ export function WorkMapChat() {
   const question = data?.question;
   const generating =
     data && ["generating", "reviewing", "failed"].includes(data.state);
+  const showDock = Boolean(
+    data && (question || editing) && !generating && data.state !== "ready",
+  );
+  const awaitingReply = Boolean(busy && !generating && !question && !editing);
+  const apps = data?.opportunities ?? [];
+  const previewing = Boolean(data?.confirmed && !data.paid && !generating);
+  const previewTotal = Math.max(1, apps.length + 1);
+  const step = Math.min(previewStep, previewTotal - 1);
+  const onOffer = previewing && step >= apps.length;
+  const currentApp =
+    previewing && !onOffer ? apps[Math.max(0, step)] : undefined;
+  const showLog = Boolean(
+    data &&
+      !generating &&
+      (question ||
+        editing ||
+        awaitingReply ||
+        (data.paid && data.state !== "profile_complete")),
+  );
   return (
-    <div className="wm-shell">
+    <div
+      className={
+        data?.state === "ready" ? "wm-shell wm-shell--document" : "wm-shell"
+      }
+    >
       <header className="wm-shell-header">
         <Link href="/" aria-label="ACCELERIAMO, homepage">
           <Brand />
         </Link>
         <div>
+          <button
+            type="button"
+            className="wm-reset"
+            onClick={() => void restart()}
+          >
+            Ricomincia
+          </button>
           <Link href="/ai-workmap">← AI WorkMap</Link>
-          <CookiePreferences />
         </div>
       </header>
       {data?.state === "ready" ? (
@@ -257,18 +331,16 @@ export function WorkMapChat() {
       ) : (
         <main id="contenuto" className="wm-chat">
           <nav className="wm-progress" aria-label="Avanzamento dell’analisi">
-            <span className={data?.profile.role ? "active" : ""}>
-              Profilo {data?.profile.role ? "✓" : ""}
-            </span>
+            <span className={data?.profile.role ? "active" : ""}>Profilo</span>
             <span className={data?.profile.mainTasks.length ? "active" : ""}>
-              Attività {data?.profile.mainTasks.length ? "✓" : ""}
+              Attività
             </span>
             <span
               className={
                 data?.profile.timeConsumingTasks.length ? "active" : ""
               }
             >
-              Priorità {data?.profile.timeConsumingTasks.length ? "✓" : ""}
+              Priorità
             </span>
             <span
               className={data?.workflowCount || data?.confirmed ? "active" : ""}
@@ -315,204 +387,168 @@ export function WorkMapChat() {
               </button>
             </div>
           )}
-          {!data && !error && <p role="status">Apro la tua conversazione…</p>}
-          {data && !generating && (
-            <>
-              {(!data.confirmed || data.paid || editing) && (
-                <div
-                  className="wm-messages"
-                  role="log"
-                  aria-label="Conversazione"
-                >
-                  {data.messages.map((m, i) => (
-                    <div
-                      key={i}
-                      className={`wm-message ${m.role === "user" ? "wm-message-user" : ""}`}
-                    >
-                      {m.role === "assistant" && (
-                        <small>CONSULENTE AI · ACCELERIAMO</small>
-                      )}
-                      <p>{m.text}</p>
-                    </div>
-                  ))}
-                </div>
-              )}
-              {question && !editing && (
-                <>
-                  <div className="wm-choices" aria-label="Risposte rapide">
-                    {question.options.map((option) => (
-                      <button
-                        disabled={busy}
-                        className="wm-choice"
-                        key={option}
-                        aria-pressed={selected.includes(option)}
-                        onClick={() =>
-                          question.kind === "single"
-                            ? void submit(option)
-                            : setSelected((previous) =>
-                                previous.includes(option)
-                                  ? previous.filter((v) => v !== option)
-                                  : question.field === "timeConsumingTasks" &&
-                                      previous.length >= 3
-                                    ? previous
-                                    : [...previous, option],
-                              )
-                        }
-                      >
-                        {option}
-                      </button>
-                    ))}
-                  </div>
-                  {question.kind === "multi" && selected.length > 0 && (
-                    <button
-                      className="button button--primary"
-                      disabled={busy}
-                      onClick={() => void submit(selected.join("; "))}
-                    >
-                      Conferma{" "}
-                      {selected.length === 1
-                        ? "la scelta"
-                        : `le ${selected.length} scelte`}
-                    </button>
-                  )}
-                  {question.field === "role" && (
-                    <div className="wm-choices">
-                      {professions
-                        .filter(
-                          (p) =>
-                            !answer ||
-                            p.toLowerCase().includes(answer.toLowerCase()),
-                        )
-                        .slice(0, 6)
-                        .map((p) => (
-                          <button
-                            className="wm-choice"
-                            key={p}
-                            disabled={busy}
-                            onClick={() => void submit(p)}
-                          >
-                            {p}
-                          </button>
-                        ))}
-                    </div>
-                  )}
-                </>
-              )}
-              {!question && !data.email && (
-                <section className="wm-card">
-                  <h2>Ho individuato un primo punto da approfondire.</h2>
-                  <p>
-                    {data.insight ||
-                      `Le attività che hai indicato (${data.profile.timeConsumingTasks.slice(0, 2).join(", ")}) sono il punto da cui partire: valuterò input disponibili e controlli necessari.`}
-                  </p>
-                  <form
-                    onSubmit={(e) => {
-                      e.preventDefault();
-                      void qualify();
-                    }}
+          <div
+            ref={thread}
+            className={showLog ? "wm-thread" : "wm-thread wm-thread--step"}
+          >
+            {!data && !error && (
+              <p role="status" className="wm-micro">
+                Apro la tua conversazione…
+              </p>
+            )}
+            {data && !generating && (
+              <>
+                {showLog && (
+                  <div
+                    className="wm-messages"
+                    role="log"
+                    aria-label="Conversazione"
                   >
-                    <label htmlFor="wm-email">
-                      Dove vuoi che salvi la tua analisi?
-                    </label>
-                    <input
-                      id="wm-email"
-                      type="email"
-                      autoComplete="email"
-                      required
-                      maxLength={254}
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                    />
-                    <button className="button button--primary" disabled={busy}>
-                      Mostra la mia analisi gratuita
-                    </button>
-                    <p className="wm-micro">
-                      Ti invieremo il risultato e potrai riprenderlo se chiudi
-                      la pagina. Nessuna iscrizione marketing.{" "}
-                      <Link
-                        href="/ai-workmap/condizioni#privacy"
-                        target="_blank"
+                    {data.messages.map((m, i) => (
+                      <div
+                        key={`${m.role}-${i}-${m.text.slice(0, 24)}`}
+                        className={`wm-message ${m.role === "user" ? "wm-message-user" : ""}`}
                       >
-                        Informativa privacy
-                      </Link>
-                      .
-                    </p>
-                  </form>
-                </section>
-              )}
-              {!question && data.email && data.state === "lead" && (
-                <button
-                  className="button button--primary"
-                  disabled={busy}
-                  onClick={() => void qualify()}
-                >
-                  Prepara la mia analisi
-                </button>
-              )}
-              {data.state === "qualified" && !data.confirmed && !editing && (
-                <section className="wm-card">
-                  <h2>Ecco cosa ho capito del tuo lavoro.</h2>
-                  <ProfileSummary data={data} />
-                  <p>È corretto?</p>
-                  <div className="wm-actions">
-                    <button
-                      className="button button--primary"
-                      disabled={busy}
-                      onClick={() =>
-                        void perform("confirm", {}, "ProfileConfirmed")
-                      }
-                    >
-                      Sì, è corretto
-                    </button>
-                    <button className="button" onClick={() => setEditing(true)}>
-                      Modifica
-                    </button>
+                        <p>{m.text}</p>
+                      </div>
+                    ))}
+                    {awaitingReply && (
+                      <div
+                        className="wm-message wm-message-pending"
+                        role="status"
+                        aria-live="polite"
+                      >
+                        <span className="wm-typing" aria-label="Sto scrivendo">
+                          <i />
+                          <i />
+                          <i />
+                        </span>
+                      </div>
+                    )}
                   </div>
-                </section>
-              )}
-              {editing && (
-                <p className="wm-alert">
-                  Scrivi cosa vuoi correggere. Aggiornerò il profilo e le
-                  opportunità.
-                </p>
-              )}
-              {data.confirmed && !data.paid && (
-                <>
-                  <h1 style={{ marginTop: 32 }}>
-                    Ho individuato {data.workflowCount} applicazioni AI utili
-                    per il tuo profilo.
-                  </h1>
-                  <p>Ecco le prime 3 da considerare.</p>
-                  {data.opportunities?.map((w, i) => (
-                    <article className="wm-card" key={w.id}>
-                      <span className="eyebrow">
-                        0{i + 1} · {w.priority}
-                      </span>
-                      <h2>{w.title}</h2>
-                      <p>{w.reason}</p>
-                      <span className="wm-tag">{w.difficulty}</span>
-                    </article>
-                  ))}
-                  <p className="wm-alert">{data.notRecommended}</p>
-                  <section className="wm-card">
-                    <p className="eyebrow">AI WORKMAP COMPLETA</p>
+                )}
+                {!question && !data.email && !busy && (
+                  <section className="wm-step">
+                    <p className="eyebrow">Analisi gratuita</p>
+                    <h2>Dove vuoi che salvi la tua analisi?</h2>
+                    <p className="wm-offer-line">
+                      {data.insight ||
+                        (data.profile.timeConsumingTasks[0]
+                          ? `Parto da ${data.profile.timeConsumingTasks.slice(0, 2).join(" e ")}.`
+                          : "Parto dalle attività che hai indicato.")}
+                    </p>
+                    <form
+                      onSubmit={(e) => {
+                        e.preventDefault();
+                        void qualify();
+                      }}
+                    >
+                      <label htmlFor="wm-email">
+                        Dove vuoi che salvi la tua analisi?
+                      </label>
+                      <input
+                        id="wm-email"
+                        type="email"
+                        autoComplete="email"
+                        required
+                        maxLength={254}
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                      />
+                      <button
+                        className="button button--primary"
+                        disabled={busy}
+                      >
+                        Mostra la mia analisi gratuita
+                      </button>
+                      <p className="wm-micro">
+                        Nessuna iscrizione marketing.{" "}
+                        <Link
+                          href="/ai-workmap/condizioni#privacy"
+                          target="_blank"
+                        >
+                          Informativa privacy
+                        </Link>
+                        .
+                      </p>
+                    </form>
+                  </section>
+                )}
+                {!question && data.email && data.state === "lead" && (
+                  <button
+                    className="button button--primary"
+                    disabled={busy}
+                    onClick={() => void qualify()}
+                  >
+                    Prepara la mia analisi
+                  </button>
+                )}
+                {data.state === "qualified" && !data.confirmed && !editing && (
+                  <section className="wm-step">
+                    <p className="eyebrow">Profilo individuato</p>
+                    <h2>Ecco cosa ho capito del tuo lavoro.</h2>
+                    <div className="wm-step-card">
+                      <ProfileSummary data={data} />
+                    </div>
+                    <div className="wm-actions">
+                      <button
+                        className="button button--primary"
+                        disabled={busy}
+                        onClick={() => {
+                          setPreviewStep(0);
+                          void perform("confirm", {}, "ProfileConfirmed");
+                        }}
+                      >
+                        Sì, è corretto
+                      </button>
+                      <button
+                        className="button"
+                        onClick={() => setEditing(true)}
+                      >
+                        Modifica
+                      </button>
+                    </div>
+                  </section>
+                )}
+                {editing && (
+                  <p className="wm-alert">
+                    Scrivi cosa vuoi correggere. Aggiornerò il profilo e le
+                    opportunità.
+                  </p>
+                )}
+                {data.confirmed && !data.paid && currentApp && (
+                  <section className="wm-step">
+                    <p className="eyebrow">
+                      Applicazione {step + 1} di {apps.length}
+                    </p>
                     <h2>
-                      Queste sono le prime 3.
-                      <br />
-                      La tua mappa continua.
+                      Ho individuato {data.workflowCount} applicazioni AI utili.
                     </h2>
-                    <ul>
-                      <li>{data.workflowCount} workflow personali</li>
-                      <li>
-                        {data.workflowCount * 2} prompt operativi e di revisione
-                      </li>
-                      <li>3 assistenti AI</li>
-                      <li>Strumenti, procedure e checklist</li>
-                      <li>Privacy e piano 30 giorni</li>
-                      <li>PDF e versione web privata</li>
-                    </ul>
+                    <article className="wm-card wm-step-card">
+                      <span className="eyebrow">
+                        0{step + 1} · {currentApp.priority}
+                      </span>
+                      <h3>{currentApp.title}</h3>
+                      <p>{currentApp.reason}</p>
+                      <span className="wm-tag">{currentApp.difficulty}</span>
+                    </article>
+                  </section>
+                )}
+                {data.confirmed && !data.paid && onOffer && (
+                  <section className="wm-step">
+                    <p className="eyebrow">AI WorkMap completa</p>
+                    <h2>
+                      Queste erano le prime {apps.length}. La mappa continua.
+                    </h2>
+                    <p className="wm-offer-line">
+                      {data.workflowCount} workflow · prompt operativi · 3
+                      assistenti · piano 30 giorni · PDF
+                    </p>
+                    {data.notRecommended ? (
+                      <p className="wm-micro">{data.notRecommended}</p>
+                    ) : null}
                     <p className="wm-price">{product.priceLabel}</p>
-                    <p>IVA inclusa. Pagamento una tantum.</p>
+                    <p className="wm-micro">IVA inclusa. Pagamento una tantum.</p>
                     <label className="wm-terms">
                       <input
                         type="checkbox"
@@ -524,7 +560,8 @@ export function WorkMapChat() {
                         <Link href="/ai-workmap/condizioni" target="_blank">
                           condizioni di acquisto
                         </Link>{" "}
-                        e richiedo la preparazione del documento personalizzato.
+                        e richiedo la preparazione del documento
+                        personalizzato.
                       </span>
                     </label>
                     <button
@@ -542,149 +579,207 @@ export function WorkMapChat() {
                         salvata.
                       </p>
                     )}
-                    <div className="wm-actions">
-                      <Link className="text-link" href="/ai-workmap">
-                        Continua più tardi
-                      </Link>
-                    </div>
                   </section>
-                </>
-              )}
-              {data.state === "profile_complete" && (
-                <section className="wm-card">
-                  <h2>
-                    Adesso ho abbastanza informazioni per costruire la tua AI
-                    WorkMap.
-                  </h2>
-                  <ProfileSummary data={data} />
+                )}
+                {data.state === "profile_complete" && (
+                  <section className="wm-step">
+                    <p className="eyebrow">Pronto per generare</p>
+                    <h2>Adesso posso costruire la tua AI WorkMap.</h2>
+                    <div className="wm-step-card">
+                      <ProfileSummary data={data} />
+                    </div>
+                    <button
+                      className="button button--primary"
+                      disabled={busy}
+                      onClick={() =>
+                        void perform("generate", {}, "GenerationStarted")
+                      }
+                    >
+                      Genera la WorkMap
+                    </button>
+                  </section>
+                )}
+              </>
+            )}
+            {generating && (
+              <section className="wm-step">
+                <p className="eyebrow">Generazione</p>
+                <h2>
+                  {data.state === "failed"
+                    ? "Riprendiamo da dove eravamo."
+                    : "Sto costruendo la tua WorkMap."}
+                </h2>
+                <p className="wm-offer-line">
+                  Puoi lasciare la pagina: il risultato resta qui e arriva via
+                  email.
+                </p>
+                <ol className="wm-status-list">
+                  {stages.map((label, i) => (
+                    <li
+                      key={label}
+                      className={data.job?.step === i ? "active" : ""}
+                    >
+                      {i < (data.job?.step ?? 0)
+                        ? "✓ "
+                        : i === data.job?.step
+                          ? "→ "
+                          : ""}
+                      {label}
+                      {i === 2 && data.job?.step === 2
+                        ? ` (${data.job.cursor} di ${data.workflowCount})`
+                        : ""}
+                    </li>
+                  ))}
+                </ol>
+                {data.state === "failed" && (
+                  <>
+                    <p role="alert">{data.job?.error}</p>
+                    <button
+                      className="button button--primary"
+                      disabled={busy}
+                      onClick={() => void perform("generate", { retry: true })}
+                    >
+                      Riprova dal punto salvato
+                    </button>
+                  </>
+                )}
+              </section>
+            )}
+            {data?.mailErrors.length && !previewing ? (
+              <p className="wm-alert">
+                L’email non è stata ancora consegnata. L’analisi resta
+                accessibile da questo browser.{" "}
+                <button
+                  className="wm-copy"
+                  disabled={busy}
+                  onClick={() => void perform("email", {})}
+                >
+                  Riprova l’invio
+                </button>
+              </p>
+            ) : null}
+            <div className="wm-chat-end" />
+          </div>
+          {previewing && (
+            <div className="wm-dock">
+              <div className="wm-step-nav">
+                <button
+                  type="button"
+                  className="button"
+                  disabled={step === 0}
+                  onClick={() => setPreviewStep(Math.max(0, step - 1))}
+                >
+                  Indietro
+                </button>
+                <span>
+                  {step + 1} di {previewTotal}
+                </span>
+                {onOffer ? (
+                  <span className="wm-step-nav-end">Checkout</span>
+                ) : (
                   <button
+                    type="button"
                     className="button button--primary"
-                    disabled={busy}
                     onClick={() =>
-                      void perform("generate", {}, "GenerationStarted")
+                      setPreviewStep(Math.min(previewTotal - 1, step + 1))
                     }
                   >
-                    Genera la WorkMap
+                    Avanti
                   </button>
-                </section>
-              )}
-            </>
+                )}
+              </div>
+            </div>
           )}
-          {generating && (
-            <section className="wm-card">
-              <h1>
-                {data.state === "failed"
-                  ? "Riprendiamo da dove eravamo."
-                  : "Sto costruendo la tua WorkMap."}
-              </h1>
-              <p>
-                Puoi lasciare questa pagina. Il risultato sarà disponibile qui e
-                riceverai il collegamento via email.
-              </p>
-              <ol className="wm-status-list">
-                {stages.map((label, i) => (
-                  <li
-                    key={label}
-                    className={data.job?.step === i ? "active" : ""}
-                  >
-                    {i < (data.job?.step ?? 0)
-                      ? "✓ "
-                      : i === data.job?.step
-                        ? "→ "
-                        : ""}
-                    {label}
-                    {i === 2 && data.job?.step === 2
-                      ? ` (${data.job.cursor} di ${data.workflowCount})`
-                      : ""}
-                  </li>
-                ))}
-              </ol>
-              {data.state === "failed" && (
-                <>
-                  <p role="alert">{data.job?.error}</p>
+          {showDock && (
+            <div className="wm-dock">
+              {question && !editing && question.options.length > 0 && (
+                <div className="wm-choices" aria-label="Risposte rapide">
+                  {question.options
+                    .filter(
+                      (option) =>
+                        !answer ||
+                        option.toLowerCase().includes(answer.toLowerCase()),
+                    )
+                    .slice(0, 8)
+                    .map((option) => (
+                      <button
+                        disabled={busy}
+                        className="wm-choice"
+                        key={option}
+                        aria-pressed={selected.includes(option)}
+                        onClick={() =>
+                          question.kind === "multi"
+                            ? setSelected((previous) =>
+                                previous.includes(option)
+                                  ? previous.filter((v) => v !== option)
+                                  : previous.length >= 3
+                                    ? previous
+                                    : [...previous, option],
+                              )
+                            : void submit(option)
+                        }
+                      >
+                        {option}
+                      </button>
+                    ))}
+                </div>
+              )}
+              {question?.kind === "multi" && selected.length > 0 && (
+                <button
+                  className="button button--primary wm-confirm"
+                  disabled={busy}
+                  onClick={() => void submit(selected.join("; "))}
+                >
+                  Conferma{" "}
+                  {selected.length === 1
+                    ? "la scelta"
+                    : `le ${selected.length} scelte`}
+                </button>
+              )}
+              <div className="wm-composer">
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    void submit(answer);
+                  }}
+                >
+                  <textarea
+                    id="wm-answer"
+                    ref={input}
+                    rows={1}
+                    maxLength={4000}
+                    value={answer}
+                    aria-label={editing ? "Correggi il profilo" : "Messaggio"}
+                    enterKeyHint="send"
+                    onChange={(e) => setAnswer(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key !== "Enter" || e.nativeEvent.isComposing) return;
+                      e.preventDefault();
+                      if (!busy && answer.trim()) void submit(answer);
+                    }}
+                    placeholder={
+                      question?.kind === "text"
+                        ? "Bastano poche parole…"
+                        : "Oppure scrivi la tua risposta…"
+                    }
+                    required
+                  />
                   <button
                     className="button button--primary"
-                    disabled={busy}
-                    onClick={() => void perform("generate", { retry: true })}
+                    disabled={!answer.trim()}
                   >
-                    Riprova dal punto salvato
+                    Invia
                   </button>
-                </>
-              )}
-            </section>
+                </form>
+              </div>
+            </div>
           )}
-          {data?.mailErrors.length ? (
-            <p className="wm-alert">
-              L’email non è stata ancora consegnata. L’analisi resta accessibile
-              da questo browser.{" "}
-              <button
-                className="wm-copy"
-                disabled={busy}
-                onClick={() => void perform("email", {})}
-              >
-                Riprova l’invio
-              </button>
-            </p>
-          ) : null}
-          {busy && (
-            <p role="status" aria-live="polite" className="wm-micro">
-              {generating
-                ? stages[data?.job?.step ?? 0]
-                : data?.question
-                  ? "Leggo la tua risposta…"
-                  : "Preparo la tua analisi…"}
-            </p>
-          )}
-          <div className="wm-chat-end" ref={bottom} />
         </main>
       )}
-      {data &&
-        (question || editing) &&
-        !generating &&
-        data.state !== "ready" && (
-          <div className="wm-composer">
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                void submit(answer);
-              }}
-            >
-              <label htmlFor="wm-answer">
-                <span>
-                  {editing ? "Correggi il profilo" : "La tua risposta"}
-                </span>
-                <textarea
-                  id="wm-answer"
-                  ref={input}
-                  rows={1}
-                  maxLength={4000}
-                  value={answer}
-                  onChange={(e) => setAnswer(e.target.value)}
-                  placeholder={
-                    question?.kind === "text"
-                      ? "Bastano poche parole…"
-                      : "Oppure scrivi la tua risposta…"
-                  }
-                  required
-                  disabled={busy}
-                />
-              </label>
-              <button
-                className="button button--primary"
-                disabled={busy || !answer.trim()}
-              >
-                Invia
-              </button>
-            </form>
-            <p className="wm-micro">
-              Non inserire password, segreti aziendali o dati sensibili dei tuoi
-              clienti.
-            </p>
-          </div>
-        )}
     </div>
   );
 }
+
 function ProfileSummary({ data }: { data: View }) {
   return (
     <dl>

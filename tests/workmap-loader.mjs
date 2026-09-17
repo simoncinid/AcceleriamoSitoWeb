@@ -175,7 +175,168 @@ export function fakeAI(catalog) {
           tools: ["Strumento AI approvato dall’azienda"],
         };
       else if (id === "quality-reviewer") result = input.content;
-      else throw Error("Unexpected prompt " + id);
+      else if (id === "conversation-turn") {
+        const profile = structuredClone(input.profile);
+        const q = input.question;
+        const answer = String(input.answer || "").trim();
+        const phase = input.phase;
+        if (phase === "edit" || q?.id === "correction") {
+          profile.role = answer;
+          result = {
+            message: "Ok, ho aggiornato il profilo.",
+            profile,
+            complete: true,
+            insight: "",
+            field: "role",
+            kind: "text",
+            options: [],
+          };
+        } else if (!answer || /^(ciao|salve|hey|hi|hello)\b/i.test(answer)) {
+          result = {
+            message:
+              "Dimmi che lavoro fai: il ruolo o la professione. Anche due parole.",
+            profile,
+            complete: false,
+            insight: "",
+            field: "role",
+            kind: "text",
+            options: ["Commerciale", "Recruiter", "Consulente", "Imprenditore"],
+          };
+        } else {
+          if (q?.id !== "followup" && q?.field) {
+            if (q.id === "role" && answer.includes("12 agenti"))
+              Object.assign(profile, {
+                role: "Responsabile commerciale",
+                companyType: "PMI",
+                teamContext: "Rete commerciale",
+                teamSize: "12",
+              });
+            else if (Array.isArray(profile[q.field]))
+              profile[q.field] = answer.split("; ").filter(Boolean);
+            else profile[q.field] = answer;
+          }
+          const recruit = profile.role.toLowerCase().includes("recruit");
+          const tasks = recruit
+            ? ["Colloqui", "Annunci", "Onboarding"]
+            : ["Report agenti", "Follow-up clienti", "Offerte"];
+          let next;
+          if (phase === "paid") {
+            if (!profile.name)
+              next = {
+                field: "name",
+                kind: "text",
+                options: [],
+                message: "Come ti chiami?",
+              };
+            else if (!profile.companyType)
+              next = {
+                field: "companyType",
+                kind: "single",
+                options: [
+                  "Freelance",
+                  "Studio professionale",
+                  "PMI",
+                  "Grande azienda",
+                ],
+                message: "In quale contesto lavori?",
+              };
+            else if (!profile.toolsUsed.length)
+              next = {
+                field: "toolsUsed",
+                kind: "multi",
+                options: ["Excel", "Google Workspace", "Microsoft 365", "CRM"],
+                message: "Quali software usi ogni giorno?",
+              };
+            else if (!profile.documentsUsed.length)
+              next = {
+                field: "documentsUsed",
+                kind: "multi",
+                options: ["Email", "PDF", "Report", "Offerte"],
+                message: "Quali documenti produci più spesso?",
+              };
+            else if (!profile.privacyConsiderations.length)
+              next = {
+                field: "privacyConsiderations",
+                kind: "multi",
+                options: [
+                  "Dati personali dei clienti",
+                  "Informazioni aziendali riservate",
+                  "Documenti pubblici",
+                ],
+                message: "Quale attenzione richiedono i tuoi documenti?",
+              };
+          } else if (!profile.role)
+            next = {
+              field: "role",
+              kind: "text",
+              options: tasks,
+              message: "Che lavoro fai?",
+            };
+          else if (!profile.mainTasks.length)
+            next = {
+              field: "mainTasks",
+              kind: "multi",
+              options: tasks,
+              message: "Di cosa ti occupi ogni giorno?",
+            };
+          else if (!profile.timeConsumingTasks.length)
+            next = {
+              field: "timeConsumingTasks",
+              kind: "multi",
+              options: tasks,
+              message: "Quali attività ti portano via più tempo?",
+            };
+          else if (!profile.repetitiveTasks.length)
+            next = {
+              field: "repetitiveTasks",
+              kind: "text",
+              options: [],
+              message:
+                "C’è un’attività ripetitiva che vorresti smettere di fare a mano?",
+            };
+          else if (!input.followupUsed && q?.id !== "followup")
+            next = {
+              field: "repetitiveTasks",
+              kind: "text",
+              options: [],
+              message: "Gli aggiornamenti arrivano nello stesso formato?",
+              insight:
+                "Puoi uniformare gli aggiornamenti prima di preparare il report.",
+            };
+          else if (!profile.aiLevel)
+            next = {
+              field: "aiLevel",
+              kind: "single",
+              options: [
+                "Mai",
+                "Li ho provati",
+                "Ogni tanto",
+                "Quasi ogni giorno",
+                "In maniera avanzata",
+              ],
+              message: "Quanto usi già strumenti AI?",
+            };
+          result = next
+            ? {
+                message: next.message,
+                profile,
+                complete: false,
+                insight: next.insight || "",
+                field: next.field,
+                kind: next.kind,
+                options: next.options,
+              }
+            : {
+                message: "Ho abbastanza per un’analisi concreta.",
+                profile,
+                complete: true,
+                insight: "",
+                field: "aiLevel",
+                kind: "text",
+                options: [],
+              };
+        }
+      }
       return schema.parse(result);
     },
     aiConfigured: () => true,

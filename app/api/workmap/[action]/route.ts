@@ -22,6 +22,7 @@ import {
   Conflict,
   claimLease,
   releaseLease,
+  deleteSession,
 } from "@/lib/workmap/store";
 import { createCheckout, confirmPayment } from "@/lib/workmap/payments";
 import { recoveryToken } from "@/lib/workmap/email";
@@ -95,9 +96,7 @@ export async function POST(request: Request, { params }: Context) {
         headers: { ...headers, "Set-Cookie": cookie(token) },
       });
     }
-    if (action === "start") {
-      const existing = await authenticate(request);
-      if (existing) return NextResponse.json(view(existing), { headers });
+    if (action === "start" || action === "reset") {
       if (!aiConfigured())
         throw Error(
           "L’analisi AI sarà disponibile a breve. Riprova più tardi.",
@@ -106,7 +105,15 @@ export async function POST(request: Request, { params }: Context) {
         ? request.headers.get("x-vercel-forwarded-for")?.split(",")[0] ||
           "unknown"
         : "local";
-      await rateLimit(`start:${ip}`, 10);
+      if (action === "reset") {
+        const current = await authenticate(request);
+        if (current) await deleteSession(current.id);
+        await rateLimit(`reset:${ip}`, 20);
+      } else {
+        const existing = await authenticate(request);
+        if (existing) return NextResponse.json(view(existing), { headers });
+        await rateLimit(`start:${ip}`, 10);
+      }
       const consent =
         request.headers
           .get("cookie")
@@ -236,6 +243,7 @@ export async function POST(request: Request, { params }: Context) {
         options: [],
       };
       await answerConversation(s, answer);
+      s.question = null;
       s.selection = undefined;
       s.analysis = undefined;
       s.confirmed = false;

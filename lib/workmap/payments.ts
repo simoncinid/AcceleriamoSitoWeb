@@ -2,7 +2,7 @@ import { createHmac, timingSafeEqual, randomUUID } from "node:crypto";
 import { product } from "./config";
 import type { Session } from "./schema";
 import { saveSession } from "./store";
-import { decideNextQuestion } from "./conversation";
+import { beginPaidChat } from "./conversation";
 import { aiConfigured } from "./ai";
 export function baseUrl() {
   return (process.env.NEXT_PUBLIC_SITE_URL || "https://acceleriamo.it").replace(
@@ -140,13 +140,7 @@ export async function confirmPayment(s: Session, checkoutId: string) {
   s.order.paidAt = new Date().toISOString();
   s.order.paymentId = String(checkout.payment_intent);
   s.state = "paid";
-  s.messages.push({
-    role: "assistant",
-    text: "Perfetto. Adesso posso costruire la tua WorkMap completa. Ho già capito buona parte del tuo lavoro. Mi servono ancora alcune informazioni.",
-  });
-  s.question = await decideNextQuestion(s);
-  if (s.question) s.messages.push({ role: "assistant", text: s.question.text });
-  else s.state = "profile_complete";
+  beginPaidChat(s);
   await saveSession(s, s.version);
   return true;
 }

@@ -1,9 +1,8 @@
-import { z } from "zod";
 import { structured } from "./ai";
-import { categories } from "./config";
+import { professions } from "./config";
 import {
+  conversationTurnSchema,
   profileSchema,
-  questionSchema,
   type Profile,
   type Question,
   type Session,
@@ -12,205 +11,120 @@ export const initialQuestion: Question = {
   id: "role",
   field: "role",
   kind: "text",
-  options: [],
-  text: "Ciao. In circa 90 secondi cercherò di capire dove l’AI può essere più utile nel tuo lavoro. Partiamo dalla cosa più importante: che lavoro fai?",
+  options: professions.slice(0, 8),
+  text: "Ciao. In pochi minuti capisco dove l’AI ti toglie lavoro vero, non dove fa scena. Che lavoro fai?",
 };
-const q = (
-  field: keyof Profile,
-  text: string,
-  kind: Question["kind"] = "text",
-  options: string[] = [],
-): Question => ({ id: field, field, text, kind, options });
-const free = [
-  initialQuestion,
-  q(
-    "mainTasks",
-    "Perfetto. Adesso vediamo dove passa il tuo tempo. Di cosa ti occupi ogni giorno?",
-    "multi",
-    categories,
-  ),
-  q(
-    "timeConsumingTasks",
-    "Quali sono le 3 attività che ti portano via più tempo?",
-    "multi",
-    categories,
-  ),
-  q(
-    "repetitiveTasks",
-    "C’è un’attività ripetitiva che vorresti smettere di fare manualmente?",
-  ),
-  q("aiLevel", "Quanto usi già strumenti AI?", "single", [
-    "Mai",
-    "Li ho provati",
-    "Ogni tanto",
-    "Quasi ogni giorno",
-    "In maniera avanzata",
-  ]),
+const freeGoals: Array<keyof Profile> = [
+  "role",
+  "mainTasks",
+  "timeConsumingTasks",
+  "repetitiveTasks",
+  "aiLevel",
 ];
-const premium = [
-  q("name", "Come ti chiami? Anche il solo nome va bene."),
-  q("industry", "In quale settore lavori?", "single", [
-    "Servizi professionali",
-    "Commercio",
-    "Industria",
-    "Immobiliare",
-    "Tecnologia",
-    "Altro",
-  ]),
-  q(
-    "company",
-    "Come vuoi indicare la tua attività? Puoi usare un nome generico.",
-  ),
-  q("companyType", "In quale contesto lavori?", "single", [
-    "Freelance",
-    "Studio professionale",
-    "PMI",
-    "Grande azienda",
-    "Pubblica amministrazione",
-  ]),
-  q("clients", "Con quali tipi di clienti lavori?", "multi", [
-    "Privati",
-    "Piccole imprese",
-    "Grandi aziende",
-    "Colleghi interni",
-    "Enti pubblici",
-  ]),
-  q("teamSize", "Quante persone sono coinvolte nel tuo lavoro?", "single", [
-    "Solo io",
-    "2–5",
-    "6–15",
-    "16–50",
-    "Più di 50",
-  ]),
-  q("toolsUsed", "Quali software usi ogni giorno?", "multi", [
-    "Excel",
-    "Google Workspace",
-    "Microsoft 365",
-    "CRM",
-    "Gestionale",
-    "Nessuno",
-  ]),
-  q("aiToolsUsed", "Quali strumenti AI hai già a disposizione?", "multi", [
-    "ChatGPT",
-    "Claude",
-    "Gemini",
-    "Copilot",
-    "Nessuno",
-  ]),
-  q("documentsUsed", "Quali documenti o file produci più spesso?", "multi", [
-    "Email",
-    "PDF",
-    "Report",
-    "Offerte",
-    "Fogli Excel",
-    "Presentazioni",
-  ]),
-  q(
-    "typicalWeek",
-    "Descrivimi brevemente una tua giornata o settimana tipo. Bastano poche parole.",
-  ),
-  q(
-    "eliminateTasks",
-    "Se potessi eliminare tre attività ripetitive, quali sceglieresti?",
-    "multi",
-    categories,
-  ),
-  q("desiredOutcomes", "Qual è il risultato più utile per te?", "multi", [
-    "Meno tempo su attività ripetitive",
-    "Meno errori",
-    "Risposte più chiare",
-    "Informazioni più ordinate",
-  ]),
-  q("constraints", "Ci sono vincoli da rispettare?", "multi", [
-    "Solo strumenti gratuiti",
-    "Software approvati dall’azienda",
-    "Nessuna integrazione tecnica",
-    "Nessun vincolo particolare",
-  ]),
-  q(
-    "privacyConsiderations",
-    "Quale attenzione richiedono i tuoi documenti? Non inserire dati reali.",
-    "multi",
-    [
-      "Dati personali dei clienti",
-      "Informazioni aziendali riservate",
-      "Documenti pubblici",
-      "Non so: preferisco anonimizzare",
-    ],
-  ),
+const paidGoals: Array<keyof Profile> = [
+  "name",
+  "companyType",
+  "toolsUsed",
+  "documentsUsed",
+  "privacyConsiderations",
 ];
-export function nextCandidate(s: Session): Question | null {
+function filled(profile: Profile, field: keyof Profile) {
+  const value = profile[field];
+  return Array.isArray(value)
+    ? value.some((item) => item.trim())
+    : Boolean(value.trim());
+}
+export function missingFields(profile: Profile, paid = false) {
+  return (paid ? paidGoals : freeGoals).filter((field) => !filled(profile, field));
+}
+export function analysisReady(profile: Profile) {
   return (
-    (s.order?.paidAt ? [...free, ...premium] : free).find(
-      (question) =>
-        !s.answered.includes(question.id) && !s.profile[question.field].length,
-    ) ?? null
+    filled(profile, "role") &&
+    (filled(profile, "mainTasks") ||
+      filled(profile, "timeConsumingTasks") ||
+      filled(profile, "repetitiveTasks"))
   );
 }
-export const extractProfile = (s: Session, answer: string) =>
-  structured("profile-extractor", profileSchema, {
-    profile: s.profile,
-    question: s.question,
-    answer,
+function mergeProfile(current: Profile, next: Profile): Profile {
+  return profileSchema.parse({
+    ...current,
+    ...Object.fromEntries(
+      Object.entries(next).filter(([, value]) =>
+        Array.isArray(value) ? value.some((item) => item.trim()) : String(value).trim(),
+      ),
+    ),
   });
-export async function decideNextQuestion(s: Session) {
-  const candidate = nextCandidate(s);
-  if (!candidate) return null;
-  if (
-    candidate.kind === "multi" &&
-    ["mainTasks", "timeConsumingTasks", "eliminateTasks"].includes(
-      candidate.field,
-    )
-  ) {
-    const personalized = await structured("next-question", questionSchema, {
-      profile: s.profile,
-      candidate,
-    });
-    return {
-      ...personalized,
-      id: candidate.id,
-      field: candidate.field,
-      kind: candidate.kind,
-    };
+}
+export function beginPaidChat(s: Session) {
+  if (missingFields(s.profile, true).length === 0) {
+    s.question = null;
+    s.state = "profile_complete";
+    return;
   }
-  return candidate;
+  s.messages.push({
+    role: "assistant",
+    text: "Perfetto. Per la WorkMap completa mi bastano ancora poche cose, senza ripetere quello che so già. Come ti chiami? Anche solo il nome.",
+  });
+  s.question = {
+    id: "name",
+    field: "name",
+    kind: "text",
+    options: [],
+    text: "Come ti chiami? Anche solo il nome.",
+  };
 }
 export async function answerConversation(s: Session, answer: string) {
-  if (!s.question)
-    throw new Error("Questa fase della conversazione è già conclusa.");
-  const question = s.question;
-  const profile = await extractProfile(s, answer);
-  // Explicit answers cannot be lost when an extractor returns an empty field.
-  if (!profile[question.field].length && question.id !== "followup") {
-    const shape = profileSchema.shape[question.field];
-    Object.assign(profile, {
-      [question.field]: shape instanceof z.ZodArray ? [answer] : answer,
-    });
-  }
-  s.profile = profile;
-  s.answered.push(question.id);
+  const phase =
+    s.question?.id === "correction"
+      ? "edit"
+      : s.order?.paidAt
+        ? "paid"
+        : "free";
+  const previous = s.question;
+  const turn = await structured("conversation-turn", conversationTurnSchema, {
+    phase,
+    profile: s.profile,
+    question: s.question,
+    messages: s.messages.slice(-12),
+    answer,
+    missing: missingFields(s.profile, phase === "paid"),
+    followupUsed: s.followupUsed,
+  });
   s.messages.push({ role: "user", text: answer });
-  if (question.field === "repetitiveTasks" && !s.followupUsed) {
-    const follow = await structured(
-      "followup-decider",
-      z.object({ question: z.string().max(350), insight: z.string().max(700) }),
-      { profile },
-    );
+  s.profile = mergeProfile(s.profile, turn.profile);
+  if (turn.insight) {
+    s.insight = turn.insight;
     s.followupUsed = true;
-    s.insight = follow.insight;
-    if (follow.question) {
-      s.question = {
-        id: "followup",
-        field: "repetitiveTasks",
-        kind: "text",
-        options: [],
-        text: follow.question,
-      };
-      s.messages.push({ role: "assistant", text: follow.question });
-      return;
-    }
   }
-  s.question = await decideNextQuestion(s);
-  if (s.question) s.messages.push({ role: "assistant", text: s.question.text });
-  else if (s.order?.paidAt) s.state = "profile_complete";
+  s.messages.push({ role: "assistant", text: turn.message });
+  for (const field of Object.keys(profileSchema.shape) as Array<keyof Profile>)
+    if (filled(s.profile, field) && !s.answered.includes(field))
+      s.answered.push(field);
+  const userTurns = s.messages.filter((message) => message.role === "user").length;
+  const ready =
+    phase === "edit" ||
+    (phase === "free" &&
+      analysisReady(s.profile) &&
+      (turn.complete || userTurns >= 8)) ||
+    (phase === "paid" &&
+      filled(s.profile, "role") &&
+      missingFields(s.profile, true).length === 0) ||
+    (phase === "paid" && turn.complete && missingFields(s.profile, true).length <= 1);
+  if (ready) {
+    s.question = null;
+    if (s.order?.paidAt) s.state = "profile_complete";
+    return;
+  }
+  s.question = {
+    id:
+      turn.insight &&
+      previous?.field === "repetitiveTasks" &&
+      previous.id !== "followup"
+        ? "followup"
+        : turn.field,
+    field: turn.field,
+    kind: turn.kind,
+    options: turn.options,
+    text: turn.message,
+  };
 }
