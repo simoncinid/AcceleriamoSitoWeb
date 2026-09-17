@@ -367,6 +367,15 @@ export function WorkMapChat() {
         awaitingReply ||
         (data.paid && data.state !== "profile_complete")),
   );
+  const showEmailCapture = Boolean(
+    funnelScreen &&
+      !loadingStep &&
+      data?.state === "lead" &&
+      !question &&
+      !data.email &&
+      !replyPending &&
+      !awaitingReply,
+  );
   return (
     <div
       className={
@@ -495,10 +504,7 @@ export function WorkMapChat() {
                 {loadingStep && waitKind === "confirm" && (
                   <StepWait label="Preparo le opportunità per te…" />
                 )}
-                {!loadingStep &&
-                  data.state === "lead" &&
-                  !question &&
-                  !data.email && (
+                {showEmailCapture && (
                   <section className="wm-step">
                     <p className="eyebrow">Analisi gratuita</p>
                     <h2>{EMAIL_PROMPT}</h2>
