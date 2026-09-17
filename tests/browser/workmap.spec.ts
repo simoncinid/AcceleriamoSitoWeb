@@ -64,8 +64,24 @@ for (const width of [360, 375, 390, 430, 1440])
     await page
       .getByRole("button", { name: "Report agenti", exact: true })
       .click();
+    await expect(
+      page.getByText("Quali attività ti portano via più tempo?", {
+        exact: false,
+      }),
+    ).toBeVisible();
+    await expect
+      .poll(() =>
+        page
+          .getByRole("button", { name: "Offerte", exact: true })
+          .evaluate(
+            (el) =>
+              el.getBoundingClientRect().bottom <
+              document.querySelector(".wm-composer")!.getBoundingClientRect()
+                .top,
+          ),
+      )
+      .toBe(true);
     await page.getByRole("button", { name: "Offerte", exact: true }).click();
-    await page.getByRole("button", { name: "Conferma le 2 scelte" }).click();
     await expect(page.getByLabel("Messaggio")).toBeEnabled();
     expect(
       await page.evaluate(
@@ -87,18 +103,6 @@ for (const width of [360, 375, 390, 430, 1440])
         return Math.round(shell.getBoundingClientRect().height) <= innerHeight + 1;
       }),
     ).toBe(true);
-    await expect
-      .poll(() =>
-        page
-          .getByRole("button", { name: "Offerte", exact: true })
-          .evaluate(
-            (el) =>
-              el.getBoundingClientRect().bottom <
-              document.querySelector(".wm-composer")!.getBoundingClientRect()
-                .top,
-          ),
-      )
-      .toBe(true);
     await page.screenshot({ path: `artifacts/workmap/chat-${width}.png` });
     await page.reload();
     await expect(
@@ -112,51 +116,47 @@ for (const width of [360, 375, 390, 430, 1440])
 test("analisi gratuita, correzione profilo, anteprima e paywall", async ({
   page,
 }) => {
+  const emailLabel = "A che indirizzo mail devo inviare l'analisi completa?";
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/ai-workmap/analisi");
-  for (const answer of [
-    "Recruiter",
-    "Colloqui; Annunci",
-    "Colloqui; Onboarding",
-    "Raccogliere gli aggiornamenti",
-    "Formati diversi",
-    "Mai",
-  ]) {
-    if (
-      await page.getByLabel("Dove vuoi che salvi la tua analisi?").isVisible()
-    )
-      break;
-    await expect(page.getByLabel("Messaggio")).toBeEnabled();
-    await page.getByLabel("Messaggio").fill(answer);
-    await page.getByRole("button", { name: "Invia", exact: true }).click();
-  }
-  await expect(
-    page.getByLabel("Dove vuoi che salvi la tua analisi?"),
-  ).toBeVisible();
+  await page.getByLabel("Messaggio").fill("Recruiter");
+  await page.getByRole("button", { name: "Invia", exact: true }).click();
+  await expect(page.getByText("Di cosa ti occupi")).toBeVisible();
+  await page.getByRole("button", { name: "Colloqui", exact: true }).click();
+  await expect(page.getByText("Quali attività ti portano via più tempo?")).toBeVisible();
+  await page.getByRole("button", { name: "Annunci", exact: true }).click();
+  await expect(page.getByText("ripetitiva", { exact: false })).toBeVisible();
+  await page.getByLabel("Messaggio").fill("Raccogliere gli aggiornamenti");
+  await page.getByRole("button", { name: "Invia", exact: true }).click();
+  await expect(page.getByText("formato", { exact: false })).toBeVisible();
+  await page.getByLabel("Messaggio").fill("Formati diversi");
+  await page.getByRole("button", { name: "Invia", exact: true }).click();
+  await expect(page.getByText("strumenti AI", { exact: false })).toBeVisible();
+  await page.getByRole("button", { name: "Mai", exact: true }).click();
+  await expect(page.locator("#wm-email")).toBeVisible({ timeout: 15000 });
   await page
-    .getByLabel("Dove vuoi che salvi la tua analisi?")
+    .getByLabel(emailLabel)
     .fill("test@example.test");
   await page
     .getByRole("button", { name: "Mostra la mia analisi gratuita" })
     .click();
   await expect(
     page.getByRole("heading", { name: "Ecco cosa ho capito del tuo lavoro." }),
-  ).toBeVisible();
+  ).toBeVisible({ timeout: 60000 });
   await expect(
     page.getByRole("button", { name: "Sì, è corretto" }),
   ).toBeEnabled();
   await page.getByRole("button", { name: "Modifica", exact: true }).click();
   await page.getByLabel("Correggi il profilo").fill("HR manager");
   await page.getByRole("button", { name: "Invia", exact: true }).click();
-  await page.getByRole("button", { name: "Prepara la mia analisi" }).click();
   await expect(
-    page.getByRole("button", { name: "Sì, è corretto" }),
-  ).toBeEnabled();
+    page.getByRole("heading", { name: "Ecco cosa ho capito del tuo lavoro." }),
+  ).toBeVisible({ timeout: 60000 });
   await page.getByRole("button", { name: "Sì, è corretto" }).click();
-  await expect(page.getByRole("button", { name: "Ricomincia" })).toBeVisible();
   await expect(
     page.getByRole("heading", { name: /Ho individuato 12/ }),
-  ).toBeVisible();
+  ).toBeVisible({ timeout: 60000 });
+  await expect(page.getByRole("button", { name: "Ricomincia" })).toBeVisible();
   await expect(page.getByRole("button", { name: "Avanti", exact: true })).toBeVisible();
   await page.getByRole("button", { name: "Avanti", exact: true }).click();
   await page.getByRole("button", { name: "Avanti", exact: true }).click();

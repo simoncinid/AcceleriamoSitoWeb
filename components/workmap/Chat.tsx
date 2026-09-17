@@ -8,6 +8,16 @@ import { trackWorkMap, type WorkMapEvent } from "./tracking";
 import type { view } from "@/lib/workmap/service";
 import { WorkMapResult } from "./Result";
 type View = ReturnType<typeof view>;
+const EMAIL_PROMPT =
+  "A che indirizzo mail devo inviare l'analisi completa?";
+function StepWait({ label }: { label: string }) {
+  return (
+    <section className="wm-step wm-step--wait" role="status" aria-live="polite">
+      <span className="wm-spinner" aria-hidden />
+      <p>{label}</p>
+    </section>
+  );
+}
 async function api(
   action: string,
   body?: object,
@@ -31,12 +41,13 @@ export function WorkMapChat() {
     [busy, setBusy] = useState(false),
     [error, setError] = useState(""),
     [answer, setAnswer] = useState(""),
-    [selected, setSelected] = useState<string[]>([]),
     [email, setEmail] = useState(""),
     [editing, setEditing] = useState(false),
     [terms, setTerms] = useState(false),
     [cancelled, setCancelled] = useState(false),
-    [previewStep, setPreviewStep] = useState(0);
+    [previewStep, setPreviewStep] = useState(0),
+    [waitKind, setWaitKind] = useState<null | "qualify" | "confirm">(null),
+    [replyPending, setReplyPending] = useState(false);
   const input = useRef<HTMLTextAreaElement>(null);
   const thread = useRef<HTMLDivElement>(null);
   const pending = useRef<{ answer: string; id: string } | null>(null),
@@ -160,6 +171,9 @@ export function WorkMapChat() {
     event?: WorkMapEvent,
   ) {
     if (busy) return;
+    const loading: null | "qualify" | "confirm" =
+      action === "qualify" ? "qualify" : action === "confirm" ? "confirm" : null;
+    if (loading) setWaitKind(loading);
     setBusy(true);
     setError("");
     try {
@@ -183,6 +197,7 @@ export function WorkMapChat() {
       );
     } finally {
       setBusy(false);
+      if (loading) setWaitKind(null);
     }
   }
   async function submit(value: string) {
@@ -190,36 +205,53 @@ export function WorkMapChat() {
     const text = value.trim();
     const field = data.question?.field;
     const isEdit = editing;
-    if (!pending.current || pending.current.answer !== text)
-      pending.current = { answer: text, id: crypto.randomUUID() };
-    setAnswer("");
-    setSelected([]);
-    setEditing(false);
-    setError("");
-    setData((previous) =>
-      previous
-        ? {
-            ...previous,
-            messages: [...previous.messages, { role: "user", text }],
-            question: isEdit ? previous.question : null,
-          }
-        : previous,
-    );
-    const next = await perform(
-      isEdit ? "edit" : "answer",
-      isEdit
-        ? { answer: text }
-        : {
-            answer: text,
-            version: data.version,
-            requestId: pending.current.id,
-          },
-    );
-    if (next) {
-      pending.current = null;
-      if (field === "role") emit("RoleProvided");
-      if (field === "mainTasks") emit("TasksProvided");
-      if (field === "repetitiveTasks") emit("PainPointProvided");
+    setReplyPending(true);
+    try {
+      if (!pending.current || pending.current.answer !== text)
+        pending.current = { answer: text, id: crypto.randomUUID() };
+      setAnswer("");
+      setEditing(false);
+      setError("");
+      setData((previous) =>
+        previous
+          ? {
+              ...previous,
+              messages: [...previous.messages, { role: "user", text }],
+              question: isEdit ? previous.question : null,
+            }
+          : previous,
+      );
+      const next = await perform(
+        isEdit ? "edit" : "answer",
+        isEdit
+          ? { answer: text }
+          : {
+              answer: text,
+              version: data.version,
+              requestId: pending.current.id,
+            },
+      );
+      if (next) {
+        pending.current = null;
+        if (field === "role") emit("RoleProvided");
+        if (field === "mainTasks") emit("TasksProvided");
+        if (field === "repetitiveTasks") emit("PainPointProvided");
+        if (
+          isEdit &&
+          next.state === "lead" &&
+          next.email &&
+          next.workflowCount === 0
+        ) {
+          const again = await perform(
+            "qualify",
+            { email: next.email },
+            "EmailCaptured",
+          );
+          if (again) await perform("email", {});
+        }
+      }
+    } finally {
+      setReplyPending(false);
     }
   }
   async function qualify() {
@@ -233,12 +265,12 @@ export function WorkMapChat() {
       const next = await api("reset", contactAttribution());
       setData(next);
       setAnswer("");
-      setSelected([]);
       setEmail("");
       setEditing(false);
       setTerms(false);
       setCancelled(false);
       setPreviewStep(0);
+      setReplyPending(false);
       pending.current = null;
       events.current = new Set();
       emit("AnalysisStarted");
@@ -289,7 +321,22 @@ export function WorkMapChat() {
   const showDock = Boolean(
     data && (question || editing) && !generating && data.state !== "ready",
   );
-  const awaitingReply = Boolean(busy && !generating && !question && !editing);
+  const funnelScreen = Boolean(
+    data &&
+      !generating &&
+      !question &&
+      !editing &&
+      !replyPending &&
+      (waitKind ||
+        (data.state === "lead" &&
+          (!data.email || busy || waitKind === "qualify")) ||
+        (data.state === "qualified" && !data.confirmed) ||
+        (data.confirmed && !data.paid)),
+  );
+  const awaitingReply = Boolean(
+    busy && replyPending && !generating && !waitKind,
+  );
+  const loadingStep = Boolean(waitKind && !generating);
   const apps = data?.opportunities ?? [];
   const previewing = Boolean(data?.confirmed && !data.paid && !generating);
   const previewTotal = Math.max(1, apps.length + 1);
@@ -300,6 +347,7 @@ export function WorkMapChat() {
   const showLog = Boolean(
     data &&
       !generating &&
+      !funnelScreen &&
       (question ||
         editing ||
         awaitingReply ||
@@ -427,10 +475,19 @@ export function WorkMapChat() {
                     )}
                   </div>
                 )}
-                {!question && !data.email && !busy && (
+                {loadingStep && waitKind === "qualify" && (
+                  <StepWait label="Preparo la tua analisi…" />
+                )}
+                {loadingStep && waitKind === "confirm" && (
+                  <StepWait label="Preparo le opportunità per te…" />
+                )}
+                {!loadingStep &&
+                  data.state === "lead" &&
+                  !question &&
+                  !data.email && (
                   <section className="wm-step">
                     <p className="eyebrow">Analisi gratuita</p>
-                    <h2>Dove vuoi che salvi la tua analisi?</h2>
+                    <h2>{EMAIL_PROMPT}</h2>
                     <p className="wm-offer-line">
                       {data.insight ||
                         (data.profile.timeConsumingTasks[0]
@@ -443,9 +500,7 @@ export function WorkMapChat() {
                         void qualify();
                       }}
                     >
-                      <label htmlFor="wm-email">
-                        Dove vuoi che salvi la tua analisi?
-                      </label>
+                      <label htmlFor="wm-email">{EMAIL_PROMPT}</label>
                       <input
                         id="wm-email"
                         type="email"
@@ -474,16 +529,10 @@ export function WorkMapChat() {
                     </form>
                   </section>
                 )}
-                {!question && data.email && data.state === "lead" && (
-                  <button
-                    className="button button--primary"
-                    disabled={busy}
-                    onClick={() => void qualify()}
-                  >
-                    Prepara la mia analisi
-                  </button>
-                )}
-                {data.state === "qualified" && !data.confirmed && !editing && (
+                {data.state === "qualified" &&
+                  !data.confirmed &&
+                  !editing &&
+                  !loadingStep && (
                   <section className="wm-step">
                     <p className="eyebrow">Profilo individuato</p>
                     <h2>Ecco cosa ho capito del tuo lavoro.</h2>
@@ -706,35 +755,12 @@ export function WorkMapChat() {
                         disabled={busy}
                         className="wm-choice"
                         key={option}
-                        aria-pressed={selected.includes(option)}
-                        onClick={() =>
-                          question.kind === "multi"
-                            ? setSelected((previous) =>
-                                previous.includes(option)
-                                  ? previous.filter((v) => v !== option)
-                                  : previous.length >= 3
-                                    ? previous
-                                    : [...previous, option],
-                              )
-                            : void submit(option)
-                        }
+                        onClick={() => void submit(option)}
                       >
                         {option}
                       </button>
                     ))}
                 </div>
-              )}
-              {question?.kind === "multi" && selected.length > 0 && (
-                <button
-                  className="button button--primary wm-confirm"
-                  disabled={busy}
-                  onClick={() => void submit(selected.join("; "))}
-                >
-                  Conferma{" "}
-                  {selected.length === 1
-                    ? "la scelta"
-                    : `le ${selected.length} scelte`}
-                </button>
               )}
               <div className="wm-composer">
                 <form

@@ -381,6 +381,31 @@ body:has(.wm-shell:not(.wm-shell--document)) {
   margin: 0;
   font-size: 22px;
 }
+.wm-step--wait {
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 16px;
+}
+.wm-step--wait p {
+  margin: 0;
+  color: var(--body);
+  font-size: 15px;
+}
+.wm-spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid var(--line);
+  border-top-color: var(--orange);
+  border-radius: 50%;
+  animation: wm-spin 0.75s linear infinite;
+}
+@keyframes wm-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
 .wm-step-card {
   flex: 1;
   min-height: 0;
