@@ -11,7 +11,7 @@ import {
   deliverPending,
   safeEqual,
 } from "@/lib/workmap/service";
-import { deliverEmails, kickGeneration, scheduleWork } from "@/lib/workmap/jobs";
+import { kickGeneration, scheduleWork } from "@/lib/workmap/jobs";
 import { analyzeTasks, selectWorkflows } from "@/lib/workmap/pipeline";
 import { answerSchema } from "@/lib/workmap/schema";
 import { answerConversation, beginDetailsChat } from "@/lib/workmap/conversation";
@@ -216,7 +216,8 @@ export async function POST(request: Request, { params }: Context) {
       held = undefined;
       await deliverPending(s.id);
       s = (await getSession(s.id))!;
-      if (s.mailErrors.length) scheduleWork(s.id, "email", 8000);
+      if (s.mailErrors.length || (s.state === "ready" && !s.mail.ready))
+        scheduleWork(s.id, "email", 8000);
     } else if (action === "confirm") {
       if (!s.selection || s.state !== "qualified")
         throw Error("Profilo non modificabile in questa fase.");
@@ -254,7 +255,8 @@ export async function POST(request: Request, { params }: Context) {
       held = undefined;
       await deliverPending(s.id);
       s = (await getSession(s.id))!;
-      if (s.mailErrors.length) scheduleWork(s.id, "email", 8000);
+      if (s.mailErrors.length || (s.state === "ready" && !s.mail.ready))
+        scheduleWork(s.id, "email", 8000);
     } else
       return NextResponse.json(
         { error: "Operazione non trovata." },

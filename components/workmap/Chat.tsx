@@ -9,6 +9,19 @@ import type { view } from "@/lib/workmap/service";
 type View = ReturnType<typeof view>;
 const EMAIL_PROMPT =
   "A che indirizzo mail devo inviare l'analisi completa?";
+function applyView(previous: View | null, next: View) {
+  return previous && previous.version > next.version ? previous : next;
+}
+function generationActive(view: View) {
+  return (
+    ["generating", "reviewing"].includes(view.state) ||
+    (view.state === "failed" && (view.job?.attempts ?? 5) < 5)
+  );
+}
+function jobLooksStale(job?: View["job"]) {
+  if (!job?.updatedAt) return true;
+  return Date.now() - new Date(job.updatedAt).getTime() > 120_000;
+}
 function StepWait({ label }: { label: string }) {
   return (
     <section className="wm-step wm-step--wait" role="status" aria-live="polite">
@@ -92,7 +105,7 @@ export function WorkMapChat() {
         let next: View;
         if (token) next = await api("resume", { token });
         else next = await api("start", contactAttribution());
-        setData(previous => previous && previous.version > next.version ? previous : next);
+        setData((previous) => applyView(previous, next));
         setEmail(next.email);
         emit("AnalysisStarted");
       } catch (e) {
@@ -171,7 +184,7 @@ export function WorkMapChat() {
     setError("");
     try {
       const next = await api(action, body);
-      setData(previous => previous && previous.version > next.version ? previous : next);
+      setData((previous) => applyView(previous, next));
       if (event) emit(event);
       return next;
     } catch (e) {
@@ -282,23 +295,81 @@ export function WorkMapChat() {
       setBusy(false);
     }
   }
-  const live = Boolean(data && (["generating", "reviewing"].includes(data.state) || (data.state === "failed" && (data.job?.attempts ?? 5) < 5)));
-  useEffect(() => {
-    if (!live || busy) return;
-    void api("generate", {}).catch(() => {});
-  }, [live]);
+  const live = Boolean(data && generationActive(data));
   useEffect(() => {
     if (!live) return;
     const source = new EventSource("/api/workmap/events");
-    source.onmessage = event => {
+    source.onmessage = (event) => {
       try {
         const next: View = JSON.parse(event.data);
-        setData(previous => previous && previous.version > next.version ? previous : next);
-        if (next.state === "ready" || (next.state === "failed" && (next.job?.attempts ?? 5) >= 5)) source.close();
-      } catch { /* Reconnection provides a new validated server snapshot. */ }
+        setData((previous) => applyView(previous, next));
+        if (
+          next.state === "ready" ||
+          (next.state === "failed" && (next.job?.attempts ?? 5) >= 5)
+        )
+          source.close();
+      } catch {
+        /* Reconnection provides a new validated server snapshot. */
+      }
     };
     return () => source.close();
   }, [live]);
+  useEffect(() => {
+    if (!live) return;
+    let cancelled = false;
+    let lastKick = 0;
+    const sync = async (forceKick = false) => {
+      try {
+        const next = await api("session");
+        if (cancelled) return;
+        setData((previous) => applyView(previous, next));
+        const running = generationActive(next);
+        const stale = jobLooksStale(next.job);
+        const now = Date.now();
+        if (running && (forceKick || (stale && now - lastKick > 15_000))) {
+          lastKick = now;
+          await api("generate", {}).catch(() => {});
+        }
+      } catch {}
+    };
+    void sync(true);
+    const interval = setInterval(() => void sync(), 3000);
+    const onVisible = () => {
+      if (document.visibilityState === "visible") void sync();
+    };
+    document.addEventListener("visibilitychange", onVisible);
+    return () => {
+      cancelled = true;
+      clearInterval(interval);
+      document.removeEventListener("visibilitychange", onVisible);
+    };
+  }, [live]);
+  const pendingEmail = Boolean(
+    data?.state === "ready" && !data.emailDelivered,
+  );
+  useEffect(() => {
+    if (!pendingEmail) return;
+    let cancelled = false;
+    let attempts = 0;
+    const send = async () => {
+      if (cancelled || attempts >= 40) return;
+      attempts += 1;
+      try {
+        const next = await api("email", {});
+        if (cancelled) return;
+        setData((previous) => applyView(previous, next));
+        if (next.emailDelivered) return;
+      } catch {
+        /* 409 se un worker è ancora in corso: riproviamo. */
+      }
+      if (!cancelled && attempts < 40)
+        window.setTimeout(() => void send(), 8000);
+    };
+    void send();
+    return () => {
+      cancelled = true;
+    };
+  }, [pendingEmail]);
   const question = data?.question;
   const generating =
     data && ["generating", "reviewing", "failed"].includes(data.state);

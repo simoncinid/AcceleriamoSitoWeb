@@ -6,6 +6,7 @@ import {
 } from "./store";
 import { runGenerationStep } from "./pipeline";
 import { deliverPending, safeEqual } from "./service";
+import { baseUrl } from "./config";
 import type { Session } from "./schema";
 export const workKindSchema = z.enum(["generate", "email"]);
 export type WorkKind = z.infer<typeof workKindSchema>;
@@ -33,17 +34,25 @@ const GENERATION_BUDGET_MS = 170_000;
 const STEP_GUARD_MS = [50_000, 95_000, 80_000, 95_000, 95_000, 30_000, 25_000];
 const REVIEW_MODEL_MS = 30_000;
 
+export function workerOrigin() {
+  const site = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "");
+  if (site?.startsWith("https://")) return site;
+  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
+  return baseUrl();
+}
+
 export function scheduleWork(id: string, kind: WorkKind, delay = 0) {
   if (
     process.env.NODE_ENV === "test" ||
     process.env.VERCEL !== "1" ||
-    !process.env.CRON_SECRET ||
-    !process.env.VERCEL_URL
+    !process.env.CRON_SECRET
   )
     return;
+  const origin = workerOrigin();
+  if (!origin) return;
   const run = async () => {
     if (delay) await new Promise((resolve) => setTimeout(resolve, delay));
-    await fetch(`https://${process.env.VERCEL_URL}/api/workmap/worker`, {
+    const response = await fetch(`${origin}/api/workmap/worker`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${process.env.CRON_SECRET}`,
@@ -52,17 +61,32 @@ export function scheduleWork(id: string, kind: WorkKind, delay = 0) {
       body: JSON.stringify({ id, kind }),
       cache: "no-store",
     });
+    if (!response.ok)
+      console.error("workmap-worker-schedule-failed", response.status, kind);
   };
   try {
-    after(() => run().catch(() => {}));
+    after(() =>
+      run().catch((error) => {
+        console.error(
+          "workmap-worker-schedule-failed",
+          kind,
+          error instanceof Error ? error.message : "unknown",
+        );
+      }),
+    );
   } catch {
     void run().catch(() => {});
   }
 }
 export async function deliverEmails(id: string) {
-  await deliverPending(id);
+  const delivered = await deliverPending(id);
   const s = await getSession(id);
-  if (s?.mailErrors.length) scheduleWork(id, "email", 8000);
+  if (
+    !delivered ||
+    s?.mailErrors.length ||
+    (s?.state === "ready" && !s.mail.ready)
+  )
+    scheduleWork(id, "email", 8000);
 }
 async function continueGeneration(id: string) {
   const started = Date.now();
@@ -91,6 +115,7 @@ async function continueGeneration(id: string) {
       await new Promise((resolve) => setTimeout(resolve, 5000));
     }
     if (s.state === "ready") {
+      scheduleWork(id, "email");
       await deliverEmails(id);
       return true;
     }
@@ -121,7 +146,7 @@ export function kickGeneration(id: string) {
 export async function processWork(id: string, kind: WorkKind) {
   if (kind === "generate") return continueGeneration(id);
   if (kind === "email") {
-    await deliverPending(id);
+    await deliverEmails(id);
     return;
   }
 }

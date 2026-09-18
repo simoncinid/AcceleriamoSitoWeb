@@ -96,22 +96,28 @@ export function view(s: Session) {
 }
 export async function deliverPending(id: string) {
   const lease = await claimLease(id);
-  if (!lease) return;
+  if (!lease) return false;
   try {
     const s = await getSession(id);
-    if (!s) return;
+    if (!s) return false;
     const kinds: MailKind[] = [];
     if (s.state === "ready") kinds.push("ready");
     const errors: string[] = [];
     for (const kind of kinds) {
       try {
         await sendWorkMapEmail(s, kind);
-      } catch {
+      } catch (error) {
+        console.error(
+          "workmap-email-failed",
+          kind,
+          error instanceof Error ? error.message : "unknown",
+        );
         errors.push(kind);
       }
     }
     s.mailErrors = errors;
     await saveSession(s, s.version);
+    return errors.length === 0;
   } finally {
     await releaseLease(id, lease);
   }

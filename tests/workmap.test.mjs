@@ -509,6 +509,16 @@ test("persistenza CAS e lease impediscono sovrascritture e lavorazioni concorren
   }
 });
 
+test("il worker interno usa il dominio pubblico, non solo VERCEL_URL", () => {
+  const { workerOrigin } = modules({
+    env: {
+      NEXT_PUBLIC_SITE_URL: "https://acceleriamo.it",
+      VERCEL_URL: "acceleriamo-sito-web.vercel.app",
+    },
+  })("lib/workmap/jobs.ts");
+  assert.equal(workerOrigin(), "https://acceleriamo.it");
+});
+
 test("Redis REST ignora rediss con password e preferisce https", () => {
   const rest = modules({
     env: {
@@ -526,6 +536,16 @@ test("Redis REST ignora rediss con password e preferisce https", () => {
   })("lib/workmap/store.ts");
   assert.equal(derived.redisRestUrl(), "https://example.upstash.io");
   assert.equal(derived.redisRestToken(), "secret+token");
+});
+
+test("gli eventi Redis riconoscono sia il formato Upstash sia JSON", () => {
+  const { isRedisChangeLine } = basic("lib/workmap/events.ts");
+  assert.equal(isRedisChangeLine("data: subscribe,workmap:events:abc,1"), true);
+  assert.equal(isRedisChangeLine("data: message,workmap:events:abc,12"), true);
+  assert.equal(isRedisChangeLine('data: {"type":"message"}'), true);
+  assert.equal(isRedisChangeLine(": ping"), false);
+  assert.equal(isRedisChangeLine("data:"), false);
+  assert.equal(isRedisChangeLine("data:   "), false);
 });
 
 test("worker cron autenticato riprende la generazione senza coda esterna", async () => {

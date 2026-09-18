@@ -26,8 +26,9 @@ export async function sendWorkMapEmail(s: Session, kind: MailKind) {
     port: 465,
     secure: true,
     auth: { user: process.env.ARUBA_USER, pass: process.env.ARUBA_PASS },
-    connectionTimeout: 10000,
-    socketTimeout: 15000,
+    connectionTimeout: 20000,
+    greetingTimeout: 20000,
+    socketTimeout: 45000,
   });
   await transport.sendMail({
     from: { name: "ACCELERIAMO", address: process.env.ARUBA_USER },
