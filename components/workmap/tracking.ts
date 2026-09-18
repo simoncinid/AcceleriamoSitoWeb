@@ -11,8 +11,6 @@ export type WorkMapEvent =
   | "AnalysisCompleted"
   | "ProfileConfirmed"
   | "PreviewViewed"
-  | "DetailsStarted"
-  | "DetailsCompleted"
   | "GenerationStarted"
   | "GenerationCompleted"
   | "WorkMapViewed"

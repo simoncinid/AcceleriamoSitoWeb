@@ -163,7 +163,11 @@ export type Session = {
   updatedAt: string;
   email: string;
   profile: Profile;
-  messages: { role: "assistant" | "user"; text: string }[];
+  messages: {
+    role: "assistant" | "user";
+    text: string;
+    tone?: "highlight";
+  }[];
   question: Question | null;
   answered: string[];
   state:
@@ -192,7 +196,7 @@ export type Session = {
   drafts: z.infer<typeof workflowSchema>[];
   pdf?: string;
   downloads: number;
-  mail: { analysis?: string; ready?: string };
+  mail: { ready?: string };
   mailErrors: string[];
   marketing: boolean;
   fbp?: string;

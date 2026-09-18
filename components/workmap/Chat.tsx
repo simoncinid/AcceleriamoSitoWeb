@@ -6,7 +6,6 @@ import { stages } from "@/lib/workmap/config";
 import { contactAttribution } from "@/lib/tracking";
 import { trackWorkMap, type WorkMapEvent } from "./tracking";
 import type { view } from "@/lib/workmap/service";
-import { WorkMapResult } from "./Result";
 type View = ReturnType<typeof view>;
 const EMAIL_PROMPT =
   "A che indirizzo mail devo inviare l'analisi completa?";
@@ -154,8 +153,6 @@ export function WorkMapChat() {
     if (data.confirmed) {
       emit("PreviewViewed", { workflow_count: data.workflowCount });
     }
-    if (data.state === "details") emit("DetailsStarted");
-    if (data.state === "profile_complete") emit("DetailsCompleted");
     if (data.state === "ready") {
       emit("GenerationCompleted");
       emit("WorkMapViewed");
@@ -238,16 +235,30 @@ export function WorkMapChat() {
             { email: next.email },
             "EmailCaptured",
           );
-          if (again) await perform("email", {});
+          if (again?.state === "profile_complete")
+            await perform("generate", {}, "GenerationStarted");
         }
+        if (next.state === "profile_complete")
+          await perform("generate", {}, "GenerationStarted");
       }
     } finally {
       setReplyPending(false);
     }
   }
   async function qualify() {
-    const next = await perform("qualify", { email }, "EmailCaptured");
-    if (next) await perform("email", {});
+    await perform("qualify", { email }, "EmailCaptured");
+  }
+  async function retryDelivery() {
+    if (busy) return;
+    setBusy(true);
+    setError("");
+    try {
+      setData(await api("email", {}));
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Invio non riuscito. Riprova.");
+    } finally {
+      setBusy(false);
+    }
   }
   async function restart() {
     setBusy(true);
@@ -339,8 +350,7 @@ export function WorkMapChat() {
       !funnelScreen &&
       (question ||
         editing ||
-        awaitingReply ||
-        data.state === "details"),
+        awaitingReply),
   );
   const showEmailCapture = Boolean(
     funnelScreen &&
@@ -352,11 +362,7 @@ export function WorkMapChat() {
       !awaitingReply,
   );
   return (
-    <div
-      className={
-        data?.state === "ready" ? "wm-shell wm-shell--document" : "wm-shell"
-      }
-    >
+    <div className="wm-shell">
       <header className="wm-shell-header">
         <Link href="/" aria-label="ACCELERIAMO, homepage">
           <Brand />
@@ -373,7 +379,36 @@ export function WorkMapChat() {
         </div>
       </header>
       {data?.state === "ready" ? (
-        <WorkMapResult data={data} />
+        <main id="contenuto" className="wm-thanks">
+          <p className="eyebrow">Analisi completata</p>
+          <h1>Grazie.</h1>
+          {data.emailDelivered ? (
+            <p>
+              Abbiamo inviato la tua AI WorkMap in PDF a <strong>{data.email}</strong>.
+              Controlla anche la cartella spam.
+            </p>
+          ) : (
+            <p>
+              La tua AI WorkMap è pronta, ma l’email non è ancora partita.
+              Puoi riprovare l’invio adesso.
+            </p>
+          )}
+          {error && <p className="wm-alert" role="alert">{error}</p>}
+          <div className="wm-thanks-actions">
+            {!data.emailDelivered && (
+              <button
+                className="button"
+                disabled={busy}
+                onClick={() => void retryDelivery()}
+              >
+                Invia di nuovo il PDF
+              </button>
+            )}
+            <Link className="button button--primary" href="/">
+              Vai alla home
+            </Link>
+          </div>
+        </main>
       ) : (
         <main id="contenuto" className="wm-chat">
           <nav className="wm-progress" aria-label="Avanzamento dell’analisi">
@@ -432,7 +467,7 @@ export function WorkMapChat() {
                     {data.messages.map((m, i) => (
                       <div
                         key={`${m.role}-${i}-${m.text.slice(0, 24)}`}
-                        className={`wm-message ${m.role === "user" ? "wm-message-user" : ""}`}
+                        className={`wm-message${m.role === "user" ? " wm-message-user" : ""}${m.tone === "highlight" ? " wm-message-highlight" : ""}`}
                       >
                         <p>{m.text}</p>
                       </div>
@@ -559,30 +594,33 @@ export function WorkMapChat() {
                 )}
                 {data.confirmed && data.state === "qualified" && onOffer && (
                   <section className="wm-step wm-step--delivery">
-                    <p className="eyebrow">AI WorkMap completa</p>
-                    <h2>
-                      Queste erano le prime {apps.length}. La mappa continua.
-                    </h2>
-                    <p className="wm-offer-line">
-                      {data.workflowCount} workflow · prompt operativi · 3
-                      assistenti · piano 30 giorni · PDF
-                    </p>
-                    {data.notRecommended ? (
-                      <p className="wm-micro wm-delivery-note">
-                        {data.notRecommended}
+                    <div className="wm-delivery-copy">
+                      <p className="eyebrow">La tua AI WorkMap</p>
+                      <h2>
+                        Hai visto le prime {apps.length}. Nel PDF trovi la mappa
+                        completa.
+                      </h2>
+                      <p className="wm-delivery-contents">
+                        {data.workflowCount} workflow personalizzati, prompt
+                        pronti da copiare e un piano di 30 giorni.
                       </p>
-                    ) : null}
-                    <p className="wm-offer-line">È tutto gratuito. Riceverai il PDF completo via email.</p>
-                    <p className="wm-micro">
-                      <Link href="/ai-workmap/condizioni" target="_blank">Condizioni del servizio e privacy</Link>
-                    </p>
-                    <button
-                      className="button button--primary"
-                      disabled={busy}
-                      onClick={() => void perform("complete")}
-                    >
-                      Completa la mia analisi gratuita
-                    </button>
+                    </div>
+                    <div className="wm-delivery-box">
+                      <strong>È gratuita.</strong>
+                      <span>Te la inviamo via email in formato PDF.</span>
+                    </div>
+                    <div className="wm-delivery-actions">
+                      <button
+                        className="button button--primary"
+                        disabled={busy}
+                        onClick={() => void perform("complete")}
+                      >
+                        Continua e ricevi il PDF
+                      </button>
+                      <Link href="/ai-workmap/condizioni" target="_blank">
+                        Condizioni del servizio e privacy
+                      </Link>
+                    </div>
                   </section>
                 )}
                 {data.state === "profile_complete" && (

@@ -7,43 +7,71 @@ import {
   assistantsSchema,
   planSchema,
   contentSchema,
+  type Selection,
   type Session,
 } from "./schema";
 import { renderPdf } from "./pdf";
 import { claimLease, releaseLease, getSession, saveSession } from "./store";
+
+const catalogIds = new Set(catalog.map((entry) => entry.id));
+
+function normalizeSelectionWorkflows(
+  workflows: Selection["workflows"],
+  requiredCount?: number,
+) {
+  const seen = new Set<string>();
+  const normalized: Selection["workflows"] = [];
+  for (const workflow of workflows) {
+    if (!catalogIds.has(workflow.id) || seen.has(workflow.id)) continue;
+    seen.add(workflow.id);
+    normalized.push(workflow);
+  }
+  if (requiredCount !== undefined && normalized.length !== requiredCount)
+    return null;
+  if (normalized.length < 10 || normalized.length > 15) return null;
+  return normalized;
+}
+
 export const analyzeTasks = (s: Session) =>
   structured("task-analyzer", taskSchema, { profile: s.profile });
 export async function selectWorkflows(s: Session) {
-  const selection = await structured("workflow-selector", selectionSchema, {
-    profile: s.profile,
-    analysis: s.analysis,
-    catalog,
-    requiredCount: s.selection?.workflows.length,
-  });
-  if (
-    s.selection &&
-    selection.workflows.length !== s.selection.workflows.length
-  )
-    throw Error("La selezione deve conservare il numero di workflow previsto.");
-  if (
-    new Set(selection.workflows.map((w) => w.id)).size !==
-      selection.workflows.length ||
-    selection.workflows.some((w) => !catalog.some((c) => c.id === w.id))
-  )
-    throw Error("Selezione non valida. Riprova.");
-  return selection;
+  const requiredCount = s.selection?.workflows.length;
+  const selectionError =
+    "Non sono riuscito a completare la scelta automatica dei workflow. Riprova dal punto salvato.";
+  for (let attempt = 0; attempt < 3; attempt++) {
+    const selection = await structured("workflow-selector", selectionSchema, {
+      profile: s.profile,
+      analysis: s.analysis,
+      catalog,
+      requiredCount,
+    });
+    const workflows = normalizeSelectionWorkflows(
+      selection.workflows,
+      requiredCount,
+    );
+    if (workflows) return { ...selection, workflows };
+  }
+  throw Error(selectionError);
 }
-export const personalizeWorkflow = (s: Session, index: number) =>
-  structured(
+export async function personalizeWorkflow(s: Session, index: number) {
+  const picked = s.selection!.workflows[index];
+  const base = catalog.find((entry) => entry.id === picked.id);
+  if (!base)
+    throw Error(
+      "Non sono riuscito a personalizzare un workflow. Riprova dal punto salvato.",
+    );
+  const workflow = await structured(
     "workflow-personalizer",
     workflowSchema,
     {
       profile: s.profile,
-      workflow: catalog.find((c) => c.id === s.selection!.workflows[index].id),
-      reason: s.selection!.workflows[index].reason,
+      workflow: base,
+      reason: picked.reason,
     },
     true,
   );
+  return { ...workflow, id: picked.id, title: base.title };
+}
 export const generateAssistants = (s: Session) =>
   structured(
     "assistant-generator",
@@ -58,11 +86,24 @@ export const generatePlan = (s: Session) =>
     assistants: s.content?.assistants,
   });
 export async function reviewWorkMap(s: Session) {
-  const content = await structured("quality-reviewer", contentSchema, {
+  let content = await structured("quality-reviewer", contentSchema, {
     profile: s.profile,
     selected: s.selection,
     content: s.content,
   });
+  const selected = s.selection!.workflows;
+  if (content.workflows.length === selected.length) {
+    content = {
+      ...content,
+      workflows: content.workflows.map((workflow, index) => ({
+        ...workflow,
+        id: selected[index].id,
+        title:
+          catalog.find((entry) => entry.id === selected[index].id)?.title ??
+          workflow.title,
+      })),
+    };
+  }
   const ids = content.workflows.map((w) => w.id);
   if (
     new Set(ids).size !== ids.length ||
@@ -122,8 +163,6 @@ export async function runGenerationStep(id: string, runId?: string) {
           break;
         case 2: {
           const workflow = await personalizeWorkflow(s, s.job.cursor);
-          if (workflow.id !== s.selection!.workflows[s.job.cursor].id)
-            throw Error("Workflow non coerente con la selezione.");
           s.drafts.push(workflow);
           s.job.cursor++;
           if (s.job.cursor === s.selection!.workflows.length) s.job.step = 3;

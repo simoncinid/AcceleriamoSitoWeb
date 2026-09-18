@@ -101,7 +101,6 @@ export async function deliverPending(id: string) {
     const s = await getSession(id);
     if (!s) return;
     const kinds: MailKind[] = [];
-    if (s.email && s.selection) kinds.push("analysis");
     if (s.state === "ready") kinds.push("ready");
     const errors: string[] = [];
     for (const kind of kinds) {

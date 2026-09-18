@@ -2,7 +2,7 @@ import nodemailer from "nodemailer";
 import { createHmac } from "node:crypto";
 import { baseUrl } from "./config";
 import type { Session } from "./schema";
-export type MailKind = "analysis" | "ready";
+export type MailKind = "ready";
 export function recoveryToken(id: string) {
   if ((process.env.WORKMAP_ACCESS_SECRET?.length ?? 0) < 32)
     throw Error("Accesso via email non configurato.");
@@ -15,12 +15,9 @@ export async function sendWorkMapEmail(s: Session, kind: MailKind) {
   if (kind === "ready" && !s.pdf) throw Error("PDF non disponibile per l’invio.");
   const link = `${baseUrl()}/ai-workmap/analisi#resume=${recoveryToken(s.id)}`;
   const subjects = {
-    analysis: "Abbiamo salvato la tua analisi",
     ready: "La tua AI WorkMap è pronta",
   };
   const intro = {
-    analysis:
-      "La tua analisi è salvata. Puoi riprendere dallo stesso punto, anche su un altro dispositivo.",
     ready:
       "In allegato trovi gratuitamente il PDF della tua WorkMap personalizzata: workflow, prompt copiabili, assistenti e piano di 30 giorni. Apri la mia WorkMap:",
   };

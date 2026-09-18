@@ -4,7 +4,7 @@ AI WorkMap offre gratuitamente la conversazione, l’analisi completa e il docum
 
 ## Flusso
 
-La conversazione iniziale raccoglie ruolo e attività. L’utente indica l’email, verifica il riepilogo e vede le opportunità. Il pulsante «Completa la mia analisi gratuita» apre le ultime domande; al termine può avviare la generazione. Il PDF completo viene allegato all’email finale ed è anche scaricabile dalla pagina privata.
+La conversazione iniziale raccoglie ruolo e attività. L’utente indica l’email, verifica il riepilogo e vede le opportunità. Il pulsante «Completa la mia analisi gratuita» apre una nuova conversazione pulita con le ultime domande; al termine la generazione parte automaticamente. Una sola email viene inviata quando il documento è pronto, con il PDF completo allegato.
 
 Stati: `lead → qualified → details → profile_complete → generating → reviewing → ready`. Lo stato `failed` conserva il checkpoint per riprovare. Le sessioni e i documenti scadono dopo 30 giorni dalla creazione; il PDF ricevuto resta all’utente.
 
@@ -14,7 +14,7 @@ Stati: `lead → qualified → details → profile_complete → generating → r
 - `lib/workmap/conversation.ts`: conversazione iniziale e approfondimento.
 - `lib/workmap/pipeline.ts`: analisi, selezione workflow, personalizzazione, assistenti, piano, revisione e PDF.
 - `lib/workmap/pdf.ts`: renderer PDFKit, testo selezionabile.
-- `lib/workmap/email.ts`: SMTP Aruba, email di recupero e email finale con allegato `AI-WorkMap.pdf`.
+- `lib/workmap/email.ts`: SMTP Aruba, unica email finale con allegato `AI-WorkMap.pdf` e collegamento personale di recupero.
 - `lib/workmap/jobs.ts`: worker e recupero dei job/email interrotti.
 - `lib/workmap/store.ts`: Redis REST in produzione; file locali solo in sviluppo, CAS e lease per evitare lavorazioni concorrenti.
 - `components/workmap/`: chat, anteprima, risultato, download e metriche aggregate.

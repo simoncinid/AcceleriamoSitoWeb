@@ -129,11 +129,12 @@ for (const width of [360, 375, 390, 430, 1440])
     ).toBeVisible();
     expect(errors).toEqual([]);
   });
-test("analisi gratuita, correzione profilo, anteprima e approfondimento gratuito", async ({
+for (const width of [390, 1200])
+test(`analisi gratuita, correzione profilo e consegna a ${width}px`, async ({
   page,
 }) => {
   const emailLabel = "A che indirizzo mail devo inviare l'analisi completa?";
-  await page.setViewportSize({ width: 390, height: 844 });
+  await page.setViewportSize({ width, height: 844 });
   await page.goto("/ai-workmap/analisi");
   await page.getByLabel("Messaggio").fill("Recruiter");
   await page.getByRole("button", { name: "Invia", exact: true }).click();
@@ -178,7 +179,7 @@ test("analisi gratuita, correzione profilo, anteprima e approfondimento gratuito
   await page.getByRole("button", { name: "Avanti", exact: true }).click();
   await page.getByRole("button", { name: "Avanti", exact: true }).click();
   await expect(
-    page.getByRole("button", { name: "Completa la mia analisi gratuita" }),
+    page.getByRole("button", { name: "Continua e ricevi il PDF" }),
   ).toBeEnabled();
   expect(
     await page.evaluate(() => {
@@ -187,11 +188,40 @@ test("analisi gratuita, correzione profilo, anteprima e approfondimento gratuito
       return Math.round(shell.getBoundingClientRect().height) <= innerHeight + 1;
     }),
   ).toBe(true);
-  await page.getByRole("button", { name: "Completa la mia analisi gratuita" }).click();
-  await expect(page.getByLabel("Messaggio")).toBeVisible();
+  await page.screenshot({
+    path: `artifacts/workmap/delivery-offer-${width}.png`,
+    fullPage: true,
+  });
+  await page.getByRole("button", { name: "Continua e ricevi il PDF" }).click();
+  await expect(
+    page.getByText(
+      "Abbiamo bisogno solo di qualche altra risposta per completare la tua analisi gratuita.",
+      { exact: true },
+    ),
+  ).toBeVisible();
   await expect(page.getByText("Come ti chiami?", { exact: false })).toBeVisible();
   await page.screenshot({
-    path: "artifacts/workmap/delivery-390.png",
+    path: `artifacts/workmap/details-${width}.png`,
+    fullPage: true,
+  });
+  for (let answer = 0; answer < 8; answer++) {
+    if (await page.getByRole("heading", { name: "Grazie." }).isVisible()) break;
+    const field = page.getByLabel("Messaggio");
+    if (await field.isVisible()) {
+      await field.fill(answer === 0 ? "Marco" : "Informazioni generiche");
+      await page.getByRole("button", { name: "Invia", exact: true }).click();
+    } else {
+      const choice = page.locator(".wm-choice:visible").first();
+      if (await choice.isVisible()) await choice.click();
+    }
+    await page.waitForTimeout(150);
+  }
+  await expect(page.getByRole("heading", { name: "Grazie." })).toBeVisible({
+    timeout: 60000,
+  });
+  await expect(page.getByRole("link", { name: "Vai alla home" })).toBeVisible();
+  await page.screenshot({
+    path: `artifacts/workmap/delivery-${width}.png`,
     fullPage: true,
   });
 });

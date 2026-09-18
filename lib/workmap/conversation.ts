@@ -57,21 +57,26 @@ function mergeProfile(current: Profile, next: Profile): Profile {
 }
 export function beginDetailsChat(s: Session) {
   s.state = "details";
+  s.messages = [
+    {
+      role: "assistant",
+      tone: "highlight",
+      text: "Abbiamo bisogno solo di qualche altra risposta per completare la tua analisi gratuita.",
+    },
+  ];
   if (missingFields(s.profile, true).length === 0) {
     s.question = null;
     s.state = "profile_complete";
     return;
   }
-  s.messages.push({
-    role: "assistant",
-    text: "Perfetto. Per la WorkMap completa mi bastano ancora poche cose, senza ripetere quello che so già. Come ti chiami? Anche solo il nome.",
-  });
+  const text = "Come ti chiami? Anche solo il nome.";
+  s.messages.push({ role: "assistant", text });
   s.question = {
     id: "name",
     field: "name",
     kind: "text",
     options: [],
-    text: "Come ti chiami? Anche solo il nome.",
+    text,
   };
 }
 export async function answerConversation(s: Session, answer: string) {

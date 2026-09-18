@@ -144,15 +144,17 @@ test("funnel completo: profilo ricco, email, edit, approfondimento gratuito, ret
     assert.equal(result.data.confirmed, false);
     await s.post("qualify", { email: "test@example.test" });
     await s.post("email");
-    assert.equal(s.sent.length, 1);
+    assert.equal(s.sent.length, 0);
     await s.post("email");
-    assert.equal(s.sent.length, 1);
+    assert.equal(s.sent.length, 0);
     await s.post("confirm");
     result = await s.post("complete");
     assert.equal(result.status, 200);
     const count = result.data.messages.length;
     result = await s.post("complete");
     assert.equal(result.data.messages.length, count);
+    assert.equal(result.data.messages[0].tone, "highlight");
+    assert.match(result.data.messages[0].text, /analisi gratuita/);
     assert.notEqual(result.data.question.field, "teamSize");
     let guard = 0;
     while (result.data.question && guard++ < 25) {
@@ -165,6 +167,7 @@ test("funnel completo: profilo ricco, email, edit, approfondimento gratuito, ret
       assert.equal(result.status, 200);
     }
     assert.equal(result.data.state, "profile_complete");
+    assert.equal(result.data.question, null);
     const smtpPassword = s.env.ARUBA_PASS;
     s.env.ARUBA_PASS = "";
     s.ai.failNext();
@@ -188,12 +191,12 @@ test("funnel completo: profilo ricco, email, edit, approfondimento gratuito, ret
     s.env.ARUBA_PASS = smtpPassword;
     const delivered = await s.post("email");
     assert.equal(delivered.data.emailDelivered, true);
-    assert.equal(s.sent.length, 2);
-    assert.match(s.sent[1].text, /#resume=/);
-    assert.equal(s.sent[1].attachments[0].filename, "AI-WorkMap.pdf");
-    assert.deepEqual(s.sent[1].attachments[0].content, bytes);
+    assert.equal(s.sent.length, 1);
+    assert.match(s.sent[0].text, /#resume=/);
+    assert.equal(s.sent[0].attachments[0].filename, "AI-WorkMap.pdf");
+    assert.deepEqual(s.sent[0].attachments[0].content, bytes);
     await s.post("email");
-    assert.equal(s.sent.length, 2);
+    assert.equal(s.sent.length, 1);
   } finally {
     await s.cleanup();
   }
@@ -303,6 +306,50 @@ test("provider JSON invalido e timeout non producono documenti inventati", async
     );
   }
 });
+test("id workflow dal modello vengono allineati al catalogo", async () => {
+  const directory = await mkdtemp(path.join(tmpdir(), "workmap-id-test-"));
+  try {
+    const env = {
+      NODE_ENV: "test",
+      WORKMAP_DATA_DIR: directory,
+      WORKMAP_AI_API_KEY: "mock",
+      WORKMAP_AI_MODEL: "mock",
+      WORKMAP_ACCESS_SECRET: "test-secret-long-enough-32-characters",
+      NEXT_PUBLIC_SITE_URL: "http://localhost:3000",
+    };
+    const ai = fakeAI(catalog);
+    ai.personalizerWrongIdOnce();
+    const load = modules({
+      env,
+      overrides: { "./ai": ai, "@/lib/workmap/ai": ai },
+    });
+    const { emptyProfile } = load("lib/workmap/schema.ts");
+    const { personalizeWorkflow } = load("lib/workmap/pipeline.ts");
+    const picked = catalog[0];
+    const workflow = await personalizeWorkflow(
+      {
+        profile: emptyProfile(),
+        selection: {
+          workflows: [
+            {
+              id: picked.id,
+              reason: "Utile per il profilo.",
+              priority: "Priorità alta",
+              difficulty: "Semplice",
+            },
+          ],
+          notRecommended: "Non prioritizzerei i social.",
+        },
+      },
+      0,
+    );
+    assert.equal(workflow.id, picked.id);
+    assert.equal(workflow.title, picked.title);
+  } finally {
+    await rm(directory, { recursive: true, force: true });
+  }
+});
+
 test("profilo già completo salta le domande e non richiede team o strumenti due volte", () => {
   const { emptyProfile } = basic("lib/workmap/schema.ts");
   const { analysisReady, missingFields } = basic("lib/workmap/conversation.ts");

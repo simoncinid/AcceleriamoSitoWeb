@@ -69,7 +69,8 @@ export function modules({
   return load;
 }
 export function fakeAI(catalog) {
-  let fail = false;
+  let fail = false,
+    personalizerWrongId = false;
   function workflow(w) {
     return {
       id: w.id,
@@ -97,6 +98,9 @@ export function fakeAI(catalog) {
   return {
     failNext() {
       fail = true;
+    },
+    personalizerWrongIdOnce() {
+      personalizerWrongId = true;
     },
     workflow,
     async structured(id, schema, input) {
@@ -145,8 +149,13 @@ export function fakeAI(catalog) {
           notRecommended:
             "Non partirei dai contenuti social: i report sono la tua priorità.",
         };
-      else if (id === "workflow-personalizer")
+      else if (id === "workflow-personalizer") {
         result = workflow(input.workflow);
+        if (personalizerWrongId) {
+          personalizerWrongId = false;
+          result = { ...result, id: "id-inventato-dal-modello" };
+        }
+      }
       else if (id === "assistant-generator")
         result = {
           assistants: ["Report", "Follow-up", "Offerte"].map((name) => ({
