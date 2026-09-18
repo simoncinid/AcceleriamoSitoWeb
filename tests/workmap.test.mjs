@@ -85,12 +85,24 @@ async function setup() {
     return post("qualify", { email: "test@example.test" });
   }
   async function finishGeneration() {
+    const jobs = load("lib/workmap/jobs.ts");
+    const store = load("lib/workmap/store.ts");
     let result = await post("generate");
     for (let n = 0; n < 80 && ["generating", "reviewing", "failed"].includes(result.data.state); n++) {
       if (result.data.state === "failed" && (result.data.job?.attempts ?? 0) >= 5) break;
-      result = await post("generate");
+      const [id] = await store.listSessions();
+      await jobs.processWork(id, "generate");
+      result = { status: 200, data: await (await get()).json() };
     }
     return result;
+  }
+  async function runGenerationOnce() {
+    const jobs = load("lib/workmap/jobs.ts");
+    const store = load("lib/workmap/store.ts");
+    const result = await post("generate");
+    const [id] = await store.listSessions();
+    await jobs.processWork(id, "generate");
+    return { status: result.status, data: await (await get()).json() };
   }
   return {
     load,
@@ -102,6 +114,7 @@ async function setup() {
     answer,
     qualify,
     finishGeneration,
+    runGenerationOnce,
     cleanup: () => rm(directory, { recursive: true, force: true }),
   };
 }
@@ -171,7 +184,7 @@ test("funnel completo: profilo ricco, email, edit, approfondimento gratuito, ret
     const smtpPassword = s.env.ARUBA_PASS;
     s.env.ARUBA_PASS = "";
     s.ai.failNext();
-    result = await s.post("generate");
+    result = await s.runGenerationOnce();
     assert.equal(result.data.state, "failed");
     assert.equal(result.data.job.step, 0);
     assert.equal(result.data.job.attempts, 1);

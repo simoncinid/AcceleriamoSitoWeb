@@ -11,8 +11,8 @@ import {
   deliverPending,
   safeEqual,
 } from "@/lib/workmap/service";
-import { deliverEmails, scheduleWork } from "@/lib/workmap/jobs";
-import { analyzeTasks, runGenerationStep, selectWorkflows } from "@/lib/workmap/pipeline";
+import { deliverEmails, kickGeneration, scheduleWork } from "@/lib/workmap/jobs";
+import { analyzeTasks, selectWorkflows } from "@/lib/workmap/pipeline";
 import { answerSchema } from "@/lib/workmap/schema";
 import { answerConversation, beginDetailsChat } from "@/lib/workmap/conversation";
 import {
@@ -167,14 +167,7 @@ export async function POST(request: Request, { params }: Context) {
           s.job.runId = randomUUID();
           await saveSession(s, s.version);
         }
-        const advanced = await runGenerationStep(s.id, s.job?.runId);
-        if (!advanced) throw new Conflict();
-        s = (await getSession(s.id))!;
-        if (["generating", "reviewing"].includes(s.state))
-          scheduleWork(s.id, "generate");
-        else if (s.state === "ready") await deliverEmails(s.id);
-        else if (s.state === "failed" && (s.job?.attempts ?? 5) < 5)
-          scheduleWork(s.id, "generate", 4000);
+        kickGeneration(s.id);
         s = (await getSession(s.id))!;
       }
       return NextResponse.json(view(s), {headers});

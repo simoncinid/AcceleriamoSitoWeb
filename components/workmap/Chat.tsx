@@ -283,26 +283,10 @@ export function WorkMapChat() {
     }
   }
   const live = Boolean(data && (["generating", "reviewing"].includes(data.state) || (data.state === "failed" && (data.job?.attempts ?? 5) < 5)));
-  const advancing = Boolean(data && ["generating", "reviewing"].includes(data.state));
   useEffect(() => {
-    if (!advancing || busy) return;
-    const timer = window.setTimeout(() => {
-      setBusy(true);
-      void api("generate", {})
-        .then((next) => {
-          setData((previous) =>
-            previous && previous.version > next.version ? previous : next,
-          );
-        })
-        .catch(() =>
-          api("session")
-            .then(setData)
-            .catch(() => {}),
-        )
-        .finally(() => setBusy(false));
-    }, 250);
-    return () => window.clearTimeout(timer);
-  }, [advancing, busy, data?.job?.step, data?.job?.cursor, data?.version]);
+    if (!live || busy) return;
+    void api("generate", {}).catch(() => {});
+  }, [live]);
   useEffect(() => {
     if (!live) return;
     const source = new EventSource("/api/workmap/events");

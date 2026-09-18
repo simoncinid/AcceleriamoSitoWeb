@@ -29,6 +29,8 @@ export function workKind(s: Session): WorkKind | undefined {
   if (s.mailErrors.length || (s.state === "ready" && !s.mail.ready)) return "email";
 
 }
+const GENERATION_BUDGET_MS = 170_000;
+
 export function scheduleWork(id: string, kind: WorkKind, delay = 0) {
   if (
     process.env.NODE_ENV === "test" ||
@@ -61,17 +63,44 @@ export async function deliverEmails(id: string) {
   if (s?.mailErrors.length) scheduleWork(id, "email", 8000);
 }
 async function continueGeneration(id: string) {
-  const current = await getSession(id);
-  const advanced = await runGenerationStep(id, current?.job?.runId);
-  if (!advanced) return false;
+  const started = Date.now();
+  while (Date.now() - started < GENERATION_BUDGET_MS) {
+    const current = await getSession(id);
+    if (!current || workKind(current) !== "generate") return true;
+    const advanced = await runGenerationStep(id, current.job?.runId);
+    if (!advanced) {
+      scheduleWork(id, "generate", 5000);
+      return false;
+    }
+    const s = await getSession(id);
+    if (!s) return true;
+    if (s.state === "ready") {
+      await deliverEmails(id);
+      return true;
+    }
+    if (s.state === "failed") {
+      if ((s.job?.attempts ?? 5) < 5) scheduleWork(id, "generate", 4000);
+      return true;
+    }
+    if (!["generating", "reviewing"].includes(s.state)) return true;
+  }
   const s = await getSession(id);
-  if (!s) return true;
-  if (["generating", "reviewing"].includes(s.state))
-    scheduleWork(id, "generate");
-  else if (s.state === "ready") await deliverEmails(id);
-  else if (s.state === "failed" && (s.job?.attempts ?? 5) < 5)
-    scheduleWork(id, "generate", 4000);
+  if (s && workKind(s) === "generate") scheduleWork(id, "generate");
   return true;
+}
+export function kickGeneration(id: string) {
+  scheduleWork(id, "generate");
+  if (process.env.NODE_ENV === "test") return;
+  const run = () => void processWork(id, "generate").catch(() => {});
+  if (process.env.VERCEL === "1") {
+    try {
+      after(run);
+    } catch {
+      run();
+    }
+    return;
+  }
+  run();
 }
 export async function processWork(id: string, kind: WorkKind) {
   if (kind === "generate") return continueGeneration(id);
