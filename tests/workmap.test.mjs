@@ -147,7 +147,7 @@ test("funnel completo: profilo ricco, email, edit, approfondimento gratuito, ret
     let result = await s.qualify();
     assert.equal(result.status, 200);
     assert.equal(result.data.profile.teamSize, "12");
-    assert.equal(result.data.workflowCount, 12);
+    assert.equal(result.data.workflowCount, 5);
     assert.equal(result.data.opportunities.length, 3);
     assert.equal((await s.get("pdf")).status, 409);
     assert.notEqual((await s.post("generate")).status, 200);
@@ -190,13 +190,16 @@ test("funnel completo: profilo ricco, email, edit, approfondimento gratuito, ret
     assert.equal(result.data.job.attempts, 1);
     result = await s.finishGeneration();
     assert.equal(result.data.state, "ready");
-    assert.equal(result.data.content.workflows.length, 12);
-    assert.equal(result.data.content.assistants.length, 3);
+    assert.equal(result.data.content.workflows.length, 5);
+    assert.equal(result.data.content.assistants.length, 2);
     assert.equal(result.data.pdfAvailable, true);
     const pdf = await s.get("pdf");
     assert.equal(pdf.status, 200);
     const bytes = Buffer.from(await pdf.arrayBuffer());
     assert.equal(bytes.subarray(0, 4).toString(), "%PDF");
+    const pageCount = bytes.toString("latin1").match(/\/Type \/Page(?!s)/g)?.length;
+    assert.equal(pageCount, 10);
+    assert.ok(pageCount <= 15);
     await mkdir("artifacts/workmap", { recursive: true });
     await writeFile("artifacts/workmap/sample.pdf", bytes);
     assert.ok(result.data.mailErrors.includes("ready"));
@@ -205,7 +208,8 @@ test("funnel completo: profilo ricco, email, edit, approfondimento gratuito, ret
     const delivered = await s.post("email");
     assert.equal(delivered.data.emailDelivered, true);
     assert.equal(s.sent.length, 1);
-    assert.match(s.sent[0].text, /#resume=/);
+    assert.doesNotMatch(s.sent[0].text, /https?:\/\//);
+    assert.match(s.sent[0].text, /In allegato trovi il PDF/);
     assert.equal(s.sent[0].attachments[0].filename, "AI-WorkMap.pdf");
     assert.deepEqual(s.sent[0].attachments[0].content, bytes);
     await s.post("email");
@@ -337,7 +341,7 @@ test("se il controllo qualità AI fallisce, prosegue con il documento già pront
     s.ai.failQualityReviewerOnce();
     result = await s.finishGeneration();
     assert.equal(result.data.state, "ready");
-    assert.equal(result.data.content.workflows.length, 12);
+    assert.equal(result.data.content.workflows.length, 5);
   } finally {
     await s.cleanup();
   }
@@ -362,7 +366,7 @@ test("il controllo finale ripara prompt e piano incompleti invece di bloccarsi",
     });
     const { emptyProfile } = load("lib/workmap/schema.ts");
     const { reviewWorkMap } = load("lib/workmap/pipeline.ts");
-    const picked = catalog.slice(0, 10);
+    const picked = catalog.slice(0, 5);
     const broken = picked.map((workflow) => ({
       ...ai.workflow(workflow),
       masterPrompt: "Prepara una tabella dal testo",
@@ -398,8 +402,8 @@ test("il controllo finale ripara prompt e piano incompleti invece di bloccarsi",
         tools: [],
       },
     });
-    assert.equal(content.workflows.length, 10);
-    assert.equal(content.assistants.length, 3);
+    assert.equal(content.workflows.length, 5);
+    assert.equal(content.assistants.length, 2);
     assert.equal(new Set(content.weeks.map((week) => week.week)).size, 4);
     for (const workflow of content.workflows) {
       for (const section of [

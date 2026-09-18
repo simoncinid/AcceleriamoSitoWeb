@@ -29,7 +29,7 @@ function normalizeSelectionWorkflows(
   }
   if (requiredCount !== undefined && normalized.length !== requiredCount)
     return null;
-  if (normalized.length < 10 || normalized.length > 15) return null;
+  if (normalized.length !== 5) return null;
   return normalized;
 }
 
@@ -77,7 +77,7 @@ export const generateAssistants = (s: Session) =>
   structured(
     "assistant-generator",
     assistantsSchema,
-    { profile: s.profile, workflows: s.drafts.slice(0, 5) },
+    { profile: s.profile, workflows: s.drafts },
     true,
   );
 export const generatePlan = (s: Session) =>
@@ -119,7 +119,7 @@ Bozza da revisionare
 CONTROLLO
 Segnala dati mancanti o incerti`;
 
-function clip(value: string, max = 4000) {
+function clip(value: string, max = 900) {
   return value.slice(0, max);
 }
 function asRecord(value: unknown): Record<string, unknown> {
@@ -127,17 +127,17 @@ function asRecord(value: unknown): Record<string, unknown> {
     ? (value as Record<string, unknown>)
     : {};
 }
-function clipList(value: unknown, fallback: string[]) {
+function clipList(value: unknown, fallback: string[], maxItems = 5) {
   const items = (Array.isArray(value) ? value : fallback)
     .map((item) => clip(String(item ?? "").trim()))
     .filter(Boolean);
-  return (items.length ? items : fallback).slice(0, 30);
+  return (items.length ? items : fallback).slice(0, maxItems);
 }
 function ensureProcedure(value: unknown) {
   const items = clipList(value, PROCEDURE_FALLBACK);
   while (items.length < 3)
     items.push(PROCEDURE_FALLBACK[items.length] || PROCEDURE_FALLBACK[0]);
-  return items.slice(0, 30);
+  return items.slice(0, 4);
 }
 function ensureMasterPrompt(prompt: string) {
   const fill = (base: string) => {
@@ -149,7 +149,10 @@ function ensureMasterPrompt(prompt: string) {
     return result;
   };
   const result = fill(prompt);
-  return clip(result.length <= 4000 ? result : fill(COMPACT_MASTER_PROMPT));
+  return clip(
+    result.length <= 1800 ? result : fill(COMPACT_MASTER_PROMPT),
+    1800,
+  );
 }
 function repairWorkflow(raw: unknown, id: string, title: string) {
   const workflow = asRecord(raw);
@@ -162,9 +165,7 @@ function repairWorkflow(raw: unknown, id: string, title: string) {
     whenToUse: clip(
       String(workflow.whenToUse || "Quando l’attività si ripete."),
     ),
-    requiredInputs: clipList(workflow.requiredInputs, [
-      "Materiale anonimizzato",
-    ]),
+    requiredInputs: clipList(workflow.requiredInputs, ["Materiale anonimizzato"], 3),
     tool: clip(
       String(workflow.tool || "Strumento AI approvato dall’azienda"),
     ),
@@ -175,6 +176,7 @@ function repairWorkflow(raw: unknown, id: string, title: string) {
         workflow.reviewPrompt ||
           "Verifica nomi, numeri, date, fonti e tono. Segnala i problemi prima di correggere.",
       ),
+      500,
     ),
     example: clip(
       String(
@@ -186,13 +188,13 @@ function repairWorkflow(raw: unknown, id: string, title: string) {
     checklist: clipList(workflow.checklist, [
       "Fonti controllate",
       "Dati verificati",
-    ]),
+    ], 3),
     humanReview: clip(
       String(workflow.humanReview || "Verifica ogni output prima di usarlo."),
     ),
     commonErrors: clipList(workflow.commonErrors, [
       "Usare informazioni non confermate",
-    ]),
+    ], 3),
     privacy: clip(
       String(
         workflow.privacy ||
@@ -203,12 +205,8 @@ function repairWorkflow(raw: unknown, id: string, title: string) {
 }
 function repairAssistants(raw: unknown): WorkMapContent["assistants"] {
   const incoming = Array.isArray(raw) ? raw : [];
-  const names = [
-    "Assistente operativo",
-    "Assistente di revisione",
-    "Assistente di sintesi",
-  ];
-  return [0, 1, 2].map((index) => {
+  const names = ["Assistente operativo", "Assistente di revisione"];
+  return [0, 1].map((index) => {
     const assistant = asRecord(incoming[index]);
     return {
       name: clip(String(assistant.name || names[index])),
@@ -218,25 +216,24 @@ function repairAssistants(raw: unknown): WorkMapContent["assistants"] {
       whenToUse: clip(
         String(assistant.whenToUse || "Quando prepari un lavoro ripetitivo"),
       ),
-      requiredInputs: clipList(assistant.requiredInputs, [
-        "Materiale anonimizzato",
-      ]),
+      requiredInputs: clipList(assistant.requiredInputs, ["Materiale anonimizzato"], 3),
       systemPrompt: clip(
         String(
           assistant.systemPrompt ||
             "Usa solo i dati forniti. Non inventare. Chiedi una revisione umana.",
         ),
+        1400,
       ),
       starterPrompts: clipList(assistant.starterPrompts, [
         "Prepara una bozza dal testo che ti incollo",
-      ]),
+      ], 2),
       rules: clipList(assistant.rules, [
         "Non inventare dati",
         "Segnala ciò che manca",
-      ]),
+      ], 3),
       limitations: clipList(assistant.limitations, [
         "Nessun accesso a sistemi esterni",
-      ]),
+      ], 2),
       humanReview: clip(
         String(assistant.humanReview || "Controlla ogni output prima dell’uso."),
       ),
@@ -262,7 +259,7 @@ function repairWeeks(raw: unknown): WorkMapContent["weeks"] {
       actions: clipList(parsed.actions, [
         "Scegli un caso senza dati riservati",
         "Confronta il risultato con le fonti",
-      ]),
+      ], 2),
       successCheck: clip(
         String(
           parsed.successCheck ||
@@ -302,11 +299,11 @@ export function repairWorkMapContent(
     weeks: repairWeeks(source.weeks),
     finalChecklist: clipList(source.finalChecklist, [
       "Verifica fonti, nomi, date e numeri",
-    ]),
+    ], 5),
     privacy: clipList(source.privacy, [
       "Anonimizza i dati prima di usare lo strumento",
-    ]),
-    tools: clipList(source.tools, ["Strumento AI approvato dall’azienda"]),
+    ], 4),
+    tools: clipList(source.tools, ["Strumento AI approvato dall’azienda"], 3),
   });
 }
 

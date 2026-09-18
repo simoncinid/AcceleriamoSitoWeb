@@ -25,7 +25,7 @@ export const metadata: Metadata = {
 const faq = [
   [
     "Cos’è AI WorkMap?",
-    "Un manuale operativo personale costruito partendo dal tuo lavoro: procedure, prompt, assistenti AI e un piano per applicarli.",
+    "Una guida operativa personale con le cinque applicazioni AI più utili per il tuo lavoro, prompt pronti e un piano per provarle.",
   ],
   [
     "È un corso o un ebook?",
@@ -61,7 +61,7 @@ const faq = [
   ],
   [
     "Come ricevo la mia analisi?",
-    "Riprendi la stessa conversazione per le ultime informazioni. Poi generiamo e controlliamo la WorkMap, disponibile in PDF e in una pagina privata. Ricevi il PDF in allegato e il collegamento via email.",
+    "Dopo le ultime domande generiamo e controlliamo la WorkMap. Ricevi il PDF personalizzato in allegato via email.",
   ],
 ];
 export default function WorkMap() {
@@ -284,12 +284,12 @@ export default function WorkMap() {
                 Il tuo <span className="accent">modo di lavorare.</span>
               </h3>
               <ul>
-                <li>10–15 workflow selezionati per te</li>
+                <li>5 workflow prioritari selezionati per te</li>
                 <li>Prompt Master e prompt di revisione</li>
-                <li>3 assistenti AI con istruzioni copiabili</li>
+                <li>2 assistenti AI con istruzioni copiabili</li>
                 <li>Procedure, strumenti e checklist</li>
                 <li>Privacy e piano di applicazione 30 giorni</li>
-                <li>Documento PDF e versione web privata</li>
+                <li>Documento PDF sintetico, entro 15 pagine</li>
               </ul>
               <p className="wm-free">
                 Analisi gratuita

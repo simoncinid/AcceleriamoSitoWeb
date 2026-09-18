@@ -656,8 +656,8 @@ export function WorkMapChat() {
                         completa.
                       </h2>
                       <p className="wm-delivery-contents">
-                        {data.workflowCount} workflow personalizzati, prompt
-                        pronti da copiare e un piano di 30 giorni.
+                        {data.workflowCount} priorità concrete, prompt pronti da
+                        copiare e un piano di 30 giorni.
                       </p>
                     </div>
                     <div className="wm-delivery-box">

@@ -67,8 +67,7 @@ export const selectionSchema = z.object({
         difficulty: z.enum(["Semplice", "Intermedia", "Avanzata"]),
       }),
     )
-    .min(10)
-    .max(15),
+    .length(5),
   notRecommended: text,
 });
 export const workflowSchema = z.object({
@@ -103,7 +102,7 @@ export const assistantsSchema = z.object({
         humanReview: text,
       }),
     )
-    .length(3),
+    .length(2),
 });
 export const planSchema = z.object({
   weeks: z
@@ -121,7 +120,7 @@ export const planSchema = z.object({
   tools: list,
 });
 export const contentSchema = z.object({
-  workflows: z.array(workflowSchema).min(10).max(15),
+  workflows: z.array(workflowSchema).length(5),
   ...assistantsSchema.shape,
   ...planSchema.shape,
 });

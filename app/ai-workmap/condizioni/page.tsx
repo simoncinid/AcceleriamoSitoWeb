@@ -21,8 +21,8 @@ export default function Conditions() {
         <LegalIdentity />
         <p>
           AI WorkMap è un documento operativo digitale personalizzato sulla base
-          delle informazioni che fornisci. Comprende 10–15 workflow, prompt, tre
-          assistenti configurabili mediante istruzioni e un piano di
+          delle informazioni che fornisci. Comprende cinque workflow prioritari,
+          prompt, due assistenti configurabili mediante istruzioni e un piano di
           applicazione di 30 giorni. Non comprende implementazioni software,
           integrazioni, consulenza professionale regolamentata o abbonamenti a
           strumenti di terzi.
@@ -36,11 +36,9 @@ export default function Conditions() {
       <section>
         <h2>Consegna e requisiti</h2>
         <p>
-          Il risultato è disponibile in una pagina privata e come PDF
-          scaricabile. Il PDF viene inviato come allegato via email, insieme al collegamento personale.
+          Il risultato viene consegnato come PDF allegato all’email.
           Occorrono una connessione, un browser aggiornato, un indirizzo email
-          valido e un lettore PDF. Conserva il documento scaricato e non
-          condividere il link personale.
+          valido e un lettore PDF. Conserva il documento ricevuto.
         </p>
         <p>
           La generazione automatica include una seconda revisione AI. Non

@@ -171,7 +171,7 @@ test(`analisi gratuita, correzione profilo e consegna a ${width}px`, async ({
   ).toBeVisible({ timeout: 60000 });
   await page.getByRole("button", { name: "Sì, è corretto" }).click();
   await expect(
-    page.getByRole("heading", { name: /Ho individuato 12/ }),
+    page.getByRole("heading", { name: /Ho individuato 5/ }),
   ).toBeVisible({ timeout: 60000 });
   await expect(page.getByRole("button", { name: "Ricomincia" })).toBeVisible();
   await expect(page.getByRole("button", { name: "Avanti", exact: true })).toBeVisible();

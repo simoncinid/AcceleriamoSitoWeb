@@ -60,7 +60,7 @@ Riferimenti: [Vercel Web Analytics](https://vercel.com/docs/analytics/privacy-po
 
 ## AI WorkMap
 
-Verticale `/ai-workmap`: analisi conversazionale gratuita, approfondimento e documento PDF inviato via email, disponibile anche in una pagina privata. Configurazione e test in [docs/ai-workmap.md](docs/ai-workmap.md). Richiede AI, Redis, SMTP e segreti per recupero e worker.
+Verticale `/ai-workmap`: analisi conversazionale gratuita, approfondimento e PDF sintetico inviato via email. Configurazione e test in [docs/ai-workmap.md](docs/ai-workmap.md). Richiede AI, Redis, SMTP e segreti per sessioni e worker.
 
 ```bash
 npm test

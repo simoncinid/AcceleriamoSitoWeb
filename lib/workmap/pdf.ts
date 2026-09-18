@@ -1,64 +1,96 @@
 import PDFDocument from "pdfkit";
 import path from "node:path";
 import type { Session } from "./schema";
-// Same structured content as the private HTML view; native PDF text remains selectable.
+
+const PAGE_LIMIT = 15;
+
 export function renderPdf(s: Session): Promise<Buffer> {
   return new Promise((resolve, reject) => {
     const doc = new PDFDocument({
       size: "A4",
       margin: 48,
       bufferPages: true,
-      info: { Title: `AI WorkMap di ${s.profile.name}`, Author: "ACCELERIAMO" },
+      info: {
+        Title: `AI WorkMap di ${s.profile.name || s.profile.role}`,
+        Author: "ACCELERIAMO",
+      },
     });
     const chunks: Buffer[] = [];
     doc.on("data", (chunk) => chunks.push(chunk));
     doc.on("end", () => resolve(Buffer.concat(chunks)));
     doc.on("error", reject);
-    const font = path.join(
+
+    const displayFont = path.join(
       process.cwd(),
       "app/fonts/degular-accents/DegularDisplay-Regular-accents.otf",
     );
-    doc.registerFont("Display", font);
-    const ink = "#1d1b19",
-      orange = "#ff5a1f",
-      body = "#625e58",
-      paper = "#fffdf8";
+    doc.registerFont("Display", displayFont);
+
+    const ink = "#1d1b19";
+    const orange = "#ff5a1f";
+    const body = "#625e58";
+    const paper = "#fffdf8";
+    const cream = "#f6f2eb";
+    const content = s.content!;
+
     const clean = (value: string) =>
-      value.replace(/[\u0000-\u0008\u000b-\u001f]/g, "");
-    const title = (value: string) => {
-      doc
-        .font("Display")
-        .fontSize(30)
-        .fillColor(ink)
-        .text(value.replace(/[\/–—-]/g, " "));
-      doc.moveDown(0.4);
+      value.replace(/[\u0000-\u0008\u000b-\u001f]/g, "").trim();
+    const shorten = (value: string, max = 900) => {
+      const text = clean(value);
+      if (text.length <= max) return text;
+      return `${text.slice(0, max).replace(/\s+\S*$/, "")}…`;
     };
-    const block = (label: string, value: string) => {
-      if (doc.y > 690) doc.addPage();
-      if (label.includes("PROMPT") || label === "Istruzioni da copiare") {
-        doc.font("Helvetica").fontSize(11);
-        const height =
-          doc.heightOfString(clean(value), { width: 475, lineGap: 4 }) + 50;
-        if (height < 680) {
-          if (doc.y + height > 780) doc.addPage();
-          const top = doc.y;
-          doc.roundedRect(42, top - 8, 511, height, 8).fill("#f6f2eb");
-          doc.rect(42, top - 3, 3, 22).fill(orange);
-        }
-      }
-      doc.font("Helvetica-Bold").fontSize(11).fillColor(ink).text(label);
-      doc.moveDown(0.3);
-      doc
-        .font("Helvetica")
-        .fontSize(11)
-        .fillColor(body)
-        .text(clean(value), { lineGap: 4 });
+    const list = (items: string[], max = 4) =>
+      items
+        .slice(0, max)
+        .map((item) => `• ${shorten(item, 180)}`)
+        .join("\n");
+    const write = (
+      value: string,
+      options: { x?: number; y?: number; width?: number; height?: number } = {},
+    ) => {
+      doc.text(shorten(value), options.x ?? 48, options.y ?? doc.y, {
+        width: options.width ?? 499,
+        height: options.height,
+        ellipsis: Boolean(options.height),
+        lineGap: 3,
+      });
+    };
+    const label = (value: string, y?: number) => {
+      doc.font("Helvetica-Bold").fontSize(9).fillColor(orange);
+      write(value.toUpperCase(), { y });
+      doc.moveDown(0.45);
+    };
+    const paragraph = (value: string, max = 600) => {
+      doc.font("Helvetica").fontSize(10.5).fillColor(body);
+      write(shorten(value, max), { height: 72 });
       doc.moveDown(0.8);
     };
-    const newSection = (name: string) => {
-      doc.addPage();
-      title(name);
+    const heading = (value: string, size = 30) => {
+      doc.font("Display").fontSize(size).fillColor(ink);
+      write(value.replace(/[\/–—-]/g, " "), { height: size * 2.5 });
+      doc.moveDown(0.35);
     };
+    const addPage = (section: string, title: string) => {
+      doc.addPage();
+      label(section);
+      heading(title);
+    };
+    const promptBox = (value: string, max = 1500) => {
+      const prompt = shorten(value, max);
+      doc.font("Helvetica").fontSize(9.5);
+      const height = Math.min(
+        280,
+        Math.max(120, doc.heightOfString(prompt, { width: 455, lineGap: 3 }) + 28),
+      );
+      const top = doc.y;
+      doc.roundedRect(48, top, 499, height, 8).fill(cream);
+      doc.rect(48, top, 3, height).fill(orange);
+      doc.fillColor(ink);
+      write(prompt, { x: 66, y: top + 14, width: 455, height: height - 28 });
+      doc.y = top + height + 14;
+    };
+
     doc.on("pageAdded", () => {
       doc.save();
       doc.rect(0, 0, 595.28, 841.89).fill(paper);
@@ -72,125 +104,89 @@ export function renderPdf(s: Session): Promise<Buffer> {
       doc.x = 48;
       doc.y = 58;
     });
+
     doc.rect(0, 0, 595.28, 841.89).fill(paper);
     doc.rect(48, 65, 18, 18).fill(orange);
-    doc
-      .font("Helvetica-Bold")
-      .fontSize(13)
-      .fillColor(ink)
-      .text("ACCELERIAMO", 78, 68);
-    doc.y = 175;
-    doc.font("Display").fontSize(62).fillColor(ink).text("AI WorkMap");
-    doc.fontSize(38).text(`di ${s.profile.name || "un professionista"}`);
-    doc.moveDown();
-    block("IL TUO LAVORO, UN PASSO ALLA VOLTA", s.profile.role);
-    block("PREPARATA IL", new Date(s.updatedAt).toLocaleDateString("it-IT"));
-    block(
-      "IL TUO PERCORSO",
-      `${s.content!.workflows.length} workflow personali · 3 assistenti AI · Piano di 30 giorni`,
-    );
-    newSection("Indice");
-    [
-      "Il tuo profilo operativo",
-      "Le opportunità AI individuate",
-      "Da dove partire",
-      "Workflow personalizzati",
-      "I tuoi Prompt Master",
-      "I tuoi 3 assistenti AI",
-      "Strumenti consigliati",
-      "Privacy e controlli",
-      "Piano 30 giorni",
-      "Checklist finale",
-    ].forEach((v, i) => block(String(i + 1).padStart(2, "0"), v));
-    newSection("01 / Il tuo profilo operativo");
-    block(
-      "Ruolo e contesto",
-      [
-        s.profile.role,
-        s.profile.companyType,
-        s.profile.industry,
-        s.profile.teamSize,
-      ]
+    doc.font("Helvetica-Bold").fontSize(13).fillColor(ink).text("ACCELERIAMO", 78, 68);
+    doc.y = 170;
+    heading("AI WorkMap", 62);
+    heading(`di ${s.profile.name || "un professionista"}`, 36);
+    doc.y = 360;
+    label("Il tuo lavoro");
+    paragraph(s.profile.role, 180);
+    label("Dentro questa guida");
+    paragraph("5 applicazioni prioritarie · 2 assistenti AI · Piano pratico di 30 giorni", 180);
+
+    addPage("01", "Le priorità per il tuo lavoro");
+    label("Profilo");
+    paragraph(
+      [s.profile.role, s.profile.companyType, s.profile.industry]
         .filter(Boolean)
         .join(" · "),
+      260,
     );
-    block("Attività principali", s.profile.mainTasks.join("; "));
-    block(
-      "Le tue priorità",
-      [...s.profile.timeConsumingTasks, ...s.profile.repetitiveTasks].join(
-        "; ",
-      ),
-    );
-    block(
-      "Strumenti e livello AI",
-      [s.profile.toolsUsed.join(", "), s.profile.aiLevel].join(" · "),
-    );
-    newSection("02 / Le opportunità individuate");
-    s.selection!.workflows.forEach((w) =>
-      block(`${catalogTitle(w.id)} · ${w.priority}`, w.reason),
-    );
-    newSection("03 / Da dove partire");
-    block(s.content!.workflows[0].title, s.content!.workflows[0].relevance);
-    block("Cosa non prioritizzare", s.selection!.notRecommended);
-    s.content!.workflows.forEach((w, i) => {
-      newSection(`04 / Workflow ${String(i + 1).padStart(2, "0")}`);
-      title(w.title);
-      block("Perché è rilevante per te", w.relevance);
-      block("Quando usarlo", w.whenToUse);
-      block("Input e strumento", `${w.requiredInputs.join("; ")}\n${w.tool}`);
-      block(
-        "Procedura",
-        w.procedure.map((p, j) => `${j + 1}. ${p}`).join("\n"),
+    content.workflows.forEach((workflow, index) => {
+      doc.font("Helvetica-Bold").fontSize(12).fillColor(ink);
+      write(`${String(index + 1).padStart(2, "0")}  ${workflow.title}`, { height: 24 });
+      doc.font("Helvetica").fontSize(9.5).fillColor(body);
+      write(workflow.relevance, { x: 78, width: 469, height: 38 });
+      doc.moveDown(0.75);
+    });
+    label("Parti da qui");
+    paragraph(content.workflows[0].whenToUse, 280);
+
+    content.workflows.forEach((workflow, index) => {
+      addPage(`02 / Priorità ${index + 1}`, workflow.title);
+      label("Cosa ottieni");
+      paragraph(`${workflow.relevance} ${workflow.output}`, 420);
+      label("Cosa ti serve");
+      paragraph(`${workflow.requiredInputs.slice(0, 3).join(" · ")} · ${workflow.tool}`, 300);
+      label("Come farlo");
+      doc.font("Helvetica").fontSize(10).fillColor(body);
+      write(
+        workflow.procedure
+          .slice(0, 4)
+          .map((step, stepIndex) => `${stepIndex + 1}. ${shorten(step, 170)}`)
+          .join("\n"),
+        { height: 105 },
       );
-      block("Esempio ipotetico", w.example);
-      block("Output atteso", w.output);
-      block("Checklist", w.checklist.join("\n"));
-      block("Controllo umano", w.humanReview);
-      block("Errori frequenti", w.commonErrors.join("\n"));
-      block("Privacy", w.privacy);
+      doc.moveDown(0.8);
+      label("Prompt da copiare");
+      promptBox(workflow.masterPrompt);
+      label("Prima di usarlo");
+      paragraph([workflow.humanReview, workflow.privacy].filter(Boolean).join(" "), 320);
     });
-    newSection("05 / I tuoi Prompt Master");
-    s.content!.workflows.forEach((w) => {
-      if (doc.y > 180) doc.addPage();
-      title(w.title);
-      block("PROMPT MASTER · COPIA E ADATTA", w.masterPrompt);
-      block("PROMPT DI REVISIONE", w.reviewPrompt);
+
+    content.assistants.forEach((assistant, index) => {
+      addPage(`03 / Assistente ${index + 1}`, assistant.name);
+      label("A cosa serve");
+      paragraph(`${assistant.purpose} ${assistant.whenToUse}`, 420);
+      label("Istruzioni da copiare");
+      promptBox(assistant.systemPrompt, 1400);
+      label("Per iniziare");
+      paragraph(list(assistant.starterPrompts, 2), 360);
+      label("Controllo umano");
+      paragraph(assistant.humanReview, 260);
     });
-    newSection("06 / I tuoi assistenti AI");
-    s.content!.assistants.forEach((a, i) => {
-      if (i) doc.addPage();
-      title(a.name);
-      block("Scopo e utilizzo", `${a.purpose}\n${a.whenToUse}`);
-      block("Input", a.requiredInputs.join("; "));
-      block("Istruzioni da copiare", a.systemPrompt);
-      block("Per iniziare", a.starterPrompts.join("\n"));
-      block("Regole", a.rules.join("\n"));
-      block(
-        "Limiti e controllo",
-        `${a.limitations.join("\n")}\n${a.humanReview}`,
-      );
+
+    addPage("04", "Il tuo piano di 30 giorni");
+    content.weeks.forEach((week) => {
+      doc.font("Helvetica-Bold").fontSize(12).fillColor(ink);
+      write(`Settimana ${week.week} · ${shorten(week.goal, 110)}`, { height: 24 });
+      doc.font("Helvetica").fontSize(9.5).fillColor(body);
+      write(list(week.actions, 2), { x: 66, width: 481, height: 48 });
+      doc.moveDown(0.6);
     });
-    newSection("07 / Strumenti consigliati");
-    block("Gli strumenti per il tuo percorso", s.content!.tools.join("\n"));
-    block(
-      "Prima di iniziare",
-      "Verifica condizioni, piani e funzioni aggiornate sul sito del fornitore. Usa strumenti autorizzati dalla tua azienda.",
-    );
-    newSection("08 / Privacy e controlli");
-    block("I tuoi controlli", s.content!.privacy.join("\n"));
-    newSection("09 / Piano 30 giorni");
-    s.content!.weeks.forEach((w) => {
-      block(`Settimana ${w.week} · ${w.goal}`, w.actions.join("\n"));
-      block("Verifica", w.successCheck);
-    });
-    newSection("10 / Checklist finale");
-    block(
-      "Prima di utilizzare un risultato",
-      s.content!.finalChecklist.join("\n"),
-    );
+    label("Controlli finali");
+    paragraph(list(content.finalChecklist, 5), 600);
+    label("Privacy");
+    paragraph(list(content.privacy, 4), 480);
+
     const range = doc.bufferedPageRange();
-    for (let i = 0; i < range.count; i++) {
-      doc.switchToPage(i);
+    if (range.count > PAGE_LIMIT)
+      throw Error("Il documento supera il limite di 15 pagine.");
+    for (let page = 0; page < range.count; page++) {
+      doc.switchToPage(page);
       doc.save();
       doc.page.margins.bottom = 0;
       doc
@@ -198,7 +194,7 @@ export function renderPdf(s: Session): Promise<Buffer> {
         .fontSize(8)
         .fillColor(body)
         .text(
-          `ACCELERIAMO · AI WORKMAP                                      ${i + 1} / ${range.count}`,
+          `ACCELERIAMO · AI WORKMAP                                      ${page + 1} / ${range.count}`,
           48,
           809,
           { lineBreak: false },
@@ -208,6 +204,3 @@ export function renderPdf(s: Session): Promise<Buffer> {
     doc.end();
   });
 }
-import { catalog } from "./catalog";
-const catalogTitle = (id: string) =>
-  catalog.find((w) => w.id === id)?.title || id;

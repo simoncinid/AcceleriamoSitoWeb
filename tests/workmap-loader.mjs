@@ -144,7 +144,7 @@ export function fakeAI(catalog) {
       else if (id === "task-analyzer") result = { tasks: [] };
       else if (id === "workflow-selector")
         result = {
-          workflows: catalog.slice(0, 12).map((w) => ({
+          workflows: catalog.slice(0, 5).map((w) => ({
             id: w.id,
             reason: "Organizza le informazioni del tuo lavoro commerciale.",
             priority: "Priorità alta",
@@ -162,7 +162,7 @@ export function fakeAI(catalog) {
       }
       else if (id === "assistant-generator")
         result = {
-          assistants: ["Report", "Follow-up", "Offerte"].map((name) => ({
+          assistants: ["Report", "Follow-up"].map((name) => ({
             name,
             purpose: "Preparare bozze dai dati forniti",
             whenToUse: "Quando prepari il lavoro",

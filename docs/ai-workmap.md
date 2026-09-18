@@ -1,6 +1,6 @@
 # AI WorkMap — analisi gratuita e PDF via email
 
-AI WorkMap offre gratuitamente la conversazione, l’analisi completa e il documento personalizzato: 10–15 workflow, prompt, tre assistenti e un piano di 30 giorni.
+AI WorkMap offre gratuitamente la conversazione, l’analisi completa e un PDF personalizzato di circa 10 pagine: cinque workflow prioritari, prompt, due assistenti e un piano di 30 giorni.
 
 ## Flusso
 
@@ -14,7 +14,7 @@ Stati: `lead → qualified → details → profile_complete → generating → r
 - `lib/workmap/conversation.ts`: conversazione iniziale e approfondimento.
 - `lib/workmap/pipeline.ts`: analisi, selezione workflow, personalizzazione, assistenti, piano, revisione e PDF.
 - `lib/workmap/pdf.ts`: renderer PDFKit, testo selezionabile.
-- `lib/workmap/email.ts`: SMTP Aruba, unica email finale con allegato `AI-WorkMap.pdf` e collegamento personale di recupero.
+- `lib/workmap/email.ts`: SMTP Aruba, unica email finale essenziale con allegato `AI-WorkMap.pdf`.
 - `lib/workmap/jobs.ts`: worker e recupero dei job/email interrotti.
 - `lib/workmap/store.ts`: Redis REST in produzione; file locali solo in sviluppo, CAS e lease per evitare lavorazioni concorrenti.
 - `components/workmap/`: chat, anteprima, risultato, download e metriche aggregate.

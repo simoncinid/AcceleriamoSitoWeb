@@ -62,7 +62,7 @@ export function WorkMapResult({ data }: { data: ReturnType<typeof view> }) {
         di {data.profile.name}.
       </h1>
       <p className="wm-lead">
-        {data.profile.role} · {content.workflows.length} workflow · 3 assistenti
+        {data.profile.role} · {content.workflows.length} workflow · {content.assistants.length} assistenti
         AI · Piano 30 giorni
       </p>
       <p role="status">
@@ -211,7 +211,7 @@ export function WorkMapResult({ data }: { data: ReturnType<typeof view> }) {
         ))}
       </section>
       <section id="wm-section-6">
-        <h2>06 / I tuoi 3 assistenti AI</h2>
+        <h2>06 / I tuoi {content.assistants.length} assistenti AI</h2>
         {content.assistants.map((a) => (
           <article className="wm-card" key={a.name}>
             <h3>{a.name}</h3>

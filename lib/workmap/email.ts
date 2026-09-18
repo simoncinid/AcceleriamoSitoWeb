@@ -1,6 +1,5 @@
 import nodemailer from "nodemailer";
 import { createHmac } from "node:crypto";
-import { baseUrl } from "./config";
 import type { Session } from "./schema";
 export type MailKind = "ready";
 export function recoveryToken(id: string) {
@@ -13,13 +12,8 @@ export async function sendWorkMapEmail(s: Session, kind: MailKind) {
   if (!process.env.ARUBA_USER || !process.env.ARUBA_PASS)
     throw Error("Invio email non configurato.");
   if (kind === "ready" && !s.pdf) throw Error("PDF non disponibile per l’invio.");
-  const link = `${baseUrl()}/ai-workmap/analisi#resume=${recoveryToken(s.id)}`;
   const subjects = {
-    ready: "La tua AI WorkMap è pronta",
-  };
-  const intro = {
-    ready:
-      "In allegato trovi gratuitamente il PDF della tua WorkMap personalizzata: workflow, prompt copiabili, assistenti e piano di 30 giorni. Apri la mia WorkMap:",
+    ready: "La tua AI WorkMap personalizzata è pronta",
   };
   const transport = nodemailer.createTransport({
     host: "smtps.aruba.it",
@@ -36,7 +30,7 @@ export async function sendWorkMapEmail(s: Session, kind: MailKind) {
     subject: subjects[kind],
     attachments: kind === "ready" ? [{ filename: "AI-WorkMap.pdf", content: Buffer.from(s.pdf!, "base64"), contentType: "application/pdf" }] : undefined,
     messageId: `<workmap-${s.id}-${kind}@acceleriamo.it>`,
-    text: `${intro[kind]}\n\n${link}\n\nIl collegamento è personale: non condividerlo.\nAssistenza: info@acceleriamo.it\n\nQuesta è un’email di servizio, non un’iscrizione marketing.`,
+    text: `Ciao${s.profile.name ? ` ${s.profile.name}` : ""},\n\nla tua AI WorkMap personalizzata è pronta.\n\nIn allegato trovi il PDF con le 5 applicazioni AI prioritarie per il tuo lavoro, i prompt da copiare e un piano pratico di 30 giorni.\n\nBuon lavoro,\nACCELERIAMO`,
   });
   s.mail[kind] = new Date().toISOString();
 }
