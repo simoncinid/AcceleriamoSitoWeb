@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { mkdtemp, rm, mkdir, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import { createHmac, randomUUID } from "node:crypto";
+import { randomUUID } from "node:crypto";
 import { modules, fakeAI } from "./workmap-loader.mjs";
 const basic = modules();
 const { catalog } = basic("lib/workmap/catalog.ts");
@@ -15,40 +15,14 @@ async function setup() {
     WORKMAP_AI_API_KEY: "mock",
     WORKMAP_AI_MODEL: "mock",
     WORKMAP_ACCESS_SECRET: "test-secret-long-enough-32-characters",
-    WORKMAP_SALES_ENABLED: "true",
-    STRIPE_SECRET_KEY: "sk_test_mock",
-    STRIPE_WEBHOOK_SECRET: "whsec_mock",
     NEXT_PUBLIC_SITE_URL: "http://localhost:3000",
     ARUBA_USER: "mail@example.test",
     ARUBA_PASS: "mock",
     CRON_SECRET: "cron-test-secret",
   };
-  const ai = fakeAI(catalog),
-    sent = [],
-    stripeRequests = [];
-  let checkout;
-  const fetch = async (url, init) => {
-    stripeRequests.push({ url, init });
-    if (url.endsWith("/checkout/sessions")) {
-      const p = new URLSearchParams(init.body);
-      checkout = {
-        id: "cs_test_123",
-        url: "https://checkout.stripe.com/test",
-        expires_at: Math.floor(Date.now() / 1000) + 3600,
-        payment_status: "unpaid",
-        mode: "payment",
-        client_reference_id: p.get("client_reference_id"),
-        metadata: { order_id: p.get("metadata[order_id]") },
-        amount_total: Number(p.get("line_items[0][price_data][unit_amount]")),
-        currency: "eur",
-        payment_intent: "pi_test",
-      };
-    }
-    return Response.json(checkout);
-  };
+  const ai = fakeAI(catalog), sent = [];
   const load = modules({
     env,
-    fetch,
     overrides: {
       "./ai": ai,
       "@/lib/workmap/ai": ai,
@@ -123,16 +97,11 @@ async function setup() {
     ai,
     env,
     sent,
-    stripeRequests,
     post,
     get,
     answer,
     qualify,
     finishGeneration,
-    pay: () => {
-      checkout.payment_status = "paid";
-    },
-    checkout: () => checkout,
     cleanup: () => rm(directory, { recursive: true, force: true }),
   };
 }
@@ -157,7 +126,7 @@ test("catalogo curato copre tutte le famiglie, schemi e prompt versionati", () =
     assert.ok(p.lastUpdated);
   }
 });
-test("funnel completo: profilo ricco, email, edit, pagamento confermato, retry, PDF e email", async () => {
+test("funnel completo: profilo ricco, email, edit, approfondimento gratuito, retry, PDF e email", async () => {
   const s = await setup();
   try {
     assert.equal((await s.get()).status, 401);
@@ -179,20 +148,10 @@ test("funnel completo: profilo ricco, email, edit, pagamento confermato, retry, 
     await s.post("email");
     assert.equal(s.sent.length, 1);
     await s.post("confirm");
-    assert.notEqual(
-      (await s.post("checkout", { acceptTerms: false })).status,
-      200,
-    );
-    result = await s.post("checkout", { acceptTerms: true });
+    result = await s.post("complete");
     assert.equal(result.status, 200);
-    assert.match(result.data.url, /checkout.stripe.com/);
-    await s.post("payment");
-    assert.equal((await (await s.get()).json()).paid, false);
-    s.pay();
-    result = await s.post("payment");
-    assert.equal(result.data.paid, true);
     const count = result.data.messages.length;
-    result = await s.post("payment");
+    result = await s.post("complete");
     assert.equal(result.data.messages.length, count);
     assert.notEqual(result.data.question.field, "teamSize");
     let guard = 0;
@@ -206,6 +165,8 @@ test("funnel completo: profilo ricco, email, edit, pagamento confermato, retry, 
       assert.equal(result.status, 200);
     }
     assert.equal(result.data.state, "profile_complete");
+    const smtpPassword = s.env.ARUBA_PASS;
+    s.env.ARUBA_PASS = "";
     s.ai.failNext();
     result = await s.post("generate");
     assert.equal(result.data.state, "failed");
@@ -222,9 +183,17 @@ test("funnel completo: profilo ricco, email, edit, pagamento confermato, retry, 
     assert.equal(bytes.subarray(0, 4).toString(), "%PDF");
     await mkdir("artifacts/workmap", { recursive: true });
     await writeFile("artifacts/workmap/sample.pdf", bytes);
+    assert.ok(result.data.mailErrors.includes("ready"));
+    assert.equal(result.data.emailDelivered, false);
+    s.env.ARUBA_PASS = smtpPassword;
+    const delivered = await s.post("email");
+    assert.equal(delivered.data.emailDelivered, true);
+    assert.equal(s.sent.length, 2);
+    assert.match(s.sent[1].text, /#resume=/);
+    assert.equal(s.sent[1].attachments[0].filename, "AI-WorkMap.pdf");
+    assert.deepEqual(s.sent[1].attachments[0].content, bytes);
     await s.post("email");
-    assert.equal(s.sent.length, 3);
-    assert.match(s.sent[2].text, /#resume=/);
+    assert.equal(s.sent.length, 2);
   } finally {
     await s.cleanup();
   }
@@ -281,28 +250,9 @@ test("professioni non previste, risposte brevi, opzioni per ruolo e deduplicazio
     await greet.cleanup();
   }
 });
-test("email invalida, origine esterna, accesso privato e firma webhook", async () => {
+test("email invalida, origine esterna, accesso privato", async () => {
   const s = await setup();
   try {
-    const payments = s.load("lib/workmap/payments.ts");
-    const raw = '{"id":"evt_1"}',
-      time = Math.floor(Date.now() / 1000);
-    const sig = createHmac("sha256", s.env.STRIPE_WEBHOOK_SECRET)
-      .update(`${time}.${raw}`)
-      .digest("hex");
-    assert.equal(payments.verifySignature(raw, `t=${time},v1=${sig}`), true);
-    assert.equal(
-      payments.verifySignature(raw + " ", `t=${time},v1=${sig}`),
-      false,
-    );
-    assert.equal(
-      payments.verifySignature(
-        raw,
-        `t=${time},v1=${sig}`,
-        Date.now() + 3600000,
-      ),
-      false,
-    );
     const route = s.load("app/api/workmap/[action]/route.ts");
     const r = await route.POST(
       new Request("http://localhost:3000/api/workmap/start", {
@@ -329,45 +279,6 @@ test("email invalida, origine esterna, accesso privato e firma webhook", async (
         .status,
       200,
     );
-  } finally {
-    await s.cleanup();
-  }
-});
-test("webhook duplicato e importo errato non duplicano/sbloccano ordini", async () => {
-  const s = await setup();
-  try {
-    await s.qualify();
-    await s.post("confirm");
-    await s.post("checkout", { acceptTerms: true });
-    s.pay();
-    const webhook = s.load("app/api/workmap/webhook/route.ts");
-    async function send() {
-      const raw = JSON.stringify({
-          type: "checkout.session.completed",
-          data: { object: s.checkout() },
-        }),
-        t = Math.floor(Date.now() / 1000);
-      const sig = createHmac("sha256", s.env.STRIPE_WEBHOOK_SECRET)
-        .update(`${t}.${raw}`)
-        .digest("hex");
-      return webhook.POST(
-        new Request("http://localhost:3000/api/workmap/webhook", {
-          method: "POST",
-          headers: { "stripe-signature": `t=${t},v1=${sig}` },
-          body: raw,
-        }),
-      );
-    }
-    s.checkout().amount_total = 100;
-    assert.equal((await send()).status, 503);
-    assert.equal((await (await s.get()).json()).paid, false);
-    s.checkout().amount_total = 4700;
-    assert.equal((await send()).status, 200);
-    const first = await (await s.get()).json();
-    assert.equal(first.paid, true);
-    assert.equal((await send()).status, 200);
-    const second = await (await s.get()).json();
-    assert.equal(second.messages.length, first.messages.length);
   } finally {
     await s.cleanup();
   }
@@ -471,9 +382,7 @@ test("worker cron autenticato riprende la generazione senza coda esterna", async
     assert.equal((await empty.json()).processed, 0);
     await s.qualify();
     await s.post("confirm");
-    await s.post("checkout", { acceptTerms: true });
-    s.pay();
-    let result = await s.post("payment");
+    let result = await s.post("complete");
     let guard = 0;
     while (result.data.question && guard++ < 25) {
       result = await s.answer(
@@ -525,14 +434,14 @@ test("tracking: solo metriche prodotto e nessun evento Meta senza consenso", () 
   assert.equal(pixels.length, 0);
   allowed = true;
   trackWorkMap(
-    "Purchase",
-    { price: 47, currency: "EUR", email: "private@example.test" },
-    "purchase-test",
+    "GenerationCompleted",
+    { workflow_count: 12, email: "private@example.test" },
+    "generation-test",
   );
   assert.equal(pixels.length, 1);
   assert.equal(
     JSON.stringify([...analytics, ...pixels]).includes("private"),
     false,
   );
-  assert.equal(pixels[0][3].eventID, "purchase-test");
+  assert.equal(pixels[0][3].eventID, "generation-test");
 });

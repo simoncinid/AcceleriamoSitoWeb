@@ -15,7 +15,9 @@ const links = [
 
 export function Header({ workmap = false }: { workmap?: boolean } = {}) {
   const ctaHref = workmap ? "/ai-workmap/analisi" : "/#contatti";
-  const ctaLabel = workmap ? "Analizza il mio lavoro" : "Richiedi la valutazione gratuita";
+  const ctaLabel = workmap
+    ? "Richiedi l'analisi gratuitamente"
+    : "Richiedi la valutazione gratuita";
   const mobileMenu = useRef<HTMLDetailsElement>(null);
 
   function closeMobileMenu() {

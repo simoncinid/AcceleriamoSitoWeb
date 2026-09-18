@@ -4,9 +4,9 @@ const definitions = {
 
 Obiettivo: capire il lavoro reale senza stancare. Poche domande, chiare, dritte al punto. Offri 3-6 spunti cliccabili specifici per quel mestiere, non etichette generiche. Se è meglio testo libero (nome, racconto), lascia options vuoto.
 
-Fase free: in 3-5 scambi devi capire (1) mestiere o ruolo, (2) dove passa il tempo, (3) cosa è ripetitivo o faticoso, (4) quanto usano già l'AI. Se un messaggio contiene già più punti, non ripetere. Se salutano o non rispondono, rispondi umano e torna al mestiere. complete=true solo quando hai un ruolo vero e almeno un'attività o un problema concreto.
+Fase initial: in 3-5 scambi devi capire (1) mestiere o ruolo, (2) dove passa il tempo, (3) cosa è ripetitivo o faticoso, (4) quanto usano già l'AI. Se un messaggio contiene già più punti, non ripetere. Se salutano o non rispondono, rispondi umano e torna al mestiere. complete=true solo quando hai un ruolo vero e almeno un'attività o un problema concreto.
 
-Fase paid: non chiedere di nuovo ciò che è già nel profilo. In 3-4 scambi: nome, contesto (freelance/studio/azienda), strumenti o documenti quotidiani, attenzione ai dati. complete=true quando basta per un manuale operativo.
+Fase details: non chiedere di nuovo ciò che è già nel profilo. In 3-4 scambi: nome, contesto (freelance/studio/azienda), strumenti o documenti quotidiani, attenzione ai dati. complete=true quando basta per un manuale operativo.
 
 Fase edit: applica la correzione al profilo. Messaggio breve di conferma. complete=true.
 
@@ -19,7 +19,7 @@ profile: aggiornato, vuoto se ignoto. Non inventare mestieri, aziende, strumenti
   "workflow-personalizer": `Adatta il workflow curato al profilo senza cambiare principio operativo. Usa lessico, input, output, esempi e vincoli della persona. Mantieni id. Scrivi 3-6 passi immediatamente applicabili. Tool: scegli solo fra ChatGPT, Claude, Gemini, oppure "Strumento AI approvato dall'azienda"; non dichiarare funzioni o piani specifici. Esempi esplicitamente ipotetici senza dati personali reali. Privacy e revisione umana sempre concrete.`,
   "prompt-generator": `Il masterPrompt contiene RUOLO, OBIETTIVO, CONTESTO, INPUT, VINCOLI, PROCESSO, OUTPUT, CONTROLLO. Variabili leggibili come [TESTO], [DATI], [CONTESTO], [OBIETTIVO]. Conciso, operativo e personalizzato. Il reviewPrompt controlla completezza, fonti, date, nomi, numeri, tono e vincoli; segnala problemi prima di correggere e non altera fatti senza avviso.`,
   "assistant-generator": `Crea esattamente 3 assistenti diversi a partire dai workflow prioritari. Includi istruzioni copiabili, 3 starter prompt, limiti, input e revisione umana. Nessuna pretesa di accesso a CRM o email, nessuna decisione sulle persone.`,
-  "plan-generator": `Piano realistico in 4 settimane, numerate 1,2,3,4: primo workflow semplice, secondo workflow, primo assistente, ottimizzazione. Poche azioni, non ogni giorno. Includi checklist finale, privacy e strumenti effettivamente raccomandati. Verifica piani e funzioni sul sito del provider prima di acquistare.`,
+  "plan-generator": `Piano realistico in 4 settimane, numerate 1,2,3,4: primo workflow semplice, secondo workflow, primo assistente, ottimizzazione. Poche azioni, non ogni giorno. Includi checklist finale, privacy e strumenti effettivamente raccomandati. Verifica piani e funzioni sul sito del provider prima di utilizzarli.`,
   "quality-reviewer": `Controlla e correggi il contenuto completo: ripetizioni, workflow simili, prompt generici, fatti inventati, funzioni inesistenti, contraddizioni, pertinenza ai pain point, privacy e giudizio umano. Restituisci l'intero documento corretto nello schema. Mantieni tutti gli id selezionati senza aggiunte. 3 assistenti e 4 settimane. Non approvare workflow HR di valutazione automatica.`,
 } as const;
 export type PromptId = keyof typeof definitions;

@@ -60,7 +60,7 @@ Riferimenti: [Vercel Web Analytics](https://vercel.com/docs/analytics/privacy-po
 
 ## AI WorkMap
 
-Nuova verticale `/ai-workmap`: analisi conversazionale, anteprima gratuita, pagamento una tantum, approfondimento e documento privato PDF/web. Architettura, route, schema, test e configurazione dei servizi sono in [docs/ai-workmap.md](docs/ai-workmap.md). Le vendite restano disattivate fino a OpenAI, Redis (piano free da Vercel Storage), Stripe, SMTP e `WORKMAP_SALES_ENABLED=true`. Non servono QStash né un database SQL.
+Verticale `/ai-workmap`: analisi conversazionale gratuita, approfondimento e documento PDF inviato via email, disponibile anche in una pagina privata. Configurazione e test in [docs/ai-workmap.md](docs/ai-workmap.md). Richiede AI, Redis, SMTP e segreti per recupero e worker.
 
 ```bash
 npm test
@@ -68,4 +68,4 @@ npm run build
 npm run test:e2e
 ```
 
-I test browser usano Chrome locale e provider simulati. Non effettuano acquisti o invii reali.
+I test browser usano Chrome locale e provider simulati. Non effettuano invii reali.

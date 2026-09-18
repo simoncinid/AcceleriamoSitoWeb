@@ -1,17 +1,13 @@
 import { after } from "next/server";
 import { z } from "zod";
 import {
-  claimLease,
   getSession,
   listSessions,
-  releaseLease,
-  saveSession,
 } from "./store";
 import { runGenerationStep } from "./pipeline";
 import { deliverPending, safeEqual } from "./service";
-import { sendPurchase } from "./meta";
 import type { Session } from "./schema";
-export const workKindSchema = z.enum(["generate", "email", "meta"]);
+export const workKindSchema = z.enum(["generate", "email"]);
 export type WorkKind = z.infer<typeof workKindSchema>;
 export const workTaskSchema = z.object({
   id: z.string().regex(/^[a-f0-9]{64}$/),
@@ -26,21 +22,12 @@ export function workKind(s: Session): WorkKind | undefined {
   if (
     ["generating", "reviewing"].includes(s.state) ||
     (s.state === "failed" &&
-      Boolean(s.order?.paidAt) &&
+      s.confirmed &&
       (s.job?.attempts ?? 5) < 5)
   )
     return "generate";
-  if (s.mailErrors.length) return "email";
-  if (
-    s.order?.paidAt &&
-    s.marketing &&
-    !s.metaSent &&
-    (s.fbp || s.fbc) &&
-    process.env.NEXT_PUBLIC_META_PIXEL_ID &&
-    process.env.META_CONVERSIONS_ACCESS_TOKEN &&
-    process.env.META_GRAPH_API_VERSION
-  )
-    return "meta";
+  if (s.mailErrors.length || (s.state === "ready" && !s.mail.ready)) return "email";
+
 }
 export function scheduleWork(id: string, kind: WorkKind, delay = 0) {
   if (
@@ -68,36 +55,20 @@ export function scheduleWork(id: string, kind: WorkKind, delay = 0) {
     void run().catch(() => {});
   }
 }
-async function deliverMeta(id: string) {
-  const lease = await claimLease(id);
-  if (!lease) return;
-  try {
-    const s = await getSession(id);
-    if (!s) return;
-    try {
-      await sendPurchase(s);
-      if (s.metaSent) await saveSession(s, s.version);
-    } catch {
-      scheduleWork(id, "meta", 8000);
-    }
-  } finally {
-    await releaseLease(id, lease);
-  }
-}
-export async function afterPaid(id: string) {
+export async function deliverEmails(id: string) {
   await deliverPending(id);
   const s = await getSession(id);
   if (s?.mailErrors.length) scheduleWork(id, "email", 8000);
-  await deliverMeta(id);
 }
 async function continueGeneration(id: string) {
-  const advanced = await runGenerationStep(id);
+  const current = await getSession(id);
+  const advanced = await runGenerationStep(id, current?.job?.runId);
   if (!advanced) return false;
   const s = await getSession(id);
   if (!s) return true;
   if (["generating", "reviewing"].includes(s.state))
     scheduleWork(id, "generate");
-  else if (s.state === "ready") await afterPaid(id);
+  else if (s.state === "ready") await deliverEmails(id);
   else if (s.state === "failed" && (s.job?.attempts ?? 5) < 5)
     scheduleWork(id, "generate", 4000);
   return true;
@@ -108,7 +79,6 @@ export async function processWork(id: string, kind: WorkKind) {
     await deliverPending(id);
     return;
   }
-  await deliverMeta(id);
 }
 export async function processDueSessions() {
   let n = 0;

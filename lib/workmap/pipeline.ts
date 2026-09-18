@@ -18,10 +18,9 @@ export async function selectWorkflows(s: Session) {
     profile: s.profile,
     analysis: s.analysis,
     catalog,
-    requiredCount: s.order?.paidAt ? s.selection?.workflows.length : undefined,
+    requiredCount: s.selection?.workflows.length,
   });
   if (
-    s.order?.paidAt &&
     s.selection &&
     selection.workflows.length !== s.selection.workflows.length
   )
@@ -101,7 +100,7 @@ export async function runGenerationStep(id: string, runId?: string) {
   try {
     const s = await getSession(id);
     if (
-      !s?.order?.paidAt ||
+      !s?.confirmed || !s.email ||
       !s.job ||
       (runId && s.job.runId !== runId) ||
       !["generating", "reviewing", ...(runId ? ["failed"] : [])].includes(s.state)

@@ -31,26 +31,42 @@ for (const width of [360, 375, 390, 430, 1440])
     );
     await page.evaluate(() => document.fonts.ready);
     expect(
-      await page.evaluate(() =>
-        Array.from(document.querySelectorAll("body *"))
+      await page.evaluate(() => {
+        const clipped = (el: Element) => {
+          const r = el.getBoundingClientRect();
+          let n = el.parentElement;
+          while (n && n !== document.body) {
+            const s = getComputedStyle(n);
+            if (
+              /(auto|scroll|hidden)/.test(s.overflowX) &&
+              n.scrollWidth > n.clientWidth + 1
+            ) {
+              if (r.right > n.getBoundingClientRect().right + 1) return true;
+            }
+            n = n.parentElement;
+          }
+          return false;
+        };
+        return Array.from(document.querySelectorAll("body *"))
           .filter(
             (el) =>
               el.checkVisibility() &&
-              el.getBoundingClientRect().right > innerWidth + 1,
+              el.getBoundingClientRect().right > innerWidth + 1 &&
+              !clipped(el),
           )
           .map(
             (el) =>
               `${el.tagName}.${el.className}: ${el.getBoundingClientRect().right}`,
           )
-          .slice(0, 12),
-      ),
+          .slice(0, 12);
+      }),
     ).toEqual([]);
     await page.screenshot({
       path: `artifacts/workmap/landing-${width}.png`,
       fullPage: true,
     });
     await page
-      .getByRole("link", { name: "Analizza il mio lavoro" })
+      .getByRole("link", { name: "Richiedi l'analisi gratuitamente" })
       .first()
       .click();
     await expect(page.getByLabel("Messaggio")).toBeVisible();
@@ -113,7 +129,7 @@ for (const width of [360, 375, 390, 430, 1440])
     ).toBeVisible();
     expect(errors).toEqual([]);
   });
-test("analisi gratuita, correzione profilo, anteprima e paywall", async ({
+test("analisi gratuita, correzione profilo, anteprima e approfondimento gratuito", async ({
   page,
 }) => {
   const emailLabel = "A che indirizzo mail devo inviare l'analisi completa?";
@@ -162,8 +178,8 @@ test("analisi gratuita, correzione profilo, anteprima e paywall", async ({
   await page.getByRole("button", { name: "Avanti", exact: true }).click();
   await page.getByRole("button", { name: "Avanti", exact: true }).click();
   await expect(
-    page.getByRole("button", { name: "Genera la mia AI WorkMap" }),
-  ).toBeDisabled();
+    page.getByRole("button", { name: "Completa la mia analisi gratuita" }),
+  ).toBeEnabled();
   expect(
     await page.evaluate(() => {
       const shell = document.querySelector(".wm-shell");
@@ -171,8 +187,11 @@ test("analisi gratuita, correzione profilo, anteprima e paywall", async ({
       return Math.round(shell.getBoundingClientRect().height) <= innerHeight + 1;
     }),
   ).toBe(true);
+  await page.getByRole("button", { name: "Completa la mia analisi gratuita" }).click();
+  await expect(page.getByLabel("Messaggio")).toBeVisible();
+  await expect(page.getByText("Come ti chiami?", { exact: false })).toBeVisible();
   await page.screenshot({
-    path: "artifacts/workmap/paywall-390.png",
+    path: "artifacts/workmap/delivery-390.png",
     fullPage: true,
   });
 });

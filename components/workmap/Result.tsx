@@ -65,6 +65,19 @@ export function WorkMapResult({ data }: { data: ReturnType<typeof view> }) {
         {data.profile.role} · {content.workflows.length} workflow · 3 assistenti
         AI · Piano 30 giorni
       </p>
+      <p role="status">
+        {data.emailDelivered ? `Il PDF gratuito è stato inviato a ${data.email}.` : data.mailErrors.includes("ready") ? `L’invio del PDF a ${data.email} non è riuscito. Puoi riprovare.` : `Il PDF gratuito è pronto. L’invio a ${data.email} è in corso.`}
+      </p>
+      {data.mailErrors.length > 0 && <button className="button" disabled={busy} onClick={async () => {
+        setBusy(true);
+        try {
+          const response = await fetch("/api/workmap/email", { method: "POST", headers: { "Content-Type": "application/json" }, body: "{}" });
+          const result = await response.json();
+          if (!response.ok || result.mailErrors?.length) throw Error("Invio non riuscito. Riprova più tardi.");
+          location.reload();
+        } catch (error) { setError((error as Error).message); }
+        finally { setBusy(false); }
+      }}>Riprova l’invio del PDF</button>}
       <div className="wm-actions">
         <button
           className="button button--primary"
@@ -233,7 +246,7 @@ export function WorkMapResult({ data }: { data: ReturnType<typeof view> }) {
         </ul>
         <p>
           Verifica piani, funzioni e condizioni aggiornate sul sito del
-          fornitore prima di acquistare.
+          fornitore prima di utilizzarli.
         </p>
       </section>
       <section id="wm-section-8">

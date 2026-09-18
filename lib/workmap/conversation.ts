@@ -14,14 +14,14 @@ export const initialQuestion: Question = {
   options: professions.slice(0, 8),
   text: "Ciao. In pochi minuti capisco dove l’AI ti toglie lavoro vero, non dove fa scena. Che lavoro fai?",
 };
-const freeGoals: Array<keyof Profile> = [
+const initialGoals: Array<keyof Profile> = [
   "role",
   "mainTasks",
   "timeConsumingTasks",
   "repetitiveTasks",
   "aiLevel",
 ];
-const paidGoals: Array<keyof Profile> = [
+const detailGoals: Array<keyof Profile> = [
   "name",
   "companyType",
   "toolsUsed",
@@ -34,8 +34,8 @@ function filled(profile: Profile, field: keyof Profile) {
     ? value.some((item) => item.trim())
     : Boolean(value.trim());
 }
-export function missingFields(profile: Profile, paid = false) {
-  return (paid ? paidGoals : freeGoals).filter((field) => !filled(profile, field));
+export function missingFields(profile: Profile, details = false) {
+  return (details ? detailGoals : initialGoals).filter((field) => !filled(profile, field));
 }
 export function analysisReady(profile: Profile) {
   return (
@@ -55,7 +55,8 @@ function mergeProfile(current: Profile, next: Profile): Profile {
     ),
   });
 }
-export function beginPaidChat(s: Session) {
+export function beginDetailsChat(s: Session) {
+  s.state = "details";
   if (missingFields(s.profile, true).length === 0) {
     s.question = null;
     s.state = "profile_complete";
@@ -77,9 +78,9 @@ export async function answerConversation(s: Session, answer: string) {
   const phase =
     s.question?.id === "correction"
       ? "edit"
-      : s.order?.paidAt
-        ? "paid"
-        : "free";
+      : s.state === "details"
+        ? "details"
+        : "initial";
   const previous = s.question;
   const turn = await structured("conversation-turn", conversationTurnSchema, {
     phase,
@@ -87,7 +88,7 @@ export async function answerConversation(s: Session, answer: string) {
     question: s.question,
     messages: s.messages.slice(-12),
     answer,
-    missing: missingFields(s.profile, phase === "paid"),
+    missing: missingFields(s.profile, phase === "details"),
     followupUsed: s.followupUsed,
   });
   s.messages.push({ role: "user", text: answer });
@@ -103,16 +104,16 @@ export async function answerConversation(s: Session, answer: string) {
   const userTurns = s.messages.filter((message) => message.role === "user").length;
   const ready =
     phase === "edit" ||
-    (phase === "free" &&
+    (phase === "initial" &&
       analysisReady(s.profile) &&
       (turn.complete || userTurns >= 8)) ||
-    (phase === "paid" &&
+    (phase === "details" &&
       filled(s.profile, "role") &&
       missingFields(s.profile, true).length === 0) ||
-    (phase === "paid" && turn.complete && missingFields(s.profile, true).length <= 1);
+    (phase === "details" && turn.complete && missingFields(s.profile, true).length <= 1);
   if (ready) {
     s.question = null;
-    if (s.order?.paidAt) s.state = "profile_complete";
+    if (s.state === "details") s.state = "profile_complete";
     return;
   }
   s.question = {

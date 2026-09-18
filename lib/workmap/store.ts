@@ -102,7 +102,7 @@ function localAllowed() {
       "Configura l’archivio persistente prima di avviare il servizio.",
     );
 }
-export function leadExpired(s: Session, now = Date.now()) { return !s.order?.paidAt && now >= new Date(s.createdAt).getTime() + 30 * 86400000; }
+export function leadExpired(s: Session, now = Date.now()) { return now >= new Date(s.createdAt).getTime() + 30 * 86400000; }
 export async function getSession(id: string): Promise<Session | null> {
   if (!/^[a-f0-9]{64}$/.test(id)) return null;
   if (remoteStore()) {
@@ -143,7 +143,7 @@ export async function saveSession(s: Session, expected: number) {
       `workmap:events:${s.id}`,
       expected,
       JSON.stringify(next),
-      s.order?.paidAt ? 0 : new Date(s.createdAt).getTime() + 30 * 86400000,
+      new Date(s.createdAt).getTime() + 30 * 86400000,
       next.version,
     );
     if (result !== 1) throw new Conflict();

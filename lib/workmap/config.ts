@@ -1,10 +1,6 @@
 export const product = {
   name: "AI WorkMap",
-  amount: 4700,
-  currency: "eur",
-  priceLabel: "47 €",
   version: "2026-09-18",
-  guarantee: "",
 } as const;
 export const stages = [
   "Analizzo il profilo",
@@ -50,3 +46,7 @@ export const categories = [
   "Contenuti",
   "Organizzazione",
 ];
+
+export function baseUrl() {
+  return (process.env.NEXT_PUBLIC_SITE_URL || "https://acceleriamo.it").replace(/\/$/, "");
+}

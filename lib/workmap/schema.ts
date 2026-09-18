@@ -169,8 +169,7 @@ export type Session = {
   state:
     | "lead"
     | "qualified"
-    | "checkout_started"
-    | "paid"
+    | "details"
     | "profile_complete"
     | "generating"
     | "reviewing"
@@ -181,18 +180,6 @@ export type Session = {
   insight: string;
   selection?: Selection;
   analysis?: z.infer<typeof taskSchema>;
-  order?: {
-    id: string;
-    checkoutId?: string;
-    url?: string;
-    expiresAt?: number;
-    amount: number;
-    currency: string;
-    paidAt?: string;
-    paymentId?: string;
-    termsVersion: string;
-    consentAt: string;
-  };
   job?: {
     runId?: string;
     step: number;
@@ -205,10 +192,9 @@ export type Session = {
   drafts: z.infer<typeof workflowSchema>[];
   pdf?: string;
   downloads: number;
-  mail: { analysis?: string; purchase?: string; ready?: string };
+  mail: { analysis?: string; ready?: string };
   mailErrors: string[];
   marketing: boolean;
-  metaSent?: boolean;
   fbp?: string;
   fbc?: string;
   requestIds: string[];

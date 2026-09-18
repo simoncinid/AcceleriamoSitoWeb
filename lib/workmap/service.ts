@@ -13,7 +13,6 @@ import {
 import { sessionCookie, product } from "./config";
 import { recoveryToken, sendWorkMapEmail, type MailKind } from "./email";
 import { catalog } from "./catalog";
-import { checkoutConfigured } from "./payments";
 export async function createSession(
   marketing: boolean,
   fbp?: string,
@@ -88,16 +87,11 @@ export function view(s: Session) {
       .map((w) => ({ ...w, title: catalog.find((c) => c.id === w.id)?.title })),
     workflowCount: s.selection?.workflows.length ?? 0,
     notRecommended: s.selection?.notRecommended,
-    paid: Boolean(s.order?.paidAt),
     job: s.job,
     content: s.state === "ready" ? s.content : undefined,
     pdfAvailable: s.state === "ready" && Boolean(s.pdf),
     mailErrors: s.mailErrors,
-    purchaseEventId: s.order?.paidAt
-      ? `workmap-purchase-${s.order.id}`
-      : undefined,
-    checkoutEnabled: checkoutConfigured(),
-    price: product.priceLabel,
+    emailDelivered: Boolean(s.mail.ready),
   };
 }
 export async function deliverPending(id: string) {
@@ -108,7 +102,6 @@ export async function deliverPending(id: string) {
     if (!s) return;
     const kinds: MailKind[] = [];
     if (s.email && s.selection) kinds.push("analysis");
-    if (s.order?.paidAt) kinds.push("purchase");
     if (s.state === "ready") kinds.push("ready");
     const errors: string[] = [];
     for (const kind of kinds) {

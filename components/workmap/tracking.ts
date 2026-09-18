@@ -11,18 +11,15 @@ export type WorkMapEvent =
   | "AnalysisCompleted"
   | "ProfileConfirmed"
   | "PreviewViewed"
-  | "PaywallViewed"
-  | "CheckoutStarted"
-  | "Purchase"
-  | "PremiumChatStarted"
-  | "PremiumChatCompleted"
+  | "DetailsStarted"
+  | "DetailsCompleted"
   | "GenerationStarted"
   | "GenerationCompleted"
   | "WorkMapViewed"
   | "PDFDownloaded";
 export function trackWorkMap(
   event: WorkMapEvent,
-  values: { workflow_count?: number; price?: number; currency?: string } = {},
+  values: { workflow_count?: number } = {},
   eventId?: string,
 ) {
   // Whitelist only aggregate product metrics. Never spread profile/chat data into analytics.
@@ -30,18 +27,14 @@ export function trackWorkMap(
     ...(values.workflow_count !== undefined
       ? { workflow_count: values.workflow_count }
       : {}),
-    ...(values.price !== undefined ? { price: values.price } : {}),
-    ...(values.currency ? { currency: values.currency } : {}),
   };
   track(event, safe);
   if (marketingAllowed()) {
     startPixel();
     window.fbq?.(
-      event === "Purchase" ? "track" : "trackCustom",
+      "trackCustom",
       event,
-      event === "Purchase"
-        ? { value: values.price, currency: values.currency }
-        : safe,
+      safe,
       { eventID: eventId || crypto.randomUUID() },
     );
   }

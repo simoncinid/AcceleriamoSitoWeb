@@ -11,10 +11,10 @@ import {
   deliverPending,
   safeEqual,
 } from "@/lib/workmap/service";
-import { afterPaid, scheduleWork } from "@/lib/workmap/jobs";
+import { deliverEmails, scheduleWork } from "@/lib/workmap/jobs";
 import { analyzeTasks, runGenerationStep, selectWorkflows } from "@/lib/workmap/pipeline";
 import { answerSchema } from "@/lib/workmap/schema";
-import { answerConversation } from "@/lib/workmap/conversation";
+import { answerConversation, beginDetailsChat } from "@/lib/workmap/conversation";
 import {
   getSession,
   saveSession,
@@ -24,7 +24,6 @@ import {
   releaseLease,
   deleteSession,
 } from "@/lib/workmap/store";
-import { createCheckout, confirmPayment } from "@/lib/workmap/payments";
 import { recoveryToken } from "@/lib/workmap/email";
 import { aiConfigured } from "@/lib/workmap/ai";
 export const runtime = "nodejs";
@@ -46,7 +45,7 @@ export async function GET(request: Request, { params }: Context) {
       );
     if (action === "session") return NextResponse.json(view(s), { headers });
     if (action === "pdf") {
-      if (!s.order?.paidAt || s.state !== "ready" || !s.pdf)
+      if (s.state !== "ready" || !s.pdf)
         return NextResponse.json(
           { error: "Il PDF non è ancora disponibile." },
           { status: 409, headers },
@@ -144,7 +143,8 @@ export async function POST(request: Request, { params }: Context) {
         { status: 401, headers },
       );
     if (action === "generate") {
-      if (!s.order?.paidAt) throw Error("Pagamento non confermato.");
+      if (!s.confirmed || !s.email || !["profile_complete", "generating", "reviewing", "failed", "ready"].includes(s.state))
+        throw Error("Completa prima il profilo e indica la tua email.");
       if (s.state === "profile_complete" || (s.state === "failed" && body.retry === true)) {
         const lease = await claimLease(s.id); if (!lease) throw new Conflict();
         try {
@@ -172,7 +172,7 @@ export async function POST(request: Request, { params }: Context) {
         s = (await getSession(s.id))!;
         if (["generating", "reviewing"].includes(s.state))
           scheduleWork(s.id, "generate");
-        else if (s.state === "ready") await afterPaid(s.id);
+        else if (s.state === "ready") await deliverEmails(s.id);
         else if (s.state === "failed" && (s.job?.attempts ?? 5) < 5)
           scheduleWork(s.id, "generate", 4000);
         s = (await getSession(s.id))!;
@@ -200,7 +200,7 @@ export async function POST(request: Request, { params }: Context) {
       const input = answerSchema.parse(body);
       if (!s.requestIds.includes(input.requestId)) {
         if (input.version !== s.version) throw new Conflict();
-        if (!["lead", "paid"].includes(s.state))
+        if (!["lead", "details"].includes(s.state))
           throw Error("Questa fase è conclusa.");
         await rateLimit(`answer:${s.id}`, 100);
         await answerConversation(s, input.answer);
@@ -208,7 +208,7 @@ export async function POST(request: Request, { params }: Context) {
         await saveSession(s, s.version);
       }
     } else if (action === "qualify") {
-      if (s.question) throw Error("Completa prima la conversazione.");
+      if (!["lead", "qualified"].includes(s.state) || s.question) throw Error("Completa prima la conversazione.");
       if (!s.email) {
         s.email = z.email().max(254).parse(body.email).toLowerCase();
         await saveSession(s, s.version);
@@ -225,14 +225,14 @@ export async function POST(request: Request, { params }: Context) {
       s = (await getSession(s.id))!;
       if (s.mailErrors.length) scheduleWork(s.id, "email", 8000);
     } else if (action === "confirm") {
-      if (!s.selection || s.order?.paidAt)
+      if (!s.selection || s.state !== "qualified")
         throw Error("Profilo non modificabile in questa fase.");
       s.confirmed = true;
       await saveSession(s, s.version);
     } else if (action === "edit") {
-      if (s.order)
+      if (!["lead", "qualified"].includes(s.state))
         throw Error(
-          "Per modifiche dopo l’avvio dell’acquisto contatta info@acceleriamo.it.",
+          "Per modifiche dopo l’avvio del documento contatta info@acceleriamo.it.",
         );
       const answer = z.string().trim().min(3).max(4000).parse(body.answer);
       s.question = {
@@ -249,19 +249,13 @@ export async function POST(request: Request, { params }: Context) {
       s.confirmed = false;
       s.state = "lead";
       await saveSession(s, s.version);
-    } else if (action === "checkout") {
-      if (body.acceptTerms !== true)
-        throw Error("Conferma di aver letto le condizioni di acquisto.");
-      const url = await createCheckout(s);
-      return NextResponse.json({ url }, { headers });
-    } else if (action === "payment") {
-      if (s.order?.checkoutId) await confirmPayment(s, s.order.checkoutId);
-      const paid = Boolean(s.order?.paidAt);
-      const id = s.id;
-      await releaseLease(held.id, held.token);
-      held = undefined;
-      if (paid) await afterPaid(id);
-      s = (await getSession(id))!;
+    } else if (action === "complete") {
+      if (s.state === "qualified" && s.confirmed && s.selection && s.email) {
+        beginDetailsChat(s);
+        await saveSession(s, s.version);
+      } else if (!["details", "profile_complete"].includes(s.state)) {
+        throw Error("Completa e conferma prima il profilo.");
+      }
     } else if (action === "email") {
       await releaseLease(held.id, held.token);
       held = undefined;

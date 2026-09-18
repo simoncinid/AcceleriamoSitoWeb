@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { Brand } from "@/components/Brand";
-import { product, stages } from "@/lib/workmap/config";
+import { stages } from "@/lib/workmap/config";
 import { contactAttribution } from "@/lib/tracking";
 import { trackWorkMap, type WorkMapEvent } from "./tracking";
 import type { view } from "@/lib/workmap/service";
@@ -34,7 +34,7 @@ function useMaxQuickChoices() {
 async function api(
   action: string,
   body?: object,
-): Promise<View & { url?: string }> {
+): Promise<View> {
   const response = await fetch(`/api/workmap/${action}`, {
     method: body ? "POST" : "GET",
     headers: body ? { "Content-Type": "application/json" } : undefined,
@@ -56,8 +56,6 @@ export function WorkMapChat() {
     [answer, setAnswer] = useState(""),
     [email, setEmail] = useState(""),
     [editing, setEditing] = useState(false),
-    [terms, setTerms] = useState(false),
-    [cancelled, setCancelled] = useState(false),
     [previewStep, setPreviewStep] = useState(0),
     [waitKind, setWaitKind] = useState<null | "qualify" | "confirm">(null),
     [replyPending, setReplyPending] = useState(false);
@@ -69,7 +67,7 @@ export function WorkMapChat() {
     initialized = useRef(false);
   const emit = (
     name: WorkMapEvent,
-    extra?: { workflow_count?: number; price?: number; currency?: string },
+    extra?: { workflow_count?: number },
     eventId?: string,
   ) => {
     const key = eventId || name;
@@ -95,10 +93,6 @@ export function WorkMapChat() {
         let next: View;
         if (token) next = await api("resume", { token });
         else next = await api("start", contactAttribution());
-        const payment = new URLSearchParams(location.search).get("payment");
-        setCancelled(payment === "cancel");
-        if (payment === "success" || next.state === "checkout_started")
-          next = await api("payment", {});
         setData(previous => previous && previous.version > next.version ? previous : next);
         setEmail(next.email);
         emit("AnalysisStarted");
@@ -159,21 +153,9 @@ export function WorkMapChat() {
     if (data.state === "qualified") emit("AnalysisCompleted");
     if (data.confirmed) {
       emit("PreviewViewed", { workflow_count: data.workflowCount });
-      if (!data.paid) emit("PaywallViewed");
     }
-    if (data.paid) {
-      emit("PremiumChatStarted");
-      if (data.purchaseEventId)
-        emit(
-          "Purchase",
-          {
-            price: product.amount / 100,
-            currency: product.currency.toUpperCase(),
-          },
-          data.purchaseEventId,
-        );
-    }
-    if (data.state === "profile_complete") emit("PremiumChatCompleted");
+    if (data.state === "details") emit("DetailsStarted");
+    if (data.state === "profile_complete") emit("DetailsCompleted");
     if (data.state === "ready") {
       emit("GenerationCompleted");
       emit("WorkMapViewed");
@@ -192,16 +174,11 @@ export function WorkMapChat() {
     setError("");
     try {
       const next = await api(action, body);
-      if (next.url) {
-        trackWorkMap("CheckoutStarted");
-        location.assign(next.url);
-        return;
-      }
       setData(previous => previous && previous.version > next.version ? previous : next);
       if (event) emit(event);
       return next;
     } catch (e) {
-      if (["answer", "generate", "qualify", "payment"].includes(action))
+      if (["answer", "generate", "qualify"].includes(action))
         try {
           setData(await api("session"));
         } catch {}
@@ -281,8 +258,6 @@ export function WorkMapChat() {
       setAnswer("");
       setEmail("");
       setEditing(false);
-      setTerms(false);
-      setCancelled(false);
       setPreviewStep(0);
       setReplyPending(false);
       pending.current = null;
@@ -296,7 +271,7 @@ export function WorkMapChat() {
       setBusy(false);
     }
   }
-  const live = Boolean(data && (["generating", "reviewing", "checkout_started"].includes(data.state) || (data.state === "failed" && (data.job?.attempts ?? 5) < 5)));
+  const live = Boolean(data && (["generating", "reviewing"].includes(data.state) || (data.state === "failed" && (data.job?.attempts ?? 5) < 5)));
   const advancing = Boolean(data && ["generating", "reviewing"].includes(data.state));
   useEffect(() => {
     if (!advancing || busy) return;
@@ -345,14 +320,14 @@ export function WorkMapChat() {
         (data.state === "lead" &&
           (!data.email || busy || waitKind === "qualify")) ||
         (data.state === "qualified" && !data.confirmed) ||
-        (data.confirmed && !data.paid)),
+        (data.confirmed && data.state === "qualified")),
   );
   const awaitingReply = Boolean(
     busy && replyPending && !generating && !waitKind,
   );
   const loadingStep = Boolean(waitKind && !generating);
   const apps = data?.opportunities ?? [];
-  const previewing = Boolean(data?.confirmed && !data.paid && !generating);
+  const previewing = Boolean(data?.confirmed && data.state === "qualified" && !generating);
   const previewTotal = Math.max(1, apps.length + 1);
   const step = Math.min(previewStep, previewTotal - 1);
   const onOffer = previewing && step >= apps.length;
@@ -365,7 +340,7 @@ export function WorkMapChat() {
       (question ||
         editing ||
         awaitingReply ||
-        (data.paid && data.state !== "profile_complete")),
+        data.state === "details"),
   );
   const showEmailCapture = Boolean(
     funnelScreen &&
@@ -416,15 +391,9 @@ export function WorkMapChat() {
             <span
               className={data?.workflowCount || data?.confirmed ? "active" : ""}
             >
-              {data?.paid ? "WorkMap" : "Analisi"}
+              Analisi
             </span>
           </nav>
-          {cancelled && !data?.paid && (
-            <p className="wm-alert">
-              Pagamento annullato. L’analisi è salvata: puoi riprendere quando
-              vuoi.
-            </p>
-          )}
           {error && (
             <div className="wm-alert" role="alert">
               <p>{error}</p>
@@ -441,21 +410,6 @@ export function WorkMapChat() {
                   Riprendi generazione
                 </button>
               ) : null}
-            </div>
-          )}
-          {data?.state === "checkout_started" && !data.paid && (
-            <div className="wm-alert">
-              <p>
-                Se hai completato il pagamento, attendiamo la conferma del
-                servizio.
-              </p>
-              <button
-                className="button"
-                disabled={busy}
-                onClick={() => void perform("payment", {})}
-              >
-                Verifica pagamento
-              </button>
             </div>
           )}
           <div
@@ -585,7 +539,7 @@ export function WorkMapChat() {
                     opportunità.
                   </p>
                 )}
-                {data.confirmed && !data.paid && currentApp && (
+                {data.confirmed && data.state === "qualified" && currentApp && (
                   <section className="wm-step">
                     <p className="eyebrow">
                       Applicazione {step + 1} di {apps.length}
@@ -603,8 +557,8 @@ export function WorkMapChat() {
                     </article>
                   </section>
                 )}
-                {data.confirmed && !data.paid && onOffer && (
-                  <section className="wm-step wm-step--checkout">
+                {data.confirmed && data.state === "qualified" && onOffer && (
+                  <section className="wm-step wm-step--delivery">
                     <p className="eyebrow">AI WorkMap completa</p>
                     <h2>
                       Queste erano le prime {apps.length}. La mappa continua.
@@ -614,46 +568,21 @@ export function WorkMapChat() {
                       assistenti · piano 30 giorni · PDF
                     </p>
                     {data.notRecommended ? (
-                      <p className="wm-micro wm-checkout-note">
+                      <p className="wm-micro wm-delivery-note">
                         {data.notRecommended}
                       </p>
                     ) : null}
-                    <div className="wm-price-row">
-                      <p className="wm-price">{product.priceLabel}</p>
-                      <p className="wm-price-meta">
-                        IVA inclusa. Pagamento una tantum.
-                      </p>
-                    </div>
-                    <label className="wm-terms">
-                      <input
-                        type="checkbox"
-                        checked={terms}
-                        onChange={(e) => setTerms(e.target.checked)}
-                      />
-                      <span>
-                        Ho letto le{" "}
-                        <Link href="/ai-workmap/condizioni" target="_blank">
-                          condizioni di acquisto
-                        </Link>{" "}
-                        e richiedo la preparazione del documento
-                        personalizzato.
-                      </span>
-                    </label>
+                    <p className="wm-offer-line">È tutto gratuito. Riceverai il PDF completo via email.</p>
+                    <p className="wm-micro">
+                      <Link href="/ai-workmap/condizioni" target="_blank">Condizioni del servizio e privacy</Link>
+                    </p>
                     <button
                       className="button button--primary"
-                      disabled={busy || !terms || !data.checkoutEnabled}
-                      onClick={() =>
-                        void perform("checkout", { acceptTerms: terms })
-                      }
+                      disabled={busy}
+                      onClick={() => void perform("complete")}
                     >
-                      Genera la mia AI WorkMap
+                      Completa la mia analisi gratuita
                     </button>
-                    {!data.checkoutEnabled && (
-                      <p className="wm-micro">
-                        L’acquisto sarà disponibile a breve. La tua analisi è
-                        salvata.
-                      </p>
-                    )}
                   </section>
                 )}
                 {data.state === "profile_complete" && (
@@ -686,7 +615,7 @@ export function WorkMapChat() {
                 </h2>
                 <p className="wm-offer-line">
                   Puoi lasciare la pagina: il risultato resta qui e arriva via
-                  email.
+                  email in PDF.
                 </p>
                 <ol className="wm-status-list">
                   {stages.map((label, i) => (
@@ -750,7 +679,7 @@ export function WorkMapChat() {
                   {step + 1} di {previewTotal}
                 </span>
                 {onOffer ? (
-                  <span className="wm-step-nav-end">Checkout</span>
+                  <span className="wm-step-nav-end">PDF gratuito</span>
                 ) : (
                   <button
                     type="button"

@@ -220,7 +220,7 @@ export function fakeAI(catalog) {
             ? ["Colloqui", "Annunci", "Onboarding"]
             : ["Report agenti", "Follow-up clienti", "Offerte"];
           let next;
-          if (phase === "paid") {
+          if (phase === "details") {
             if (!profile.name)
               next = {
                 field: "name",

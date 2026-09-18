@@ -22,7 +22,6 @@ export default defineConfig({
         WORKMAP_ALLOW_LOCAL_STORE: "true",
         WORKMAP_DATA_DIR: "artifacts/workmap/e2e-data",
         WORKMAP_ACCESS_SECRET: "test-only-secret-32-characters-long",
-        WORKMAP_SALES_ENABLED: "false",
         WORKMAP_TEST_LOCAL_AI: "true",
       },
     },

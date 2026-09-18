@@ -6,7 +6,7 @@ import {
 import { product } from "@/lib/workmap/config";
 export const metadata = legalMetadata(
   "AI WorkMap: condizioni e privacy",
-  "Informazioni sul prodotto AI WorkMap, acquisto, consegna e trattamento dei dati.",
+  "Informazioni sul prodotto AI WorkMap, analisi gratuita, consegna e trattamento dei dati.",
   "/ai-workmap/condizioni",
 );
 export default function Conditions() {
@@ -17,7 +17,7 @@ export default function Conditions() {
       intro={`Informazioni sul prodotto · versione ${product.version}`}
     >
       <section>
-        <h2>Il prodotto e il venditore</h2>
+        <h2>Il servizio e il titolare</h2>
         <LegalIdentity />
         <p>
           AI WorkMap è un documento operativo digitale personalizzato sulla base
@@ -29,27 +29,15 @@ export default function Conditions() {
         </p>
       </section>
       <section>
-        <h2>Prezzo e acquisto</h2>
-        <p>
-          L’analisi iniziale è gratuita. La WorkMap completa costa{" "}
-          {product.priceLabel} IVA inclusa, con pagamento unico attraverso
-          Stripe. L’ordine è confermato soltanto dopo la verifica del pagamento.
-          Il prezzo applicato è quello riepilogato al checkout. Nessun rinnovo
-          automatico.
-        </p>
-        <p>
-          La conversazione prosegue dopo il pagamento per completare il profilo.
-          Il cliente deve fornire le informazioni necessarie e avviare la
-          generazione. In caso di errore è possibile riprendere dal punto
-          salvato; per problemi persistenti scrivi a info@acceleriamo.it
-          indicando l’ordine.
-        </p>
+        <h2>Analisi gratuita</h2>
+        <p>L’analisi e la WorkMap completa sono gratuite. Completa la conversazione, conferma il profilo e avvia la generazione: riceverai il documento PDF via email.</p>
+        <p>In caso di errore puoi riprendere dal punto salvato. Per assistenza scrivi a info@acceleriamo.it.</p>
       </section>
       <section>
         <h2>Consegna e requisiti</h2>
         <p>
           Il risultato è disponibile in una pagina privata e come PDF
-          scaricabile. Il collegamento personale viene inviato via email.
+          scaricabile. Il PDF viene inviato come allegato via email, insieme al collegamento personale.
           Occorrono una connessione, un browser aggiornato, un indirizzo email
           valido e un lettore PDF. Conserva il documento scaricato e non
           condividere il link personale.
@@ -64,13 +52,7 @@ export default function Conditions() {
       <section>
         <h2>Assistenza e diritti</h2>
         <p>
-          Per richieste relative all’acquisto, errori nel documento, conformità
-          o recesso contatta info@acceleriamo.it. Restano fermi tutti i diritti
-          inderogabili previsti dalla normativa applicabile. La richiesta di
-          preparazione del documento non contiene una rinuncia automatica al
-          diritto di recesso. Non è prevista una garanzia commerciale
-          aggiuntiva.
-        </p>
+          Per assistenza sull’analisi o errori nel documento contatta info@acceleriamo.it.        </p>
         <p>
           Consulta le{" "}
           <a href="/termini-e-condizioni">condizioni generali del sito</a>. In
@@ -82,9 +64,7 @@ export default function Conditions() {
         <h2>Privacy dell’analisi e della WorkMap</h2>
         <p>
           Il titolare è indicato sopra. Trattiamo le risposte, il profilo
-          professionale, l’email, gli stati della conversazione e i dati
-          essenziali dell’ordine per fornire l’analisi richiesta, eseguire
-          l’acquisto e consegnare il documento. L’email viene richiesta dopo la
+          professionale, l’email e gli stati della conversazione per fornire l’analisi gratuita richiesta e consegnare il documento. L’email viene richiesta dopo la
           prima parte della conversazione e non comporta iscrizione marketing.
         </p>
         <p>
@@ -93,18 +73,11 @@ export default function Conditions() {
           necessarie vengono elaborati dal provider AI{" "}
           {process.env.WORKMAP_AI_PROVIDER_NAME ||
             "configurato per il servizio"}
-          ; email e dati di pagamento non sono inviati al modello. Stripe
-          gestisce il pagamento: il sito non riceve i numeri completi della
-          carta. Aruba gestisce le email di servizio; l’archivio persistente
+          ; l’email non è inviata al modello. Aruba gestisce le email di servizio; l’archivio persistente
           conserva conversazione e documento per il recupero.
         </p>
         <p>
-          Le analisi non acquistate sono eliminate dall’archivio dopo 30 giorni
-          dalla creazione. Per gli
-          acquisti, i dati necessari alla consegna, all’accesso al documento e
-          agli obblighi amministrativi sono conservati secondo le rispettive
-          finalità; puoi chiedere al titolare accesso o cancellazione, fatti
-          salvi gli obblighi di legge. Nessuna decisione con effetti giuridici è
+          Le analisi e i documenti sono eliminati dall’archivio dopo 30 giorni dalla creazione. Conserva il PDF ricevuto via email. Puoi chiedere al titolare accesso o cancellazione dei tuoi dati. Nessuna decisione con effetti giuridici è
           presa automaticamente sulla tua persona.
         </p>
         <p>
