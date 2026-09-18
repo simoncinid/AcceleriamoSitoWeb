@@ -21,7 +21,7 @@ Stati: `lead → qualified → details → profile_complete → generating → r
 
 API `/api/workmap/[action]`: `start`, `reset`, `session`, `resume`, `answer`, `qualify`, `confirm`, `edit`, `complete`, `generate`, `email`, `consent`, `pdf`. Il worker `/api/workmap/worker` richiede `CRON_SECRET`.
 
-La generazione prosegue per checkpoint anche a pagina chiusa: ogni avvio accoda un worker server-side (`kickGeneration`) che esegue più step fino al timeout e si riaccoda da solo; il cron orario riprende job ed email pendenti se la catena si interrompe. In produzione servono `CRON_SECRET` e `VERCEL_URL`. Nessun documento incompleto viene pubblicato. Gli invii registrati non vengono ripetuti; un arresto tra invio SMTP e salvataggio può comunque produrre un duplicato.
+La generazione prosegue per checkpoint anche a pagina chiusa: ogni avvio accoda un worker server-side (`kickGeneration`) che esegue più step fino al timeout e si riaccoda da solo; il cron giornaliero (piano Hobby Vercel) riprende job ed email ancora pendenti se la catena si interrompe. In produzione servono `CRON_SECRET` e `VERCEL_URL`. Nessun documento incompleto viene pubblicato. Gli invii registrati non vengono ripetuti; un arresto tra invio SMTP e salvataggio può comunque produrre un duplicato.
 
 ## Configurazione
 
