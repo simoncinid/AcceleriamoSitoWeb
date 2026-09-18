@@ -30,6 +30,8 @@ export function workKind(s: Session): WorkKind | undefined {
 
 }
 const GENERATION_BUDGET_MS = 170_000;
+const STEP_GUARD_MS = [50_000, 95_000, 80_000, 95_000, 95_000, 30_000, 25_000];
+const REVIEW_MODEL_MS = 30_000;
 
 export function scheduleWork(id: string, kind: WorkKind, delay = 0) {
   if (
@@ -67,7 +69,15 @@ async function continueGeneration(id: string) {
   while (Date.now() - started < GENERATION_BUDGET_MS) {
     const current = await getSession(id);
     if (!current || workKind(current) !== "generate") return true;
-    const advanced = await runGenerationStep(id, current.job?.runId);
+    const step = current.job?.step ?? 0;
+    const remaining = GENERATION_BUDGET_MS - (Date.now() - started);
+    if (step !== 5 && remaining < (STEP_GUARD_MS[step] ?? 50_000)) {
+      scheduleWork(id, "generate");
+      return true;
+    }
+    const advanced = await runGenerationStep(id, current.job?.runId, {
+      skipModelReview: step === 5 && remaining < REVIEW_MODEL_MS,
+    });
     if (!advanced) {
       scheduleWork(id, "generate", 5000);
       return false;

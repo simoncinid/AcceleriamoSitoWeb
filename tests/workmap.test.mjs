@@ -343,6 +343,89 @@ test("se il controllo qualità AI fallisce, prosegue con il documento già pront
   }
 });
 
+test("il controllo finale ripara prompt e piano incompleti invece di bloccarsi", async () => {
+  const directory = await mkdtemp(path.join(tmpdir(), "workmap-review-"));
+  try {
+    const env = {
+      NODE_ENV: "test",
+      WORKMAP_DATA_DIR: directory,
+      WORKMAP_AI_API_KEY: "mock",
+      WORKMAP_AI_MODEL: "mock",
+      WORKMAP_ACCESS_SECRET: "test-secret-long-enough-32-characters",
+      NEXT_PUBLIC_SITE_URL: "http://localhost:3000",
+    };
+    const ai = fakeAI(catalog);
+    ai.failQualityReviewerOnce();
+    const load = modules({
+      env,
+      overrides: { "./ai": ai, "@/lib/workmap/ai": ai },
+    });
+    const { emptyProfile } = load("lib/workmap/schema.ts");
+    const { reviewWorkMap } = load("lib/workmap/pipeline.ts");
+    const picked = catalog.slice(0, 10);
+    const broken = picked.map((workflow) => ({
+      ...ai.workflow(workflow),
+      masterPrompt: "Prepara una tabella dal testo",
+      procedure: ["Un passo solo"],
+      humanReview: "",
+      privacy: "",
+    }));
+    const content = await reviewWorkMap({
+      profile: emptyProfile(),
+      selection: {
+        workflows: picked.map((workflow) => ({
+          id: workflow.id,
+          reason: "Utile per il profilo.",
+          priority: "Priorità alta",
+          difficulty: "Semplice",
+        })),
+        notRecommended: "Non prioritizzerei i social.",
+      },
+      drafts: broken,
+      content: {
+        workflows: broken,
+        assistants: [],
+        weeks: [
+          {
+            week: 1,
+            goal: "Iniziare",
+            actions: ["Prova"],
+            successCheck: "Controlla",
+          },
+        ],
+        finalChecklist: [],
+        privacy: [],
+        tools: [],
+      },
+    });
+    assert.equal(content.workflows.length, 10);
+    assert.equal(content.assistants.length, 3);
+    assert.equal(new Set(content.weeks.map((week) => week.week)).size, 4);
+    for (const workflow of content.workflows) {
+      for (const section of [
+        "RUOLO",
+        "OBIETTIVO",
+        "CONTESTO",
+        "INPUT",
+        "VINCOLI",
+        "PROCESSO",
+        "OUTPUT",
+        "CONTROLLO",
+      ])
+        assert.ok(workflow.masterPrompt.includes(section));
+      assert.ok(workflow.procedure.length >= 3);
+      assert.ok(workflow.humanReview);
+      assert.ok(workflow.privacy);
+      assert.equal(
+        workflow.id,
+        picked.find((item) => item.id === workflow.id).id,
+      );
+    }
+  } finally {
+    await rm(directory, { recursive: true, force: true });
+  }
+});
+
 test("id workflow dal modello vengono allineati al catalogo", async () => {
   const directory = await mkdtemp(path.join(tmpdir(), "workmap-id-test-"));
   try {

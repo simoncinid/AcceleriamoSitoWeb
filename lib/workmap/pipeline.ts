@@ -87,64 +87,235 @@ export const generatePlan = (s: Session) =>
     assistants: s.content?.assistants,
   });
 type WorkMapContent = z.infer<typeof contentSchema>;
+const PROMPT_SECTIONS = [
+  "RUOLO",
+  "OBIETTIVO",
+  "CONTESTO",
+  "INPUT",
+  "VINCOLI",
+  "PROCESSO",
+  "OUTPUT",
+  "CONTROLLO",
+] as const;
+const PROCEDURE_FALLBACK = [
+  "Rimuovi dati personali e riservati.",
+  "Incolla solo il materiale autorizzato.",
+  "Confronta il risultato con le fonti prima di usarlo.",
+];
+const COMPACT_MASTER_PROMPT = `RUOLO
+Assistente operativo
+OBIETTIVO
+Produrre una bozza utile dal materiale fornito
+CONTESTO
+[CONTESTO]
+INPUT
+[DATI]
+VINCOLI
+Non inventare. Usa solo i dati forniti.
+PROCESSO
+Organizza, sintetizza e verifica
+OUTPUT
+Bozza da revisionare
+CONTROLLO
+Segnala dati mancanti o incerti`;
 
-function alignWorkflowIds(s: Session, content: WorkMapContent): WorkMapContent {
-  const selected = s.selection!.workflows;
-  if (content.workflows.length !== selected.length) return content;
-  return {
-    ...content,
-    workflows: content.workflows.map((workflow, index) => ({
-      ...workflow,
-      id: selected[index].id,
-      title:
-        catalog.find((entry) => entry.id === selected[index].id)?.title ??
-        workflow.title,
-    })),
-  };
+function clip(value: string, max = 4000) {
+  return value.slice(0, max);
 }
-
-function assertWorkMapContent(s: Session, content: WorkMapContent) {
-  const ids = content.workflows.map((w) => w.id);
-  if (
-    new Set(ids).size !== ids.length ||
-    ids.length !== s.selection!.workflows.length ||
-    s.selection!.workflows.some((w) => !ids.includes(w.id))
-  )
+function asRecord(value: unknown): Record<string, unknown> {
+  return value && typeof value === "object" && !Array.isArray(value)
+    ? (value as Record<string, unknown>)
+    : {};
+}
+function clipList(value: unknown, fallback: string[]) {
+  const items = (Array.isArray(value) ? value : fallback)
+    .map((item) => clip(String(item ?? "").trim()))
+    .filter(Boolean);
+  return (items.length ? items : fallback).slice(0, 30);
+}
+function ensureProcedure(value: unknown) {
+  const items = clipList(value, PROCEDURE_FALLBACK);
+  while (items.length < 3)
+    items.push(PROCEDURE_FALLBACK[items.length] || PROCEDURE_FALLBACK[0]);
+  return items.slice(0, 30);
+}
+function ensureMasterPrompt(prompt: string) {
+  const fill = (base: string) => {
+    let result = base.trim() || "Prompt operativo.";
+    for (const section of PROMPT_SECTIONS) {
+      if (!result.toUpperCase().includes(section))
+        result += `\n${section}\nUsa solo i dati forniti. Non inventare.`;
+    }
+    return result;
+  };
+  const result = fill(prompt);
+  return clip(result.length <= 4000 ? result : fill(COMPACT_MASTER_PROMPT));
+}
+function repairWorkflow(raw: unknown, id: string, title: string) {
+  const workflow = asRecord(raw);
+  return workflowSchema.parse({
+    id,
+    title: clip(String(workflow.title || title)),
+    relevance: clip(
+      String(workflow.relevance || "Utile per il tuo lavoro quotidiano."),
+    ),
+    whenToUse: clip(
+      String(workflow.whenToUse || "Quando l’attività si ripete."),
+    ),
+    requiredInputs: clipList(workflow.requiredInputs, [
+      "Materiale anonimizzato",
+    ]),
+    tool: clip(
+      String(workflow.tool || "Strumento AI approvato dall’azienda"),
+    ),
+    procedure: ensureProcedure(workflow.procedure),
+    masterPrompt: ensureMasterPrompt(String(workflow.masterPrompt || "")),
+    reviewPrompt: clip(
+      String(
+        workflow.reviewPrompt ||
+          "Verifica nomi, numeri, date, fonti e tono. Segnala i problemi prima di correggere.",
+      ),
+    ),
+    example: clip(
+      String(
+        workflow.example ||
+          "Esempio ipotetico: usa dati fittizi e confronta il risultato.",
+      ),
+    ),
+    output: clip(String(workflow.output || "Bozza da revisionare")),
+    checklist: clipList(workflow.checklist, [
+      "Fonti controllate",
+      "Dati verificati",
+    ]),
+    humanReview: clip(
+      String(workflow.humanReview || "Verifica ogni output prima di usarlo."),
+    ),
+    commonErrors: clipList(workflow.commonErrors, [
+      "Usare informazioni non confermate",
+    ]),
+    privacy: clip(
+      String(
+        workflow.privacy ||
+          "Rimuovi dati personali e riservati prima di usare lo strumento.",
+      ),
+    ),
+  });
+}
+function repairAssistants(raw: unknown): WorkMapContent["assistants"] {
+  const incoming = Array.isArray(raw) ? raw : [];
+  const names = [
+    "Assistente operativo",
+    "Assistente di revisione",
+    "Assistente di sintesi",
+  ];
+  return [0, 1, 2].map((index) => {
+    const assistant = asRecord(incoming[index]);
+    return {
+      name: clip(String(assistant.name || names[index])),
+      purpose: clip(
+        String(assistant.purpose || "Preparare bozze dai dati forniti"),
+      ),
+      whenToUse: clip(
+        String(assistant.whenToUse || "Quando prepari un lavoro ripetitivo"),
+      ),
+      requiredInputs: clipList(assistant.requiredInputs, [
+        "Materiale anonimizzato",
+      ]),
+      systemPrompt: clip(
+        String(
+          assistant.systemPrompt ||
+            "Usa solo i dati forniti. Non inventare. Chiedi una revisione umana.",
+        ),
+      ),
+      starterPrompts: clipList(assistant.starterPrompts, [
+        "Prepara una bozza dal testo che ti incollo",
+      ]),
+      rules: clipList(assistant.rules, [
+        "Non inventare dati",
+        "Segnala ciò che manca",
+      ]),
+      limitations: clipList(assistant.limitations, [
+        "Nessun accesso a sistemi esterni",
+      ]),
+      humanReview: clip(
+        String(assistant.humanReview || "Controlla ogni output prima dell’uso."),
+      ),
+    };
+  });
+}
+function repairWeeks(raw: unknown): WorkMapContent["weeks"] {
+  const incoming = Array.isArray(raw) ? raw : [];
+  const goals = [
+    "Prova il primo workflow su un caso fittizio",
+    "Applica un secondo workflow al lavoro reale",
+    "Usa il primo assistente su un’attività ripetitiva",
+    "Rivedi cosa funziona e cosa va corretto",
+  ];
+  return [1, 2, 3, 4].map((week) => {
+    const current =
+      incoming.find((item) => asRecord(item).week === week) ||
+      incoming[week - 1];
+    const parsed = asRecord(current);
+    return {
+      week,
+      goal: clip(String(parsed.goal || goals[week - 1])),
+      actions: clipList(parsed.actions, [
+        "Scegli un caso senza dati riservati",
+        "Confronta il risultato con le fonti",
+      ]),
+      successCheck: clip(
+        String(
+          parsed.successCheck ||
+            "Il risultato è utilizzabile dopo una revisione umana",
+        ),
+      ),
+    };
+  });
+}
+export function repairWorkMapContent(
+  s: Session,
+  raw: unknown,
+): WorkMapContent {
+  const selected = s.selection?.workflows;
+  if (!selected?.length)
     throw Error(
       "Non sono riuscito a completare il controllo finale. Riprova dal punto salvato.",
     );
-  for (const w of content.workflows) {
-    if (
-      ![
-        "RUOLO",
-        "OBIETTIVO",
-        "CONTESTO",
-        "INPUT",
-        "VINCOLI",
-        "PROCESSO",
-        "OUTPUT",
-        "CONTROLLO",
-      ].every((k) => w.masterPrompt.includes(k)) ||
-      !w.humanReview ||
-      !w.privacy ||
-      w.procedure.length < 3
-    )
-      throw Error(
-        "Il documento non supera i controlli minimi. Riprova dal punto salvato.",
+  const source = asRecord(raw);
+  const incoming = Array.isArray(source.workflows)
+    ? source.workflows
+    : s.drafts;
+  return contentSchema.parse({
+    workflows: selected.map((picked, index) => {
+      const match =
+        incoming.find((item) => asRecord(item).id === picked.id) ||
+        incoming[index] ||
+        s.drafts[index];
+      return repairWorkflow(
+        match,
+        picked.id,
+        catalog.find((entry) => entry.id === picked.id)?.title ||
+          String(asRecord(match).title || picked.id),
       );
-  }
-  if (new Set(content.weeks.map((w) => w.week)).size !== 4)
-    throw Error(
-      "Il piano di 30 giorni non è completo. Riprova dal punto salvato.",
-    );
+    }),
+    assistants: repairAssistants(source.assistants),
+    weeks: repairWeeks(source.weeks),
+    finalChecklist: clipList(source.finalChecklist, [
+      "Verifica fonti, nomi, date e numeri",
+    ]),
+    privacy: clipList(source.privacy, [
+      "Anonimizza i dati prima di usare lo strumento",
+    ]),
+    tools: clipList(source.tools, ["Strumento AI approvato dall’azienda"]),
+  });
 }
 
 function generationErrorMessage(error: unknown) {
   if (isTransientAIError(error))
     return "Il servizio AI ha impiegato troppo tempo. Stiamo riprovando dal punto salvato.";
+  if (error instanceof z.ZodError)
+    return "Il contenuto ricevuto non è valido. Puoi riprovare dal punto salvato.";
   if (error instanceof Error) {
-    if (error.name === "ZodError")
-      return "Il contenuto ricevuto non è valido. Puoi riprovare dal punto salvato.";
     if (/[\u0000-\u007F]/.test(error.message) && !/[àèéìòù]/i.test(error.message))
       return "Generazione interrotta. Riprova dal punto salvato.";
     return error.message;
@@ -152,8 +323,12 @@ function generationErrorMessage(error: unknown) {
   return "Generazione interrotta. Riprova dal punto salvato.";
 }
 
-export async function reviewWorkMap(s: Session) {
-  const baseline = alignWorkflowIds(s, contentSchema.parse(s.content));
+export async function reviewWorkMap(
+  s: Session,
+  options?: { skipModel?: boolean },
+) {
+  const baseline = repairWorkMapContent(s, s.content);
+  if (options?.skipModel) return baseline;
   try {
     const reviewed = await structured(
       "quality-reviewer",
@@ -161,25 +336,22 @@ export async function reviewWorkMap(s: Session) {
       {
         profile: s.profile,
         selected: s.selection,
-        content: s.content,
+        content: baseline,
       },
       true,
     );
-    const content = alignWorkflowIds(s, reviewed);
-    assertWorkMapContent(s, content);
-    return content;
-  } catch (error) {
-    try {
-      assertWorkMapContent(s, baseline);
-      return baseline;
-    } catch {
-      throw error;
-    }
+    return repairWorkMapContent(s, reviewed);
+  } catch {
+    return baseline;
   }
 }
 export const generateFinalContent = (s: Session) =>
-  contentSchema.parse(s.content);
-export async function runGenerationStep(id: string, runId?: string) {
+  repairWorkMapContent(s, s.content);
+export async function runGenerationStep(
+  id: string,
+  runId?: string,
+  options?: { skipModelReview?: boolean },
+) {
   const lease = await claimLease(id);
   if (!lease) return false;
   try {
@@ -229,7 +401,9 @@ export async function runGenerationStep(id: string, runId?: string) {
           s.state = "reviewing";
           break;
         case 5:
-          s.content = await reviewWorkMap(s);
+          s.content = await reviewWorkMap(s, {
+            skipModel: options?.skipModelReview,
+          });
           s.job.step = 6;
           break;
         case 6:

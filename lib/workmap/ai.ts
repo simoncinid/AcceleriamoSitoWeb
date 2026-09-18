@@ -7,10 +7,10 @@ const PROMPT_TIMEOUT_MS: Partial<Record<PromptId, number>> = {
   "workflow-personalizer": 75_000,
   "assistant-generator": 90_000,
   "plan-generator": 90_000,
-  "quality-reviewer": 120_000,
+  "quality-reviewer": 40_000,
 };
 const PROMPT_ATTEMPTS: Partial<Record<PromptId, number>> = {
-  "quality-reviewer": 2,
+  "quality-reviewer": 1,
 };
 
 export function aiConfigured() {
@@ -101,7 +101,13 @@ async function structuredOnce<T extends z.ZodType>(
     throw new Error(
       "Risposta AI incompleta. Riprova: i tuoi progressi sono salvati.",
     );
-  return schema.parse(JSON.parse(message.content));
+  try {
+    return schema.parse(JSON.parse(message.content));
+  } catch {
+    throw new Error(
+      "Risposta AI incompleta. Riprova: i tuoi progressi sono salvati.",
+    );
+  }
 }
 
 export async function structured<T extends z.ZodType>(
