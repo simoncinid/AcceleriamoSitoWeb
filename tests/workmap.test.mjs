@@ -319,6 +319,30 @@ test("provider JSON invalido e timeout non producono documenti inventati", async
     );
   }
 });
+test("se il controllo qualità AI fallisce, prosegue con il documento già pronto", async () => {
+  const s = await setup();
+  try {
+    await s.qualify();
+    await s.post("confirm");
+    let result = await s.post("complete");
+    let guard = 0;
+    while (result.data.question && guard++ < 25) {
+      result = await s.answer(
+        result.data.question.field === "name"
+          ? "Marco"
+          : result.data.question.options[0] ||
+              "Informazioni generiche e autorizzate",
+      );
+    }
+    s.ai.failQualityReviewerOnce();
+    result = await s.finishGeneration();
+    assert.equal(result.data.state, "ready");
+    assert.equal(result.data.content.workflows.length, 12);
+  } finally {
+    await s.cleanup();
+  }
+});
+
 test("id workflow dal modello vengono allineati al catalogo", async () => {
   const directory = await mkdtemp(path.join(tmpdir(), "workmap-id-test-"));
   try {

@@ -70,7 +70,8 @@ export function modules({
 }
 export function fakeAI(catalog) {
   let fail = false,
-    personalizerWrongId = false;
+    personalizerWrongId = false,
+    failQualityReviewer = false;
   function workflow(w) {
     return {
       id: w.id,
@@ -102,11 +103,14 @@ export function fakeAI(catalog) {
     personalizerWrongIdOnce() {
       personalizerWrongId = true;
     },
+    failQualityReviewerOnce() {
+      failQualityReviewer = true;
+    },
     workflow,
     async structured(id, schema, input) {
       if (fail) {
         fail = false;
-        throw Error("Timeout provider simulato");
+        throw Error("Errore simulato del provider");
       }
       let result;
       if (id === "profile-extractor") {
@@ -183,7 +187,13 @@ export function fakeAI(catalog) {
           privacy: ["Anonimizza"],
           tools: ["Strumento AI approvato dall’azienda"],
         };
-      else if (id === "quality-reviewer") result = input.content;
+      else if (id === "quality-reviewer") {
+        if (failQualityReviewer) {
+          failQualityReviewer = false;
+          throw Error("The operation was aborted due to timeout");
+        }
+        result = input.content;
+      }
       else if (id === "conversation-turn") {
         const profile = structuredClone(input.profile);
         const q = input.question;
@@ -349,5 +359,13 @@ export function fakeAI(catalog) {
       return schema.parse(result);
     },
     aiConfigured: () => true,
+    isTransientAIError(error) {
+      if (!(error instanceof Error)) return false;
+      if (error.name === "AbortError" || error.name === "TimeoutError")
+        return true;
+      return /timeout|aborted|temporaneamente|occupato|incompleta/i.test(
+        error.message,
+      );
+    },
   };
 }

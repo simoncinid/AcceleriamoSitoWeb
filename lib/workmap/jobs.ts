@@ -74,6 +74,12 @@ async function continueGeneration(id: string) {
     }
     const s = await getSession(id);
     if (!s) return true;
+    if (
+      s.job?.error &&
+      ["generating", "reviewing"].includes(s.state)
+    ) {
+      await new Promise((resolve) => setTimeout(resolve, 5000));
+    }
     if (s.state === "ready") {
       await deliverEmails(id);
       return true;

@@ -1,5 +1,6 @@
-import { structured } from "./ai";
+import { isTransientAIError, structured } from "./ai";
 import { catalog } from "./catalog";
+import { z } from "zod";
 import {
   taskSchema,
   selectionSchema,
@@ -85,32 +86,33 @@ export const generatePlan = (s: Session) =>
     workflows: s.drafts,
     assistants: s.content?.assistants,
   });
-export async function reviewWorkMap(s: Session) {
-  let content = await structured("quality-reviewer", contentSchema, {
-    profile: s.profile,
-    selected: s.selection,
-    content: s.content,
-  });
+type WorkMapContent = z.infer<typeof contentSchema>;
+
+function alignWorkflowIds(s: Session, content: WorkMapContent): WorkMapContent {
   const selected = s.selection!.workflows;
-  if (content.workflows.length === selected.length) {
-    content = {
-      ...content,
-      workflows: content.workflows.map((workflow, index) => ({
-        ...workflow,
-        id: selected[index].id,
-        title:
-          catalog.find((entry) => entry.id === selected[index].id)?.title ??
-          workflow.title,
-      })),
-    };
-  }
+  if (content.workflows.length !== selected.length) return content;
+  return {
+    ...content,
+    workflows: content.workflows.map((workflow, index) => ({
+      ...workflow,
+      id: selected[index].id,
+      title:
+        catalog.find((entry) => entry.id === selected[index].id)?.title ??
+        workflow.title,
+    })),
+  };
+}
+
+function assertWorkMapContent(s: Session, content: WorkMapContent) {
   const ids = content.workflows.map((w) => w.id);
   if (
     new Set(ids).size !== ids.length ||
     ids.length !== s.selection!.workflows.length ||
     s.selection!.workflows.some((w) => !ids.includes(w.id))
   )
-    throw Error("Controllo qualità: workflow non coerenti.");
+    throw Error(
+      "Non sono riuscito a completare il controllo finale. Riprova dal punto salvato.",
+    );
   for (const w of content.workflows) {
     if (
       ![
@@ -127,11 +129,53 @@ export async function reviewWorkMap(s: Session) {
       !w.privacy ||
       w.procedure.length < 3
     )
-      throw Error("Controllo qualità: procedura incompleta.");
+      throw Error(
+        "Il documento non supera i controlli minimi. Riprova dal punto salvato.",
+      );
   }
   if (new Set(content.weeks.map((w) => w.week)).size !== 4)
-    throw Error("Controllo qualità: piano incompleto.");
-  return content;
+    throw Error(
+      "Il piano di 30 giorni non è completo. Riprova dal punto salvato.",
+    );
+}
+
+function generationErrorMessage(error: unknown) {
+  if (isTransientAIError(error))
+    return "Il servizio AI ha impiegato troppo tempo. Stiamo riprovando dal punto salvato.";
+  if (error instanceof Error) {
+    if (error.name === "ZodError")
+      return "Il contenuto ricevuto non è valido. Puoi riprovare dal punto salvato.";
+    if (/[\u0000-\u007F]/.test(error.message) && !/[àèéìòù]/i.test(error.message))
+      return "Generazione interrotta. Riprova dal punto salvato.";
+    return error.message;
+  }
+  return "Generazione interrotta. Riprova dal punto salvato.";
+}
+
+export async function reviewWorkMap(s: Session) {
+  const baseline = alignWorkflowIds(s, contentSchema.parse(s.content));
+  try {
+    const reviewed = await structured(
+      "quality-reviewer",
+      contentSchema,
+      {
+        profile: s.profile,
+        selected: s.selection,
+        content: s.content,
+      },
+      true,
+    );
+    const content = alignWorkflowIds(s, reviewed);
+    assertWorkMapContent(s, content);
+    return content;
+  } catch (error) {
+    try {
+      assertWorkMapContent(s, baseline);
+      return baseline;
+    } catch {
+      throw error;
+    }
+  }
 }
 export const generateFinalContent = (s: Session) =>
   contentSchema.parse(s.content);
@@ -199,14 +243,15 @@ export async function runGenerationStep(id: string, runId?: string) {
       s.job.updatedAt = new Date().toISOString();
       await saveSession(s, s.version);
     } catch (error) {
-      s.state = "failed";
-      s.job.attempts++;
-      s.job.error =
-        error instanceof Error && !(error.name === "ZodError")
-          ? error.message
-          : "Il contenuto ricevuto non è valido. Puoi riprovare dal punto salvato.";
+      s.job.error = generationErrorMessage(error);
       s.job.updatedAt = new Date().toISOString();
-      await saveSession(s, s.version);
+      if (isTransientAIError(error)) {
+        await saveSession(s, s.version);
+      } else {
+        s.state = "failed";
+        s.job.attempts++;
+        await saveSession(s, s.version);
+      }
     }
     return true;
   } finally {
