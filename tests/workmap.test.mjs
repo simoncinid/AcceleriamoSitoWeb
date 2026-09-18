@@ -342,6 +342,9 @@ test("se il controllo qualità AI fallisce, prosegue con il documento già pront
     result = await s.finishGeneration();
     assert.equal(result.data.state, "ready");
     assert.equal(result.data.content.workflows.length, 5);
+    assert.equal(result.data.emailDelivered, true);
+    assert.equal(s.sent.length, 1);
+    assert.equal(s.sent[0].attachments[0].filename, "AI-WorkMap.pdf");
   } finally {
     await s.cleanup();
   }

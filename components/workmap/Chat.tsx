@@ -360,10 +360,10 @@ export function WorkMapChat() {
         setData((previous) => applyView(previous, next));
         if (next.emailDelivered) return;
       } catch {
-        /* 409 se un worker è ancora in corso: riproviamo. */
+        /* Lease occupato o SMTP momentaneamente assente: riproviamo. */
       }
       if (!cancelled && attempts < 40)
-        window.setTimeout(() => void send(), 8000);
+        window.setTimeout(() => void send(), attempts === 1 ? 1500 : 4000);
     };
     void send();
     return () => {
@@ -442,15 +442,20 @@ export function WorkMapChat() {
               Abbiamo inviato la tua AI WorkMap in PDF a <strong>{data.email}</strong>.
               Controlla anche la cartella spam.
             </p>
+          ) : data.mailErrors.includes("ready") ? (
+            <p>
+              L’invio del PDF a <strong>{data.email}</strong> non è riuscito.
+              Puoi riprovare adesso.
+            </p>
           ) : (
             <p>
-              La tua AI WorkMap è pronta, ma l’email non è ancora partita.
-              Puoi riprovare l’invio adesso.
+              La tua AI WorkMap è pronta. Stiamo inviando il PDF a{" "}
+              <strong>{data.email}</strong>.
             </p>
           )}
           {error && <p className="wm-alert" role="alert">{error}</p>}
           <div className="wm-thanks-actions">
-            {!data.emailDelivered && (
+            {!data.emailDelivered && data.mailErrors.includes("ready") && (
               <button
                 className="button"
                 disabled={busy}

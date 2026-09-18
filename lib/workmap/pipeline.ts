@@ -12,6 +12,7 @@ import {
   type Session,
 } from "./schema";
 import { renderPdf } from "./pdf";
+import { sendWorkMapEmail } from "./email";
 import { claimLease, releaseLease, getSession, saveSession } from "./store";
 
 const catalogIds = new Set(catalog.map((entry) => entry.id));
@@ -406,6 +407,18 @@ export async function runGenerationStep(
         case 6:
           generateFinalContent(s);
           s.pdf = (await renderPdf(s)).toString("base64");
+          try {
+            await sendWorkMapEmail(s, "ready");
+          } catch (error) {
+            console.error(
+              "workmap-email-failed",
+              "ready",
+              error instanceof Error ? error.message : "unknown",
+            );
+          }
+          if (s.mail.ready)
+            s.mailErrors = s.mailErrors.filter((kind) => kind !== "ready");
+          else if (!s.mailErrors.includes("ready")) s.mailErrors.push("ready");
           s.state = "ready";
           s.job.step = 7;
           break;

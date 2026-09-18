@@ -31,7 +31,7 @@ export function workKind(s: Session): WorkKind | undefined {
 
 }
 const GENERATION_BUDGET_MS = 170_000;
-const STEP_GUARD_MS = [50_000, 95_000, 80_000, 95_000, 95_000, 30_000, 25_000];
+const STEP_GUARD_MS = [50_000, 95_000, 80_000, 95_000, 95_000, 30_000, 50_000];
 const REVIEW_MODEL_MS = 30_000;
 
 export function workerOrigin() {
@@ -64,19 +64,20 @@ export function scheduleWork(id: string, kind: WorkKind, delay = 0) {
     if (!response.ok)
       console.error("workmap-worker-schedule-failed", response.status, kind);
   };
+  const start = () =>
+    run().catch((error) => {
+      console.error(
+        "workmap-worker-schedule-failed",
+        kind,
+        error instanceof Error ? error.message : "unknown",
+      );
+    });
   try {
-    after(() =>
-      run().catch((error) => {
-        console.error(
-          "workmap-worker-schedule-failed",
-          kind,
-          error instanceof Error ? error.message : "unknown",
-        );
-      }),
-    );
+    after(start);
   } catch {
-    void run().catch(() => {});
+    void start();
   }
+  if (!delay) void start();
 }
 export async function deliverEmails(id: string) {
   const delivered = await deliverPending(id);
@@ -115,8 +116,10 @@ async function continueGeneration(id: string) {
       await new Promise((resolve) => setTimeout(resolve, 5000));
     }
     if (s.state === "ready") {
-      scheduleWork(id, "email");
-      await deliverEmails(id);
+      if (!s.mail.ready) {
+        scheduleWork(id, "email");
+        if (!s.mailErrors.includes("ready")) await deliverEmails(id);
+      }
       return true;
     }
     if (s.state === "failed") {

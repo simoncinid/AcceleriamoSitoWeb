@@ -172,6 +172,13 @@ export async function POST(request: Request, { params }: Context) {
       }
       return NextResponse.json(view(s), {headers});
     }
+    if (action === "email") {
+      await deliverPending(s.id);
+      s = (await getSession(s.id))!;
+      if (s.mailErrors.length || (s.state === "ready" && !s.mail.ready))
+        scheduleWork(s.id, "email", 8000);
+      return NextResponse.json(view(s), { headers });
+    }
     const lease = await claimLease(s.id);
     if (!lease) throw new Conflict();
     held = { id: s.id, token: lease };
@@ -250,13 +257,6 @@ export async function POST(request: Request, { params }: Context) {
       } else if (!["details", "profile_complete"].includes(s.state)) {
         throw Error("Completa e conferma prima il profilo.");
       }
-    } else if (action === "email") {
-      await releaseLease(held.id, held.token);
-      held = undefined;
-      await deliverPending(s.id);
-      s = (await getSession(s.id))!;
-      if (s.mailErrors.length || (s.state === "ready" && !s.mail.ready))
-        scheduleWork(s.id, "email", 8000);
     } else
       return NextResponse.json(
         { error: "Operazione non trovata." },

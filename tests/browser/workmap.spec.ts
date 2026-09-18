@@ -220,6 +220,9 @@ test(`analisi gratuita, correzione profilo e consegna a ${width}px`, async ({
     timeout: 60000,
   });
   await expect(page.getByRole("link", { name: "Vai alla home" })).toBeVisible();
+  await expect(
+    page.getByText(/Abbiamo inviato la tua AI WorkMap|Stiamo inviando il PDF|non è riuscito/),
+  ).toBeVisible();
   await page.screenshot({
     path: `artifacts/workmap/delivery-${width}.png`,
     fullPage: true,
