@@ -39,4 +39,18 @@ export const caseStudies: CaseStudy[] = [
     outcome: "Circa 10 ore a settimana risparmiate.",
     logo: { src: "/clients/cuormio-logo.jpg", alt: "Logo Cuor Mio", width: 120, height: 120 },
   },
+  {
+    id: "studio-menini",
+    client: "Studio Menini",
+    clientUrl: "https://www.studiomenini.it",
+    region: "Veneto",
+    title: "Conferme appuntamento, una per una.",
+    highlights: [
+      "Ogni settimana messaggi ai pazienti con appuntamento, per chiedere se confermano o vogliono riprogrammare.",
+      "Ora WhatsApp parla col gestionale: la segreteria riprogramma solo chi ha cliccato “riprogramma” e lo stato si aggiorna in automatico.",
+    ],
+    outcome: "Almeno 35 ore al mese risparmiate.",
+    logo: { src: "/clients/studiomenini-logo.png", alt: "Logo Studio Menini", width: 192, height: 192 },
+    logoDarkBg: true,
+  },
 ];

@@ -76,6 +76,7 @@ Le regole le decidi tu: il sistema le applica e, quando un caso non torna, si fe
 - Officine: avviso al cliente quando la macchina è pronta.
 - Caso reale, Megaron Servizi Immobiliari (Toscana): circa 100 richieste al giorno smistate a mano; oggi ogni richiesta arriva da sola all’agente della zona, con conferma automatica al cliente. Circa 8 ore al giorno recuperate.
 - Caso reale, Cuormio.it (Toscana): automatizzazione di procedure interne di magazzino (ordini, scarico, spedizioni). Diverse ore a settimana risparmiate.
+- Caso reale, Studio Menini (Veneto): ogni settimana messaggi WhatsApp ai pazienti con appuntamento per conferma o riprogrammazione; lo stato si aggiorna nel gestionale e la segreteria interviene solo su chi riprogramma. Almeno 35 ore al mese risparmiate.
 - Servizi su appuntamento: disdette e urgenze che sfasciano l’agenda.
 
 ## Valutazione
