@@ -5,16 +5,21 @@ import styles from "./ServiceCarousel.module.css";
 
 function slideLeft(scroller: HTMLDivElement, index: number) {
   const slide = scroller.children[index] as HTMLElement | undefined;
-  if (!slide) return 0;
-  return slide.offsetLeft - scroller.clientLeft;
+  const first = scroller.children[0] as HTMLElement | undefined;
+  if (!slide || !first) return 0;
+  return slide.offsetLeft - first.offsetLeft;
 }
 
 function activeIndex(scroller: HTMLDivElement) {
+  const first = scroller.children[0] as HTMLElement | undefined;
+  if (!first) return 0;
+  const origin = first.offsetLeft;
   const center = scroller.scrollLeft + scroller.clientWidth / 2;
   let index = 0;
   for (let i = 0; i < scroller.children.length; i += 1) {
     const slide = scroller.children[i] as HTMLElement;
-    if (slide.offsetLeft + slide.offsetWidth / 2 <= center) index = i;
+    const left = slide.offsetLeft - origin;
+    if (left + slide.offsetWidth / 2 <= center + 1) index = i;
   }
   return index;
 }
@@ -89,11 +94,8 @@ export function ServiceCarousel({
     pointer.current = null;
     if (!start || start.id !== event.pointerId || !scroller) return;
     scroller.removeAttribute("data-dragging");
-    if (start.axis === "x") {
-      goTo(activeIndex(scroller));
-      return;
-    }
-    if (start.axis === "y") return;
+    if (start.axis === "y" || start.axis === "x") return;
+    if (Math.abs(scroller.scrollLeft - start.scrollLeft) > 8) return;
     const rect = scroller.getBoundingClientRect();
     const ratio = (event.clientX - rect.left) / rect.width;
     if (ratio < 0.34) tap(-1);
@@ -119,15 +121,9 @@ export function ServiceCarousel({
     if (!start || start.id !== event.pointerId || !scroller) return;
     const dx = event.clientX - start.x;
     const dy = event.clientY - start.y;
-    if (!start.axis) {
-      if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
-      start.axis = Math.abs(dx) > Math.abs(dy) ? "x" : "y";
-      if (start.axis === "x") {
-        scroller.dataset.dragging = "";
-        scroller.setPointerCapture(event.pointerId);
-      }
-    }
-    if (start.axis === "x") scroller.scrollLeft = start.scrollLeft - dx;
+    if (start.axis) return;
+    if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
+    start.axis = Math.abs(dx) > Math.abs(dy) ? "x" : "y";
   };
 
   return (

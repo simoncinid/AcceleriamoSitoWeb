@@ -94,7 +94,6 @@ export function absoluteUrl(path = "/") {
 
 export const publicPages = [
   { path: "/", lastModified: siteUpdated, changeFrequency: "monthly" as const, priority: 1 },
-  { path: "/ai-workmap", lastModified: "2026-09-18", changeFrequency: "monthly" as const, priority: 0.8 },
   ...legalLinks.map(({ href }) => ({
     path: href,
     lastModified: LEGAL_VERSION,

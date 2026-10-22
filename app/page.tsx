@@ -46,7 +46,7 @@ export default function Home() {
           <div className="container">
             <div className="section-heading section-heading--center real-cases__head">
               <p className="eyebrow">Casi reali</p>
-              <h2 id="real-cases-title">Due PMI, <br className="break-keep" /><span className="accent">meno lavoro a mano.</span></h2>
+              <h2 id="real-cases-title">Tre PMI, <br className="break-keep" /><span className="accent">meno lavoro a mano.</span></h2>
             </div>
             <CaseStudyGallery />
           </div>

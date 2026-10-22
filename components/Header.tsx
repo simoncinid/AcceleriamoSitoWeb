@@ -32,7 +32,6 @@ export function Header({ workmap = false }: { workmap?: boolean } = {}) {
           {links.map(([label, href]) => <Link href={href} key={href}>{label}</Link>)}
         </nav>
         <div className="header-actions">
-          {!workmap && <Link className="button button--small button--dark" href="/ai-workmap">AI WorkMap</Link>}
           <Link className="button button--small button--primary header-cta" href={ctaHref}>{ctaLabel} <Icon name="arrow" size={17} /></Link>
         </div>
         <div className="mobile-actions">
@@ -41,7 +40,6 @@ export function Header({ workmap = false }: { workmap?: boolean } = {}) {
             <summary aria-label="Apri o chiudi il menu"><Icon name="menu" size={20} /></summary>
             <nav aria-label="Navigazione mobile">
               {links.map(([label, href]) => <Link href={href} key={href} onClick={closeMobileMenu}>{label}</Link>)}
-              {!workmap && <Link className="button button--small button--dark" href="/ai-workmap" onClick={closeMobileMenu}>AI WorkMap</Link>}
               <Link className="button button--small button--primary" href={ctaHref} onClick={closeMobileMenu}>{ctaLabel}</Link>
             </nav>
           </details>

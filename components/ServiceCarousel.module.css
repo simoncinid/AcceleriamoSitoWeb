@@ -13,6 +13,8 @@
   }
   .track {
     display: flex;
+    position: relative;
+    width: 100%;
     overflow-x: auto;
     overflow-y: hidden;
     scroll-snap-type: x mandatory;
@@ -34,7 +36,7 @@
     width: 100%;
     min-width: 0;
     scroll-snap-align: start;
-    scroll-snap-stop: always;
+    scroll-snap-stop: normal;
     border-radius: var(--radius);
   }
   .dots {
